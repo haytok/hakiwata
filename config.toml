@@ -1,6 +1,8 @@
-baseURL = "example.com"
-title = "Manis"
+baseURL = "https://dilmnqvovpnmlib.github.io/"
+title = "haKiwata"
 theme = "manis-hugo-theme"
+publishDir = "docs"
+canonifyurls = true
 
 # Copyright notice. Note: You can use HTML tag here
 copyright = "&copy; 2019 Yurizal Susanto"
@@ -90,6 +92,3 @@ pygmentsUseClasses = true
 #	lang = "in"
 #	languageName = "Bahasa Indonesia"
 #	weight = 1
-
-publishDir = "docs"
-canonifyurls = true
