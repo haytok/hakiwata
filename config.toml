@@ -90,3 +90,5 @@ pygmentsUseClasses = true
 #	lang = "in"
 #	languageName = "Bahasa Indonesia"
 #	weight = 1
+
+publishDir = "docs"
