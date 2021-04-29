@@ -92,3 +92,4 @@ pygmentsUseClasses = true
 #	weight = 1
 
 publishDir = "docs"
+canonifyurls = true
