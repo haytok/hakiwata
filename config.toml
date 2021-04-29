@@ -5,7 +5,7 @@ publishDir = "docs"
 canonifyurls = true
 
 # Copyright notice. Note: You can use HTML tag here
-copyright = "&copy; 2019 Yurizal Susanto"
+copyright = "&copy; 2021 haKiwata"
 pluralizeListTitles = false
 
 # Minimum number of posts before paginate navigation show up
@@ -22,9 +22,9 @@ pygmentsCodeFences = true
 pygmentsUseClasses = true
 
 [menu]
-	[[menu.main]]
-		name = "Post"
-		url = "/post/"
+	#[[menu.main]]
+	#	name = "Post"
+	#	url = "/post/"
 	
 	[[menu.main]]
 		name = "About"
@@ -42,7 +42,7 @@ pygmentsUseClasses = true
 	# Site meta description
 	description = "Sweet little Hugo's theme for personal website or blog."
 	# Site's Tagline (Subtitle or Keyword)
-	tagline = "Nothing sweeter than this"
+	tagline = "Welcome to my website !"
 	# If true give attribution to this theme
 	themeAttrib = true
 	# URL to license file, can be outside of your domain
@@ -51,7 +51,8 @@ pygmentsUseClasses = true
 	# Configure which sections for Latest Posts
 	mainSections = ["blog", "post"]
 	# Configure which sections for Latest Works
-	workSections = ["work"]
+	# works は基本的には表示しない。
+	# workSections = ["work"]
 	
 	# List of sections that support disqus comments
 	disqusSections = [ "blog" ]
@@ -68,7 +69,7 @@ pygmentsUseClasses = true
 	sub404 = "Back to <a href='/'>Home</a>."
 
 	# Color of your website's accent
-	colorTheme = "#ff6565"
+	colorTheme = "#e47911"
 	# Maximum number of item in Latest Posts or Works
 	latestCount = 3
 	# Path to site's favicon image
@@ -82,9 +83,9 @@ pygmentsUseClasses = true
 	highlightJsStyle = "ocean"
 
 	# Social Links
-	email = "mail@yurizal-san.com"
-	github = "https://github.com/yursan9/"
-	twitter = "https://twitter.com/yuri_boya"
+	# email = "mail@yurizal-san.com"
+	github = "https://github.com/dilmnqvovpnmlib"
+	# blog = "https://dilmnqvo.hatenablog.com"
 
 
 # Language Configuration

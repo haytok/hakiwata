@@ -8,6 +8,7 @@ tags = [
     "development",
 ]
 date = "2014-04-02"
+draft = true
 +++
 
 ## Step 1. Install Hugo
