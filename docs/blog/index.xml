@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on haKiwata</title>
-    <link>https://dilmnqvovpnmlib.github.io/hakiwata/blog/</link>
+    <link>https://hakiwata.jp/blog/</link>
     <description>Recent content in Blog on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
     <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://dilmnqvovpnmlib.github.io/hakiwata/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://hakiwata.jp/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>First Post</title>
-      <link>https://dilmnqvovpnmlib.github.io/hakiwata/blog/20210430/</link>
+      <link>https://hakiwata.jp/blog/20210430/</link>
       <pubDate>Fri, 30 Apr 2021 03:03:17 +0900</pubDate>
       
-      <guid>https://dilmnqvovpnmlib.github.io/hakiwata/blog/20210430/</guid>
+      <guid>https://hakiwata.jp/blog/20210430/</guid>
       <description>First Post  こんにちは！もともと自分のポートフォリオを Amazon EC2 にデプロイしていたのですが、クレジットが切れたので、Hugo + GitHub Pages にホスティングし直しました。思い立って 2 時間ほどで移行できたので、非常に便利だと思いました。  </description>
     </item>
     

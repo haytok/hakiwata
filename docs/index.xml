@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>haKiwata</title>
-    <link>https://dilmnqvovpnmlib.github.io/hakiwata/</link>
+    <link>https://hakiwata.jp/</link>
     <description>Recent content on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
     <lastBuildDate>Fri, 30 Apr 2021 03:03:17 +0900</lastBuildDate>
     
-	<atom:link href="https://dilmnqvovpnmlib.github.io/hakiwata/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://hakiwata.jp/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>First Post</title>
-      <link>https://dilmnqvovpnmlib.github.io/hakiwata/blog/20210430/</link>
+      <link>https://hakiwata.jp/blog/20210430/</link>
       <pubDate>Fri, 30 Apr 2021 03:03:17 +0900</pubDate>
       
-      <guid>https://dilmnqvovpnmlib.github.io/hakiwata/blog/20210430/</guid>
+      <guid>https://hakiwata.jp/blog/20210430/</guid>
       <description>First Post  こんにちは！もともと自分のポートフォリオを Amazon EC2 にデプロイしていたのですが、クレジットが切れたので、Hugo + GitHub Pages にホスティングし直しました。思い立って 2 時間ほどで移行できたので、非常に便利だと思いました。  </description>
     </item>
     
     <item>
       <title>Manis Hugo Theme</title>
-      <link>https://dilmnqvovpnmlib.github.io/hakiwata/work/manis-hugo-theme/</link>
+      <link>https://hakiwata.jp/work/manis-hugo-theme/</link>
       <pubDate>Sat, 24 Jun 2017 20:47:35 +0700</pubDate>
       
-      <guid>https://dilmnqvovpnmlib.github.io/hakiwata/work/manis-hugo-theme/</guid>
+      <guid>https://hakiwata.jp/work/manis-hugo-theme/</guid>
       <description>It&amp;rsquo;s a minimalist and responsive theme for Hugo Static Site Generator. It&amp;rsquo;s name taken from Indonesian Language for Sweet.
 Features Like I said, it&amp;rsquo;s really minimal. Its doesn&amp;rsquo;t even have grid or anything nice like that.
  Configurable color! Code Highlighting (HighlightJS). Responsive. Social Icon Links. No Grid no worry. Translatable.  </description>
