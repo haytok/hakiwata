@@ -484,7 +484,7 @@ p { margin-top: 0; }
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
   text-decoration: none;
-  color: #ff6565;
+  color: #e47911;
 }
 a:hover { text-decoration: underline; }
 
@@ -591,7 +591,7 @@ blockquote {
   margin: 1.75em 0 1.75em 0;
   padding: 0 1em 0 1em;
   border-left:0.4em solid;
-  border-left-color: #ff6565;
+  border-left-color: #e47911;
 }
 
 @media (min-width: 55rem) {
@@ -599,7 +599,7 @@ blockquote {
     margin: 1.75em -2em 1.75em -2em;
     padding: 0 1.5em 0 1.5em;
     border-right:0.4em solid;
-    border-right-color: #ff6565;
+    border-right-color: #e47911;
   }
 }
 
@@ -620,7 +620,7 @@ blockquote cite a {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .bar a { color: #777; }
 .bar a:hover {
-  color: #ff6565;
+  color: #e47911;
   text-decoration: none;
 }
 .bar ul {
@@ -709,7 +709,7 @@ hr {
   margin-bottom: 1rem;
   margin-left:0;
   width: 24rem;
-  border-top: 2px solid #ff6565;
+  border-top: 2px solid #e47911;
 }
 
 img {
