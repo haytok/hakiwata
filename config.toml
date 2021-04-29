@@ -40,7 +40,7 @@ pygmentsUseClasses = true
 	customCSS = []
 	
 	# Site meta description
-	description = "Sweet little Hugo's theme for personal website or blog."
+	description = "haKiwata's website."
 	# Site's Tagline (Subtitle or Keyword)
 	tagline = "Welcome to my website !"
 	# If true give attribution to this theme
