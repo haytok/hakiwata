@@ -46,7 +46,7 @@ pygmentsUseClasses = true
 	# If true give attribution to this theme
 	themeAttrib = true
 	# URL to license file, can be outside of your domain
-	licenseURL = "/about/license"
+	# licenseURL = "/about/license"
 
 	# Configure which sections for Latest Posts
 	mainSections = ["blog", "post"]
