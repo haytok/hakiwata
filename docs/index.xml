@@ -17,7 +17,7 @@
       <pubDate>Fri, 30 Apr 2021 03:03:17 +0900</pubDate>
       
       <guid>https://hakiwata.jp/blog/20210430/</guid>
-      <description>First Post  こんにちは！もともと自分のポートフォリオを Amazon EC2 にデプロイしていたのですが、クレジットが切れたので、Hugo + GitHub Pages にホスティングし直しました。思い立って 2 時間ほどで移行できたので、非常に便利だと思いました。  </description>
+      <description>サイトの移行  こんにちは！もともと自分のポートフォリオを Amazon EC2 にデプロイしていたのですが、AWS Education で割り当てられたクレジットが切れたので、Hugo + GitHub Pages で新しく作り直しました。思い立って 2 時間ほどで移行できたので、非常に便利だと思いました。  </description>
     </item>
     
     <item>

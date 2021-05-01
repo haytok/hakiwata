@@ -40,7 +40,7 @@ pygmentsUseClasses = true
 	customCSS = []
 	
 	# Site meta description
-	description = "haKiwata's website."
+	description = "haKiwata's Website."
 	# Site's Tagline (Subtitle or Keyword)
 	tagline = "Welcome to my website !"
 	# If true give attribution to this theme
@@ -73,7 +73,7 @@ pygmentsUseClasses = true
 	# Maximum number of item in Latest Posts or Works
 	latestCount = 3
 	# Path to site's favicon image
-	faviconImg = ""
+	faviconImg = "/data/kiwata.jpg"
 	# Date format in item list
 	dateFmt = "Jan 02, 2006"
 
@@ -85,6 +85,7 @@ pygmentsUseClasses = true
 	# Social Links
 	# email = "mail@yurizal-san.com"
 	github = "https://github.com/dilmnqvovpnmlib"
+	twitter = "https://twitter.com/bilmnpvovqnmlid"
 	# blog = "https://dilmnqvo.hatenablog.com"
 
 
