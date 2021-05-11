@@ -74,6 +74,7 @@ pygmentsUseClasses = true
 	latestCount = 3
 	# Path to site's favicon image
 	faviconImg = "/data/kiwata.jpg"
+	images = ["kiwata.jpg"]
 	# Date format in item list
 	dateFmt = "Jan 02, 2006"
 
