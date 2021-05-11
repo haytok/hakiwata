@@ -73,8 +73,8 @@ pygmentsUseClasses = true
 	# Maximum number of item in Latest Posts or Works
 	latestCount = 3
 	# Path to site's favicon image
-	faviconImg = "/static/data/kiwata.jpg"
-	images = ["/static/data/kiwata.jpg"]
+	faviconImg = "/static/images/kiwata.jpg"
+	images = ["/static/images/kiwata.jpg"]
 	# Date format in item list
 	dateFmt = "Jan 02, 2006"
 
