@@ -24,4 +24,7 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/{{- . -}}.min.js"></script>
 		{{ end }}
 		{{ end }}
+
+		{{ template "_internal/opengraph.html" . }}
+		{{ template "_internal/twitter_cards.html" . }}
 	</head>
