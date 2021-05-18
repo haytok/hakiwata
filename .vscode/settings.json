@@ -1,0 +1,9 @@
+{
+    "remark.format": {
+        "rules": {
+            "listItemIndent": 1,
+            "fences": true
+        }
+    }
+}
+
