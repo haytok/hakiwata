@@ -71,10 +71,10 @@ pygmentsUseClasses = true
 	# Color of your website's accent
 	colorTheme = "#e47911"
 	# Maximum number of item in Latest Posts or Works
-	latestCount = 3
+	latestCount = 5
 	# Path to site's favicon image
-	faviconImg = "/static/images/kiwata.png"
-	images = ["/static/images/kiwata.png"]
+	faviconImg = "/img/images/kiwata.png"
+	images = ["/img/images/kiwata.png"]
 	# Date format in item list
 	dateFmt = "Jan 02, 2006"
 
