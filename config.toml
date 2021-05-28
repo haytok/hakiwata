@@ -22,9 +22,9 @@ pygmentsCodeFences = true
 pygmentsUseClasses = true
 
 [menu]
-	#[[menu.main]]
-	#	name = "Post"
-	#	url = "/post/"
+	[[menu.main]]
+		name = "Post"
+		url = "/post"
 	
 	[[menu.main]]
 		name = "About"
