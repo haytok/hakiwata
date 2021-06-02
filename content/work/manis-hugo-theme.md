@@ -4,7 +4,7 @@ date = "2017-06-24T20:47:35+07:00"
 tags = [
   "hugo"
 ]
-draft = false
+draft = true
 workURL = "https://github.com/yursan9/manis-hugo-theme"
 +++
 It's a minimalist and responsive theme for Hugo Static Site Generator. It's
