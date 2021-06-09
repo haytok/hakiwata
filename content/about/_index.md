@@ -6,8 +6,11 @@ date = "2021-04-30T00:00:00+08:00"
 ## Education
 - April 2016 ~ March 2020
   - School of Engineering at Osaka University
+    - Division of Electronic and Information Engineering
 - April 2020 ~ present
   - Graduate School of Engineering at Osaka University
+    - Division of Electrical, Electronic, and Infocommunications Engineering
+    - Member of [Inoue Lab](http://www1b.comm.eng.osaka-u.ac.jp/index.htm)
 
 ## Publications
 - H. Kiwata, M. Kikuta, M. Sigihara, and K. Igarashi, "[High-speed (800 ps) and ultra-long-period (0.8 sec) characterization of laser phase noise by heterodyne detection with FPGA-implemented data acquisition,](https://www.osapublishing.org/abstract.cfm?uri=SPPCom-2020-SpM3I.4)" in OSA Advanced Photonics Congress (AP) 2020 (IPR, NP, NOMA, Networks, PVLED, PSC, SPPCom, SOF), L. Caspani, A. Tauke-Pedretti, F. Leo, and B. Yang, eds., OSA Technical Digest (Optical Society of America, 2020), paper SpM3I.4.
