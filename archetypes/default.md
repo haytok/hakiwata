@@ -2,6 +2,7 @@
 draft: false
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
+tags: []
 favorite: false
 ---
 
