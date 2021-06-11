@@ -6,9 +6,82 @@
     <description>Recent content in Tags on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
+    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate>
     
 	<atom:link href="https://hakiwata.jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>OCaml</title>
+      <link>https://hakiwata.jp/tags/ocaml/</link>
+      <pubDate>Thu, 10 Jun 2021 01:34:28 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/ocaml/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ARP</title>
+      <link>https://hakiwata.jp/tags/arp/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/arp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ethernet</title>
+      <link>https://hakiwata.jp/tags/ethernet/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/ethernet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ICMP</title>
+      <link>https://hakiwata.jp/tags/icmp/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/icmp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IP</title>
+      <link>https://hakiwata.jp/tags/ip/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/ip/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TCP</title>
+      <link>https://hakiwata.jp/tags/tcp/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/tcp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>UDP</title>
+      <link>https://hakiwata.jp/tags/udp/</link>
+      <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/udp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://hakiwata.jp/tags/hugo/</link>
+      <pubDate>Fri, 30 Apr 2021 03:03:17 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/hugo/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

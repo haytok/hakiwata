@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OCaml on haKiwata</title>
+    <link>https://hakiwata.jp/tags/ocaml/</link>
+    <description>Recent content in OCaml on haKiwata</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>&amp;copy; 2021 haKiwata</copyright>
+    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate>
+    
+	<atom:link href="https://hakiwata.jp/tags/ocaml/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>関数型プログラミングに入門した</title>
+      <link>https://hakiwata.jp/post/20210610/</link>
+      <pubDate>Thu, 10 Jun 2021 01:34:28 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/post/20210610/</guid>
+      <description>概要  こんにちは！先月末から プログラミングの基礎 を読んでいました。普段は Python や C 言語でプログラムを書くことが多いのですが、この本を通して、関数型プログラミングに入門しました。丁度今日に読み終えたので、なぜ読み始めたのかや何を学んだかなどの記録を残したいと思います。  読み始めたきっかけと目的  この本を読もうと思ったきっかけは、関数型プログラミングを通して再帰の概念や多相型について学びたいと思ったからです。2, 3 年前までは競技プログラミングをしていたのですが、その時に再帰的なプログラムを書くのに苦手意識を感じていました。典型的な再帰の問題は解けるのですが、少し難しい応用的な問題が出ると、お手上げな状態でした。実務などで頻繁に使うイメージはないのですが、前々から苦手意識は潰しておきたいと思っていました。そのため、関数型プログラミング言語の OCaml を通して再帰的なデータ構造や多相型について学ぶことが、この本を読む目的でした。  学んだこと  この本を通して学んだことを列挙します。  プログラムを書く際のデザインレシピとその実践  関数の目的と入出力の型を考える 関数のテストケース (具体例) を考える 関数のテンプレート (骨組み) を実装する 以上のことを基に関数の本体を実装する テストケースに従って関数をテストする   再帰的なプログラミング リスト自体が再帰的なデータ構造である  数学的帰納法をイメージするとわかりやすい リストを定義するには、要素とリストが必要なので、再帰的なデータ構造となる   関数の抽象化 多相型を使用したデータ構造 エラーハンドリング    紹介   ここでは、紹介されていたプログラムの中で、なるほど！と思ったプログラムについて紹介したいと思います。
+  接頭語のリストから全ての接頭語のリストを返す関数 prefix を実装することがこの章での目的です。例えば [1; 2; 3; 4] のリストを受け取ると、[[1]; [1; 2]; [1; 2; 3]; [1; 2; 3; 4]] を返す関数の実装です。</description>
+    </item>
+    
+  </channel>
+</rss>
