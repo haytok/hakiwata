@@ -6,10 +6,19 @@
     <description>Recent content on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
-    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 11 Jun 2021 17:37:01 +0900</lastBuildDate>
     
 	<atom:link href="https://hakiwata.jp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Hugo のテンプレートを修正してみた</title>
+      <link>https://hakiwata.jp/post/20210611/</link>
+      <pubDate>Fri, 11 Jun 2021 17:37:01 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/post/20210611/</guid>
+      <description>概要  こんにちは！自分の Web サイトは Hugo を用いて運用しています。これまでは、デフォルトの設定で特に大きく変更すること無く使用していました。しかし、表示するコンテンツを追加したいと思い、思い切ってテンプレートに修正を加えていくことにしました。今回は、その際に行った修正などについての記録を残したいと思います。  背景と目的  記事を新しく追加していくと、Latest Posts の記事から、メモ的なお気に入りの記事が埋もれてしまう問題点がありました。現状の設定では Latest Posts に表示される記事の数は 5 件です。そこで、トップページに Favorite Posts の項目を追加し、メモ的なお気に入りの記事を表示させるようにしました。  方法  上述の目的を成し遂げるために以下の二つのことを行いました。   archetypes/default.md の Front Matter Variables に favorite: false を追加する。 themes/manis-hugo-theme/layouts/index.html を修正して Favorite Posts を表示するロジックを作成する。   2 に関しては Latest Post のプログラムと公式のドキュメントの Hugo の文法を参考に実装しました。特に、Nest where Clauses が参考になりました。  感想  実装したい機能から逆算して修正すべきファイルに当たりをつけて、リバースエンジニアリング的に機能を拡張できて楽しかったです。Hugo は Golang の機能を活用して実装されています。Golang や Hugo に詳しいわけではないのですが、公式ドキュメントを読んでいると Hugo の文法も少し知ることができました。こうして、なんとか実現したい機能を調査と検証を繰り返しながら実装できて良かったです。また少し技術力が上がった気がします。  参考  Front Matter Nest where Clauses hakiwata/issues/3  </description>
+    </item>
     
     <item>
       <title>関数型プログラミングに入門した</title>

@@ -4,16 +4,26 @@
   
   <url>
     <loc>https://hakiwata.jp/</loc>
-    <lastmod>2021-06-10T01:34:28+09:00</lastmod>
+    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hakiwata.jp/tags/ocaml/</loc>
-    <lastmod>2021-06-10T01:34:28+09:00</lastmod>
+    <loc>https://hakiwata.jp/tags/hugo/</loc>
+    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hakiwata.jp/post/20210611/</loc>
+    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://hakiwata.jp/tags/</loc>
+    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hakiwata.jp/tags/ocaml/</loc>
     <lastmod>2021-06-10T01:34:28+09:00</lastmod>
   </url>
   
@@ -69,11 +79,6 @@
   
   <url>
     <loc>https://hakiwata.jp/post/20210430/</loc>
-    <lastmod>2021-04-30T03:03:17+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://hakiwata.jp/tags/hugo/</loc>
     <lastmod>2021-04-30T03:03:17+09:00</lastmod>
   </url>
   

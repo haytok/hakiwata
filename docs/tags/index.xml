@@ -6,10 +6,19 @@
     <description>Recent content in Tags on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
-    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 11 Jun 2021 17:37:01 +0900</lastBuildDate>
     
 	<atom:link href="https://hakiwata.jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://hakiwata.jp/tags/hugo/</link>
+      <pubDate>Fri, 11 Jun 2021 17:37:01 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/hugo/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>OCaml</title>
@@ -71,15 +80,6 @@
       <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
       
       <guid>https://hakiwata.jp/tags/udp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Hugo</title>
-      <link>https://hakiwata.jp/tags/hugo/</link>
-      <pubDate>Fri, 30 Apr 2021 03:03:17 +0900</pubDate>
-      
-      <guid>https://hakiwata.jp/tags/hugo/</guid>
       <description></description>
     </item>
     
