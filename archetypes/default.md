@@ -1,6 +1,20 @@
 ---
+draft: false
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
-draft: true
+favorite: false
 ---
 
+## 概要
+
+## 背景
+
+## 目的
+
+## 方法
+
+## 結果
+
+## 結論
+
+## 参考
