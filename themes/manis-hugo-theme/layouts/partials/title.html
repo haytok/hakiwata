@@ -1,10 +1,12 @@
 <hgroup id="brand">
 	<!-- Homepage -->
 	{{- if eq .Kind "home" -}}
+	<!-- Top ページの haKiwata を表す -->
 	<h1>{{ .Site.Title }}</h1>
 	<h5>{{- with .Site.Params.Tagline -}}{{.}}{{- end -}}</h5>
 	<!-- Section List -->
 	{{- else if ( or ( eq .Kind "section") ( eq .Kind "taxonomyTerm" ) ) -}}
+	<!-- Post, About のタイトルを表す -->
 	<h1>{{ .Title }}</h1>
 	<!-- Ordinary Page -->
 	{{- else if eq .Kind "page" -}}
@@ -16,7 +18,7 @@
 			{{ with .Params.tags -}}
 			-
 				{{ range . }}
-				<a href="/tags/{{.}}">{{.}}</a>
+				<a href="/tags/{{ lower .}}">{{.}}</a>
 				{{ end }}
 			{{- end -}}
 			{{- with .Params.workURL -}}
@@ -27,8 +29,7 @@
 	</h5>
 	<!-- Taxonomy Page -->
 	{{- else if eq .Kind "taxonomy" -}}
-	<h5>{{ .Data.Singular | title }}:</h5>
-	<h1>{{ .Title }}</h1>
+	<h5>{{ .Data.Singular | title }}:&nbsp;{{ .Title }}</h5>
 	{{ end }}
 </hgroup>
 <hr class="sep" />
