@@ -3,8 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://hakiwata.jp/post/20210613/</loc>
+    <lastmod>2021-06-13T06:13:26+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hakiwata.jp/tags/git/</loc>
+    <lastmod>2021-06-13T06:13:26+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hakiwata.jp/</loc>
-    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
+    <lastmod>2021-06-13T06:13:26+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hakiwata.jp/tags/</loc>
+    <lastmod>2021-06-13T06:13:26+09:00</lastmod>
   </url>
   
   <url>
@@ -14,11 +29,6 @@
   
   <url>
     <loc>https://hakiwata.jp/post/20210611/</loc>
-    <lastmod>2021-06-11T17:37:01+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://hakiwata.jp/tags/</loc>
     <lastmod>2021-06-11T17:37:01+09:00</lastmod>
   </url>
   
@@ -49,6 +59,11 @@
   
   <url>
     <loc>https://hakiwata.jp/tags/ip/</loc>
+    <lastmod>2021-05-29T00:08:15+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hakiwata.jp/tags/network/</loc>
     <lastmod>2021-05-29T00:08:15+09:00</lastmod>
   </url>
   
