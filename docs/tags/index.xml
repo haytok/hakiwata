@@ -6,10 +6,19 @@
     <description>Recent content in Tags on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
-    <lastBuildDate>Sun, 13 Jun 2021 06:13:26 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jun 2021 00:34:14 +0900</lastBuildDate>
     
 	<atom:link href="https://hakiwata.jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Study</title>
+      <link>https://hakiwata.jp/tags/study/</link>
+      <pubDate>Tue, 15 Jun 2021 00:34:14 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/tags/study/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>git</title>
@@ -98,15 +107,6 @@
       <pubDate>Sat, 29 May 2021 00:08:15 +0900</pubDate>
       
       <guid>https://hakiwata.jp/tags/udp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Study</title>
-      <link>https://hakiwata.jp/tags/study/</link>
-      <pubDate>Tue, 18 May 2021 04:27:07 +0900</pubDate>
-      
-      <guid>https://hakiwata.jp/tags/study/</guid>
       <description></description>
     </item>
     
