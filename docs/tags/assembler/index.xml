@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Assembler on haKiwata</title>
+    <link>https://hakiwata.jp/tags/assembler/</link>
+    <description>Recent content in Assembler on haKiwata</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>&amp;copy; 2021 haKiwata</copyright>
+    <lastBuildDate>Fri, 18 Jun 2021 02:21:38 +0900</lastBuildDate>
+    
+	<atom:link href="https://hakiwata.jp/tags/assembler/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>システムコール番号を使って write システムコールを呼び出す</title>
+      <link>https://hakiwata.jp/post/20210618/</link>
+      <pubDate>Fri, 18 Jun 2021 02:21:38 +0900</pubDate>
+      
+      <guid>https://hakiwata.jp/post/20210618/</guid>
+      <description>概要  こんにちは！最近、低レイヤ寄りの実装に興味があり、Linux Kernel のシステムコール周りのソースコードを読む機会がありました。その際に、システムコールには、対応するシステムコール番号があるのを知りました。そこで、今回は C 言語やアセンブリ言語を書くことを通して、write システムコールにおけるシステムコール番号とシステムコールの関係性について調査してみたいと思います。  背景と目的   あるとき、socket システムコールは第三引数の protocol に応じてどのような処理が行われているかが気になったことがありました。その際、socket システムコールのプログラムを Linux Kernel のソースコードから紐解く静的解析を行いました。静的解析でプログラムを追っていくと、write システムコールが呼び出されていることに気づきました。このことがキッカケで、一番プリミティブで親近感のある write システムコールの実装やシステムコール番号との関係性に興味を持ちました。
+  そこで、今回は検証プログラムを実装することを通して、write システムコールにおけるシステムコール番号とシステムコールの関係性を明らかにします。
+  方法  以下の 1 と 2 と 3 の順序で検証を行います。    まず、syscall 関数とシステムコール番号を使用して標準出力に文字列を出力する C 言語のプログラムを実装します。これにより、システムコール番号とシステムコールの対応関係に対する理解を深めます。
+  次に、アセンブリ言語単体でシステムコールを呼び出すプログラムを実装します。これにより、システムコールを呼び出す際に必要な引数をスタックに詰んで、システムコールを呼び出す流れを確認します。
+  最後に、アセンブリ言語でシステムコールを呼び出し、標準出力に文字列を出力させる関数を実装し、その関数を C 言語で書いたプログラムから呼び出します。こうして、C 言語で書いたプログラムとアセンブリ言語で書いたプログラムの関係性を確認します。ただし、ここで取り扱うアセンブリ言語のプログラムは 32 bit の実行ファイルを作成するためのプログラムです。
+    それでは、1 を検証したいと思います。 まず、syscall 関数のマニュアルを確認すると、以下のような記述がありました。  NAME syscall - indirect system call SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &amp;lt;unistd.</description>
+    </item>
+    
+  </channel>
+</rss>
