@@ -6,11 +6,7 @@
     <description>Recent content in OCaml on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
-    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate>
-    
-	<atom:link href="https://hakiwata.jp/tags/ocaml/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 10 Jun 2021 01:34:28 +0900</lastBuildDate><atom:link href="https://hakiwata.jp/tags/ocaml/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>関数型プログラミングに入門した</title>
       <link>https://hakiwata.jp/post/20210610/</link>

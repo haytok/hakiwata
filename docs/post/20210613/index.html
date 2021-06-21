@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="generator" content="Hugo 0.65.3" />
+		<meta name="generator" content="Hugo 0.83.1" />
 		<title>.gitconfig を使って untracked files のみを退避させる - haKiwata</title>
 
 		<meta name="description" content="概要  自分で運用しているブログサイトは git を用いて管理しています。新しい記事を作成する際に、untracked files のみを git stash して、退避させたいことがありました。しかし、git にはデフォルトで untracked files のみを退避させるコマンドは無いそうです。そこで、今回は .gitconfig を使用して工夫したことについての記録を残したいと思います。  背景と目的   新しい記事を作成するために hugo new コマンドで記事の雛形を作成します。過去に書いた記事を参考にしつつ新しい記事を書いていると、過去の記事にタイポを見つけて修正したくなることや、言い回しを変えたくなる時があります。その内容を修正しつつ、一通り満足の行く新しい記事を書き終えると、hugo コマンドで修正したり作成したファイルを build を行った後に push する必要があります。しかし、修正した過去の記事と新規作成した記事の build を別々に行った後に push してコミットを分けたいと考えています。そのため、このようなケースでは一旦新規作成した記事を退避させて build を行い、push します。そして、その後に git stash pop で退避させた新規作成した記事を元に戻してから build を行い、push するようにします。
@@ -34,10 +34,10 @@
   こうして untracked files のみを退避させたいのですが、このコマンドは毎回調べているイメージがありました。その調べている時間が無駄でもったいないと感じていました。そこで、今回はその無駄な手順を省くために .gitconfig を使用し、 untracked files のみを退避させるエイリアスを設定しました。また、.bashrc に記述していた git コマンドのエイリアスも .gitconfig に移して、設定ファイルの整理も行いました。
   方法  untracked files のみを退避させる方法は How to git stash only untracked files?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://hakiwata.jp/post/20210613/" />
-<meta property="og:image" content="https://hakiwata.jp/img/images/kiwata.png"/>
-<meta property="article:published_time" content="2021-06-13T06:13:26+09:00" />
-<meta property="article:modified_time" content="2021-06-13T06:13:26+09:00" />
+<meta property="og:url" content="https://hakiwata.jp/post/20210613/" /><meta property="og:image" content="https://hakiwata.jp/img/images/kiwata.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-06-13T06:13:26&#43;09:00" />
+<meta property="article:modified_time" content="2021-06-13T06:13:26&#43;09:00" />
+
 
 		<meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://hakiwata.jp/img/images/kiwata.png"/>
@@ -69,7 +69,7 @@
 	<h1>.gitconfig を使って untracked files のみを退避させる</h1>
 	<h5>
 		
-		<time datetime="2021-06-13 06:13:26 &#43;0900 JST">Jun 13, 2021</time>
+		<time datetime="2021-06-13 06:13:26 &#43;0900 &#43;0900">Jun 13, 2021</time>
 		<span class="no-print">
 			-
 				
@@ -119,26 +119,26 @@
 <table>
 <thead>
 <tr>
-<th align="center">git コマンド (実行後)</th>
-<th align="center">stash list の状況</th>
+<th style="text-align:center">git コマンド (実行後)</th>
+<th style="text-align:center">stash list の状況</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">git stash</td>
-<td align="center">{0}: 修正ファイル</td>
+<td style="text-align:center">git stash</td>
+<td style="text-align:center">{0}: 修正ファイル</td>
 </tr>
 <tr>
-<td align="center">git stash -u</td>
-<td align="center">{0}: untracked files</td>
+<td style="text-align:center">git stash -u</td>
+<td style="text-align:center">{0}: untracked files</td>
 </tr>
 <tr>
-<td align="center"></td>
-<td align="center">{1}: 修正ファイル</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">{1}: 修正ファイル</td>
 </tr>
 <tr>
-<td align="center">git stash pop stash@{1};</td>
-<td align="center">{0}: untracked files</td>
+<td style="text-align:center">git stash pop stash@{1};</td>
+<td style="text-align:center">{0}: untracked files</td>
 </tr>
 </tbody>
 </table>

@@ -6,11 +6,7 @@
     <description>Recent content in Hugo on haKiwata</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>&amp;copy; 2021 haKiwata</copyright>
-    <lastBuildDate>Fri, 11 Jun 2021 17:37:01 +0900</lastBuildDate>
-    
-	<atom:link href="https://hakiwata.jp/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 11 Jun 2021 17:37:01 +0900</lastBuildDate><atom:link href="https://hakiwata.jp/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hugo のテンプレートを修正してみた</title>
       <link>https://hakiwata.jp/post/20210611/</link>
