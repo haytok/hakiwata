@@ -2,16 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://hakiwata.jp/</loc>
+    <lastmod>2021-06-21T14:53:48+00:00</lastmod>
+  </url><url>
+    <loc>https://hakiwata.jp/tags/poem/</loc>
+    <lastmod>2021-06-21T14:53:48+00:00</lastmod>
+  </url><url>
+    <loc>https://hakiwata.jp/tags/</loc>
+    <lastmod>2021-06-21T14:53:48+00:00</lastmod>
+  </url><url>
+    <loc>https://hakiwata.jp/post/20210622/</loc>
+    <lastmod>2021-06-21T14:53:48+00:00</lastmod>
+  </url><url>
     <loc>https://hakiwata.jp/tags/assembler/</loc>
     <lastmod>2021-06-18T02:21:38+09:00</lastmod>
   </url><url>
     <loc>https://hakiwata.jp/tags/c/</loc>
-    <lastmod>2021-06-18T02:21:38+09:00</lastmod>
-  </url><url>
-    <loc>https://hakiwata.jp/</loc>
-    <lastmod>2021-06-18T02:21:38+09:00</lastmod>
-  </url><url>
-    <loc>https://hakiwata.jp/tags/</loc>
     <lastmod>2021-06-18T02:21:38+09:00</lastmod>
   </url><url>
     <loc>https://hakiwata.jp/post/20210618/</loc>
