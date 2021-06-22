@@ -1,18 +1,21 @@
 VERSION=0.83.1
+PORT=1313
+
+OLD_VERSION=0.65.3
+
+$(eval USER_ID := $(shell id -u $(USER)))
+$(eval GROUP_ID := $(shell id -g $(USER)))
 
 .PHONY: server
 server:
 	docker run --rm -it \
 		-v $(PWD):/src \
-		-p 1313:1313 \
+		-p $(PORT):1313 \
 		klakegg/hugo:$(VERSION) server
 
 .PHONY: new
 new:
 	@echo "New file name is $(F)"
-
-	$(eval USER_ID := $(shell id -u $(USER)))
-	$(eval GROUP_ID := $(shell id -g $(USER)))
 
 	docker run --rm -it \
 		-v /etc/group:/etc/group:ro \
