@@ -27,9 +27,12 @@
 			{{- end -}}
 		<span>
 	</h5>
-	<!-- Taxonomy Page -->
+	<!-- Tags Page -->
 	{{- else if eq .Kind "taxonomy" -}}
-	<h5>{{ .Data.Singular | title }}:&nbsp;{{ .Title }}</h5>
+	<h1>{{ .Title | title }}</h1>
+	<!-- Tag の詳細画面で出る ex.) Tag: Assembler -->
+	{{- else if .Params.title -}}
+	<h1>{{ .Title | title }}</h1>
 	{{ end }}
 </hgroup>
 <hr class="sep" />
