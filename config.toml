@@ -29,6 +29,9 @@ pygmentsUseClasses = true
 	[[menu.main]]
 		name = "About"
 		url = "/about"
+	[[menu.main]]
+		name = "Tags"
+		url = "/tags"
 
 [taxonomies]
 	tag = "tags"
