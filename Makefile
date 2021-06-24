@@ -23,9 +23,3 @@ new:
 		-v $(PWD):/src \
 		-u $(USER_ID):$(GROUP_ID) \
 		klakegg/hugo:$(VERSION) new "content/post/$(F)"
-
-.PHONY: build
-build:
-	docker run --rm -it \
-		-v $(PWD):/src \
-		klakegg/hugo:$(VERSION)
