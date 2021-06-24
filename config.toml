@@ -40,7 +40,7 @@ pygmentsUseClasses = true
 	# If false, use minified CSS (ui.min.css)
 	debugCSS = false
 	# Custom CSS
-	customCSS = []
+	customCSS = ["/css/main.css"]
 	
 	# Site meta description
 	description = "haKiwata's Website."

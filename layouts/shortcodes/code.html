@@ -1,0 +1,5 @@
+{{ $title := .Get "title" }}
+{{ $lang := or (.Get "lang") "" }}
+
+<div class="xCodeBlock_code">{{ highlight (trim .Inner "\r\n") $lang "" }}</div>
+{{ with $title }}<div class="xCodeBlock_title">{{.}}</div>{{ end }}
