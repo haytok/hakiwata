@@ -92,9 +92,11 @@ pygmentsUseClasses = true
 	twitter = "https://twitter.com/bilmnpvovqnmlid"
 	# blog = "https://dilmnqvo.hatenablog.com"
 
-
 # Language Configuration
 #[languages.in]
 #	lang = "in"
 #	languageName = "Bahasa Indonesia"
 #	weight = 1
+
+[markup.goldmark.renderer]
+	unsafe= true
