@@ -1,6 +1,6 @@
 ---
 draft: false
-title: "Hugo で Markdown が上手く parse されない原因を調査してみた"
+title: "Hugo で Markdown が上手く Parse されない原因を調査してみた"
 date: 2021-06-22T13:08:38Z
 tags: ["Hugo"]
 favorite: false
@@ -28,13 +28,13 @@ favorite: false
 
 ## 目的
 
-- Table の中央揃えと右揃えを表す Markdown が上手く parse されない原因を明らかにし、改善するプロセスを振り返ることがこの記事の目的です。まず、この原因が Hugo 側にあるのか、あるいは Markdwon Parser に原因があるのか、あるいはそれ以外なのかを調査します。そしてその調査結果に基づいて不具合を修正します。
+- Table の中央揃えと右揃えを表す Markdown が上手く Parse されない原因を明らかにし、改善するプロセスを振り返ることがこの記事の目的です。まず、この原因が Hugo 側にあるのか、あるいは Markdwon Parser に原因があるのか、あるいはそれ以外なのかを調査します。そしてその調査結果に基づいて不具合を修正します。
 
 ## 調査プロセスと解決方法
 
 - この問題の原因は大きく 2 つに分けられます。Hugo に問題があるケースと Markdown Parser に問題があるケースです。そこで、まず、Hugo が採用している Markdown Parser 側からの調査を行いました。
 
-- 初めに、Hugo に使われている Markdown のパーサを調べました。これは、普通にググれば出てきます。`Hugo v0.60.0` から [goldmark](https://github.com/yuin/goldmark) が採用されているそうです。この背景は、[goldmarkがHugoに採用された](http://inforno.net/articles/2019/12/25/hugo-now-uses-goldmark)や[Now CommonMark Compliant!](https://gohugo.io/news/0.60.0-relnotes/)の記事が参考になります。
+- 初めに、Hugo で使われている Markdown Parser を調べました。これは、普通にググれば出てきます。`Hugo v0.60.0` から [goldmark](https://github.com/yuin/goldmark) が採用されているそうです。この背景は、[goldmarkがHugoに採用された](http://inforno.net/articles/2019/12/25/hugo-now-uses-goldmark)や[Now CommonMark Compliant!](https://gohugo.io/news/0.60.0-relnotes/)の記事が参考になります。
 
 - 次に、この [goldmark](https://github.com/yuin/goldmark) のソースコードの中で、Table 記法の Markdown を Parse する箇所を最初に確認しました。そもそも Parse するロジックが実装されているかを調査するためです。今回は、GitHub の左上の検索ボックスで `table` の文字列を入力して検索を行いました。実際に Table 記法を Parse してそうなファイルに当たりをつけました。そのファイルは以下です。
 
