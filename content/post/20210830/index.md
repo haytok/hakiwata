@@ -12,43 +12,51 @@ favorite: false
 
 ## 日記
 
+### 2021 年 8 月 13 日
+
+#### osbook_day01
+
+- 自作 OS を始めました！名前は HonOS です！
+
+![osbook_day01.png](osbook_day01.png)
+
 ### 2021 年 8 月 28 日
 
-### osbook_day09b
+#### osbook_day09b
 
 ![osbook_day09b.gif](osbook_day09b.gif)
 
-### osbook_day09c
+#### osbook_day09c
 
 ![osbook_day09c.gif](osbook_day09c.gif)
 
-### osbook_day09d
+#### osbook_day09d
 
 ![osbook_day09d.gif](osbook_day09d.gif)
 
 ### 2021 年 8 月 29 日
 
-### osbook_day09e
+#### osbook_day09e
 
 ![osbook_day09e.gif](osbook_day09e.gif)
 
-### osbook_day10a
+#### osbook_day10a
 
 ![osbook_day10a.gif](osbook_day10a.gif)
 
-### osbook_day10b-invalid
+#### osbook_day10b-invalid
 
 - `FrameBuffer::Copy` の実装が間違っていたせいで表示がバグってしまいました。状況を切り分けつつバグを調査する過程が最高に楽しかったです。
 
 ![osbook_day10b-invalid.gif](osbook_day10b-invalid.gif)
 
-### osbook_day10b
+#### osbook_day10b
 
 - ウィンドウを表示することができました！
 
 ![osbook_day10b.gif](osbook_day10b.gif)
 
-### osbook_day10c
+#### osbook_day10c
 
 - Kernel の main 関数の for ループ回数を書き込んだウィンドウを表示することができました！
 
@@ -60,24 +68,11 @@ favorite: false
 
 ![osbook_day10c.gif](osbook_day10c.gif)
 
-### osbook_day10d
+#### osbook_day10d
 
 - 実装中🤞
 
-<!--
+<!-- ## 最後に -->
 
-![]()
-
-### 2021 年 8 月 31 日
-
-![]()
-
-![]()
-
-![]() -->
-
-<!-- ## 最後に
-
-- 🤞 -->
 
 ## 参考
