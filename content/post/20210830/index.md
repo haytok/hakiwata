@@ -52,9 +52,13 @@ favorite: false
 
 - Kernel の main 関数の for ループ回数を書き込んだウィンドウを表示することができました！
 
-![osbook_day10c.gif](osbook_day10c.gif)
+![osbook_day10c-invalid.gif](osbook_day10c-invalid.gif)
 
 ### 2021 年 8 月 30 日
+
+- しかし、この記事を見た同期に表示されている色の挙動がおかしいと指摘されました。そこで、[osbook_day10c](https://github.com/uchan-nos/mikanos/tree/osbook_day10c) に checkout し、正常系の挙動を確認してみました。そうすると、確かに正常系と比較すると、挙動がおかしかったので、バグを調査し修正しました。原因は `constexpr PixelColor ToColor(uint32_t c);` の色のビットシフトが逆になっていたことでした。だいぶ画面がチカチカしていますが、そのリファクタリングは次節以降でできればと思っています！
+
+![osbook_day10c.gif](osbook_day10c.gif)
 
 ### osbook_day10d
 
