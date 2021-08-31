@@ -76,11 +76,11 @@ favorite: false
 
 #### osbook_day10e
 
-![osbook_day10f.gif](osbook_day10f.gif)
+![osbook_day10e.gif](osbook_day10e.gif)
 
 #### osbook_day10f
 
-- USB ドライバからデータを取り出すプログラムは、マウスのボタンが押されたかとマウスがどれだけ移動したかの変位を取得できる機能のものだった。しかし、なぜかドライバから Kernel にそれらのデータが渡されなかった。`make clean` や `rm kernel.elf` を実行し、クリアな状況にしても状況が改善されなかった。そこで、`Makefile` を本家からコピーすると正常な動きをするようになったが、なぜデータが Kernel 側に受け渡されなかったかの原因が不明のまま解決してしまった。そして、かなりイライラした。
+- USB ドライバからデータを取り出すプログラムは、マウスのボタンが押されたかとマウスがどれだけ移動したかの変位を取得できる機能のものだった。しかし、なぜかドライバから Kernel にそれらのデータが渡されなかった。`make clean` や `rm kernel.elf` を実行し、クリアな状況にしても状況が改善されなかった。そこで、`Makefile` を本家からコピーすると正常な動きをするようになったが、なぜデータが Kernel 側に受け渡されなかったかの原因が不明のまま解決してしまった。
 
 ![osbook_day10f.gif](osbook_day10f.gif)
 
@@ -95,3 +95,6 @@ favorite: false
 <!-- ## 最後に -->
 
 ## 参考
+
+- [honOS](https://github.com/dilmnqvovpnmlib/honOS)
+- [mikanos](https://github.com/uchan-nos/mikanos)
