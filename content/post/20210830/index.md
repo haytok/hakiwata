@@ -88,7 +88,29 @@ favorite: false
 
 ![osbook_day10g.gif](osbook_day10g.gif)
 
+### 2021 年 9 月 1 日
+
 #### osbook_day11a
+
+- main 関数のリファクタリングを行った。main 関数が大きすぎて大変だった。見た目の挙動は osbook_day10g と変わらない。
+
+![osbook_day11a.gif](osbook_day11a.gif)
+
+#### osbook_day11b
+
+- 周期的に割り込むタイマを実装した。一定のカウントが刻まれると、割り込みが入り、背景に文字列が表示される。
+
+![osbook_day11b.gif](osbook_day11b.gif)
+
+#### osbook_day11c
+
+- 前節よりも短い周期で割り込みを行わせ、その割り込み回数を計算する。
+
+![osbook_day11c.gif](osbook_day11c.gif)
+
+### 2021 年 9 月 2 日
+
+#### osbook_day11d
 
 - 実装中🤞
 
