@@ -130,6 +130,56 @@ favorite: false
 
 #### osbook_day12b
 
+- ACPI PM タイマ (基準となる軸で、fadt->pm_tmr_blk から求められる。) を使用して Local APIC タイマの 1 カウントが何秒なのかを計測します。
+
+![osbook_day12b.gif](osbook_day12b.gif)
+
+#### osbook_day12c
+
+![osbook_day12c.gif](osbook_day12c.gif)
+
+#### osbook_day12d
+
+![osbook_day12d.gif](osbook_day12d.gif)
+
+#### osbook_day12e
+
+![osbook_day12e.gif](osbook_day12e.gif)
+
+#### osbook_day12f
+
+![osbook_day12f.gif](osbook_day12f.gif)
+
+### 2021 年 9 月 4 日
+
+#### osbook_day13a
+
+- 協調的マルチタスクの機能を実装しました！
+
+![osbook_day13a.gif](osbook_day13a.gif)
+
+#### osbook_day13b
+
+- プリミティブなプリエンプティブマルチタスクの機能を実装しました！特にコンテキストスイッチの自動化を行いました。
+
+![osbook_day13b.gif](osbook_day13b.gif)
+
+#### osbook_day13c
+
+- マルチタスクが実装できるかを検証しました。Hello Window と TaskB Window のカウンタが 1 秒おきに切り替わっていることがわかります。しかし、カウンタは 2 秒間分のカウントを刻んでいます。
+
+![osbook_day13c.gif](osbook_day13c.gif)
+
+#### osbook_day13d
+
+- マルチタスクを管理するための TaskManager を実装しました。タスクを増やせば増やすほどマウスがカクつく問題が生じたので、次章以降で修正していきたいと思います！
+
+![osbook_day13d.gif](osbook_day13d.gif)
+
+### 2021 年 9 月 5 日
+
+#### osbook_day14a
+
 - 実装中🤞
 
 <!-- ## 最後に -->
