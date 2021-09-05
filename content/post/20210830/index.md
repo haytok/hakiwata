@@ -180,6 +180,24 @@ favorite: false
 
 #### osbook_day14a
 
+![osbook_day14a.gif](osbook_day14a.gif)
+
+#### osbook_day14b
+
+![osbook_day14b.gif](osbook_day14b.gif)
+
+#### osbook_day14c
+
+![osbook_day14c.gif](osbook_day14c.gif)
+
+#### osbook_day14d
+
+![osbook_day14d.gif](osbook_day14d.gif)
+
+### 2021 年 9 月 6 日
+
+#### osbook_day15a
+
 - 実装中🤞
 
 <!-- ## 最後に -->
