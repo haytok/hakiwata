@@ -198,9 +198,19 @@ favorite: false
 
 #### osbook_day15a
 
+- ウィンドウの描画をメインスレッドで行うようにリファクタリングを行う。
+
 - 実装中🤞
 
-<!-- ## 最後に -->
+### 2021 年 9 月 9 日
+
+#### osbook_day15c
+
+![osbook_day15c.gif](media/osbook_day15c.gif)
+
+#### osbook_day15d
+
+![osbook_day15d.gif](media/osbook_day15d.gif)
 
 ## 参考
 
