@@ -31,3 +31,11 @@ jobs:
       - name: Test
         run: |
           echo "${{ steps.latest_data_id.outputs.latest_data }}"
+
+      - name: Dispatch update a blog of 20210830
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: dilmnqvovpnmlib/honOS
+          event-type: update-a-blog-of-20210830
+          client-payload: ${{ steps.latest_data_id.outputs.latest_data }}
