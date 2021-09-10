@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'content/post/20210830/media/**'
+    paths:
+      - 'content/post/20210830/media/**'
 jobs:
   build:
     runs-on: ubuntu-latest
