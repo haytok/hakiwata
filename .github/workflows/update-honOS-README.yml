@@ -38,4 +38,4 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: dilmnqvovpnmlib/honOS
           event-type: update-a-blog-of-20210830
-          client-payload: ${{ steps.latest_data_id.outputs.latest_data }}
+          # client-payload: ${{ steps.latest_data_id.outputs.latest_data }}
