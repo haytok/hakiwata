@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - '*/*'
-    #   - '!*.gif'
+    paths:
+      - 'content/post/**'
 
 jobs:
   deploy:

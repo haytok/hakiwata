@@ -1,0 +1,26 @@
+name: Publish and Dispatch to honOS Repository
+on:
+  push:
+    branches:
+      - main
+    # paths:
+    #   - 'content/post/20210830/media/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: | #このような書き方で複数行を一気に実行することができる。
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Run main.py
+        run: |
+          python main.py
