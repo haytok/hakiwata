@@ -13,7 +13,7 @@ make server
 - 新規コンテンツの作成
 
 ```bash
-make new F=<filename>
+make new D=<directory name>
 ```
 
 - プログラムのビルド
