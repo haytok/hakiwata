@@ -15,11 +15,13 @@ server:
 
 .PHONY: new
 new:
-	@echo "New file name is $(F)"
+	@echo "Directory name is $(D)"
+
+	mkdir -p content/post/$(D)
 
 	docker run --rm -it \
 		-v /etc/group:/etc/group:ro \
 		-v /etc/passwd:/etc/passwd:ro \
 		-v $(PWD):/src \
 		-u $(USER_ID):$(GROUP_ID) \
-		klakegg/hugo:$(VERSION) new "content/post/$(F)"
+		klakegg/hugo:$(VERSION) new "content/post/$(D)/index.md"
