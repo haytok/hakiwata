@@ -22,5 +22,12 @@ jobs:
           pip install -r scripts/requirements.txt
 
       - name: Run main.py
+        id: latest_data_id
         run: |
-          python scripts/main.py
+          latest_data=$(python scripts/main.py)
+          echo $latest_data
+          echo "::set-output name=latest_data::$latest_data"
+
+      - name: Test
+        run: |
+          echo "${{ steps.latest_data_id.outputs.latest_data }}"
