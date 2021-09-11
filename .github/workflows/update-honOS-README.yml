@@ -11,31 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-
-      - name: Install Dependencies
-        run: | #このような書き方で複数行を一気に実行することができる。
-          python -m pip install --upgrade pip
-          pip install -r scripts/requirements.txt
-
-      - name: Run main.py
-        id: latest_data_id
-        run: |
-          latest_data=$(python scripts/main.py)
-          echo $latest_data
-          echo "::set-output name=latest_data::$latest_data"
-
-      - name: Test
-        run: |
-          echo "${{ steps.latest_data_id.outputs.latest_data }}"
-
       - name: Dispatch update a blog of 20210830
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: dilmnqvovpnmlib/honOS
           event-type: update-a-blog-of-20210830
-          # client-payload: ${{ steps.latest_data_id.outputs.latest_data }}
