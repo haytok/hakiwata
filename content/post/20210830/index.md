@@ -198,21 +198,85 @@ favorite: false
 
 #### osbook_day15a
 
-- ウィンドウの描画をメインスレッドで行うようにリファクタリングを行う。
+- ウィンドウの描画をメインスレッドで行うようにリファクタリングを行いました！これまでは TaskB とメインタスクの両方で画面の再描画を行っていました。しかし、それが原因でデータをの競合が発生し、ウィンドウを動かすと、そのゴミが残ってしまっていました。
+
+![osbook_day15a.gif](media/osbook_day15a.gif)
+
+#### osbook_day15b
+
+- ウィンドウにアクティブ/非アクティブの機能を追加しました！
+
+![osbook_day15b.gif](media/osbook_day15b.gif)
+
+- この節通りにプログラムを実装すると、実行後すぐに TaskB のウィンドウが消えてしまいます。状況を切り分けてトラブルシューティングすると、main.cpp 内でマウスを初期化する前に Taskb のウィンドウを初期化してしまうことが原因でした。自力で解決できたときは最高に嬉しかったです。その後、念の為、サポートページを確認すると、issues ([osbook_day15b で実行後すぐにTaskBウィンドウが消える](https://github.com/uchan-nos/os-from-zero/issues/42)) の中で同様の質問をしている方がいらっしゃいました。解決方法が正しかったと確信を持ててよかったです。
 
 ### 2021 年 9 月 9 日
 
 #### osbook_day15c
 
+- ターミナルウィンドウの UI だけを作成しました！
+
 ![osbook_day15c.gif](media/osbook_day15c.gif)
 
 #### osbook_day15d
+
+- ウィンドウの描画の高速化を行いました！
 
 ![osbook_day15d.gif](media/osbook_day15d.gif)
 
 ### 2021 年 9 月 10 日
 
 #### osbook_day16a
+
+- ターミナルに文字列を書き込めるようにしました！
+
+![osbook_day16a.gif](media/osbook_day16a.gif)
+
+### 2021 年 9 月 11 日
+
+#### osbook_day16b
+
+- `echo コマンド` を実装しました！
+
+![osbook_day16b.gif](media/osbook_day16b.gif)
+
+#### osbook_day16c
+
+- `clear コマンド` を実装しました！
+
+![osbook_day16c.gif](media/osbook_day16c.gif)
+
+#### osbook_day16d
+
+- `lspci コマンド` を実装しました！
+
+![osbook_day16d.gif](media/osbook_day16d.gif)
+
+#### osbook_day16e
+
+- 上矢印/下矢印でコマンドの履歴を遡れるようになりました！
+
+![osbook_day16e.gif](media/osbook_day16e.gif)
+
+#### osbook_day16f
+
+- CPU のリソースを食いまくっている TaskB のウィンドウを削除しました。以下の top コマンドの差を見ると、削除した結果 QEMU が使用しているリソースが減っていることがわかると思います。
+
+- TaskB を削除する前の top コマンドの結果です。
+
+![osbook_day16f-result-of-top-command_bofore.png](media/osbook_day16f-result-of-top-command_bofore.png)
+
+- TaskB を削除した後の top コマンドの結果です。
+
+![osbook_day16f-result-of-top-command_bofore.png](media/osbook_day16f-result-of-top-command_bofore.png)
+
+- TaskB を削除しただけなので、特に変化はありません！
+
+![osbook_day16f.gif](media/osbook_day16f.gif)
+
+### 2021 年 9 月 12 日
+
+#### osbook_day17a
 
 - 実装中🤞
 
