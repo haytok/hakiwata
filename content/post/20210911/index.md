@@ -8,7 +8,7 @@ favorite: false
 
 ## 概要
 
-- こんにちは！先月から [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) に取り組んでいます。その進捗を綴った日記は [自作 OS 日記](https://hakiwata.jp/post/20210830/) にあり、日記にはその日までに出来上がった OS のの挙動を記録した GIF を載せています。これまでは、この日記を更新すると、手動で [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md に最新の OS GIF のリンクを貼り付けていました。ですが、最近、その作業がすごく面倒臭くなってきました。そこで、今回は [自作 OS 日記](https://hakiwata.jp/post/20210830/) を更新すると、 [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md も同時にアップデートされるように行った自動化の記録について書き残したいと思います。
+- こんにちは！先月から [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) に取り組んでいます。その進捗を綴った日記は [自作 OS 日記](https://hakiwata.jp/post/20210830/) にあり、日記にはその日までに出来上がった OS の挙動を記録した GIF を載せています。これまでは、この日記を更新すると、手動で [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md に最新の OS GIF のリンクを貼り付けていました。ですが、最近、その作業がすごく面倒臭くなってきました。そこで、今回は [自作 OS 日記](https://hakiwata.jp/post/20210830/) を更新すると、 [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md も同時にアップデートされるように行った自動化の記録について書き残したいと思います。
 
 ## 方法
 
