@@ -7,17 +7,11 @@
 - 開発用サーバの起動
 
 ```bash
-make server
+make
 ```
 
 - 新規コンテンツの作成
 
 ```bash
 make new D=<directory name>
-```
-
-- プログラムのビルド
-
-```bash
-make build
 ```
