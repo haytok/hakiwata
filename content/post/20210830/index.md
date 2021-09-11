@@ -180,6 +180,8 @@ favorite: false
 
 #### osbook_day14a
 
+- ランキューを作成して実行可能状態にあるタスクを保持する。処理が完了したタスクをランキューから取り出し Sleep させ、CPU が割り当てられないような機能を実装する。この節では、キーボードからの入力でタスクを Sleep させるか Wakeup させるかを適宜切り替える。
+
 ![osbook_day14a.gif](media/osbook_day14a.gif)
 
 #### osbook_day14b
