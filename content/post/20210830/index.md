@@ -276,9 +276,15 @@ favorite: false
 
 ![osbook_day16f.gif](media/osbook_day16f.gif)
 
-### 2021 年 9 月 12 日
+### 2021 年 9 月 14 日
 
 #### osbook_day17a
+
+![osbook_day17a.gif](media/osbook_day17a.gif)
+
+### 2021 年 9 月 15 日
+
+#### osbook_day17b
 
 - 実装中🤞
 
