@@ -286,6 +286,49 @@ favorite: false
 
 #### osbook_day17b
 
+![osbook_day17b.gif](media/osbook_day17b.gif)
+
+### 2021 年 9 月 16 日
+
+#### osbook_day18a
+
+![osbook_day18a.gif](media/osbook_day18a.gif)
+
+#### osbook_day18b
+
+- 初めてアプリケーションを自作 OS 上で動作させた。ターミナルに `onlyhlt` コマンドを実行すると、ターミナルのプロセスが止まる。この節で OS とアプリケーションを全てビルドし、OS からアプリケーションを実行できるようなシェルスクリプトを実装した。
+
+![osbook_day18b.gif](media/osbook_day18b.gif)
+
+### 2021 年 9 月 17 日
+
+#### osbook_day18c
+
+- この節では簡単な算術演算のコマンド `rpn` コマンドを追加で実装した。実装後、OS を起動させると、`rpn` コマンドが実行できない。また、`ls` コマンドも実行できないことにも気づいた。そのため、このバグをトラブルシューティングする必要があった。そこで、まずこの節で追加で実装した機能にバグが無いかを調査した。そして次に、そこにバグが無いことを確認した。これは、`git bisect` のようなやり方でどのタイミングで `ls` コマンドが正常な起動をしなくなったかを調査した。結論としては、アプリケーションを起動させる際に新たに使用するようになった `~/osbook/devenv/make_mikanos_image.sh` の中身の環境変数のパスを自分の OS 用に変更していなかったことが問題だった。変更点は以下である。書籍でも少し触れてくれても良いのではないかと思った。
+
+```bash
+---
+# LOADER_EFI="$HOME/edk2/Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi"
+# KERNEL_ELF="$MIKANOS_DIR/kernel/kernel.elf"
++++
+LOADER_EFI=$HOME/edk2/Build/HonoLoaderX64/DEBUG_CLANG38/X64/Loader.efi
+KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
+```
+
+- こういったバグをできるだけ素早く気づき、どのケースでバグが発生しているかを確認するためにも、やはりテストコードを書くことは極めて重要だと痛感した。
+
+- また、この節で初めて気づいたのだが、日本語配列のキーボードで `+` を入力すると、`:` が出力されてしまう。色々なキーボードを押して確認していると、`+` を出力するためには、`shift + ^` を押さなければならない。
+
+![osbook_day18c.gif](media/osbook_day18c.gif)
+
+#### osbook_day18d
+
+![osbook_day18d.gif](media/osbook_day18d.gif)
+
+### 2021 年 9 月 18 日
+
+#### osbook_day19a
+
 - 実装中🤞
 
 ## 参考
