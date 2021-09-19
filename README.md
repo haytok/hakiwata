@@ -15,3 +15,9 @@ make
 ```bash
 make new D=<directory name>
 ```
+
+- 新規スクラップの作成
+
+```bash
+make scraps D=<directory name>
+```
