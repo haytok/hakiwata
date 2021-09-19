@@ -76,7 +76,16 @@ favorite: false
 
 #### osbook_day10e
 
+- この節では、バックバッファに描画を行った後に、バックバッファをフレームバッファに転送を行います。こうして転送を行うことで、マウスカーソルが表示されない期間を完全になくし、カウンタにマウスを重ねた時のチラツキをなくすことができます。
+
 ![osbook_day10e.gif](media/osbook_day10e.gif)
+
+##### 参考
+
+- [ゼロからOS自作入門 10章](https://zenn.dev/link/comments/85cef9483586e5)
+- [【OpenGLでゲームを作る】ダブルバッファリングとは](https://nn-hokuson.hatenablog.com/entry/2014/01/15/164232)
+- [ダブルバッファリング 【double buffering】 ](https://e-words.jp/w/%E3%83%80%E3%83%96%E3%83%AB%E3%83%90%E3%83%83%E3%83%95%E3%82%A1%E3%83%AA%E3%83%B3%E3%82%B0.html)
+- [描画処理について](http://codebock.web.fc2.com/sec02_03.html)
 
 #### osbook_day10f
 
@@ -329,11 +338,21 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### osbook_day19a
 
+- この章の仮想アドレスと物理アドレスの変換のロジックの実装が難しすぎて泣いた。
+
 ![osbook_day19a.gif](media/osbook_day19a.gif)
 
 ### 2021 年 9 月 19 日
 
 #### osbook_day20a
+
+- アプリケーション (rpn) から Kernel の関数 (printk など) を呼び出しました。
+
+![osbook_day20a.gif](media/osbook_day20a.gif)
+
+### 2021 年 9 月 20 日
+
+#### osbook_day20b
 
 - 実装中🤞
 
