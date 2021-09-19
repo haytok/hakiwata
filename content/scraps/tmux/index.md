@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "tmux メモ"
-date: 2021-09-20T19:00:00Z
+date: 2021-09-19T22:14:46Z
 tags: ["tmux"]
 favorite: false
 ---
