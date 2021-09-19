@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'content/post/**'
+      - 'content/scraps/**'
 
 jobs:
   deploy:
