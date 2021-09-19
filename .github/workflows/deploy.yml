@@ -7,6 +7,7 @@ on:
     paths:
       - 'content/post/**'
       - 'content/scraps/**'
+  workflow_dispatch:
 
 jobs:
   deploy:
