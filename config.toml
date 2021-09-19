@@ -30,6 +30,9 @@ pygmentsUseClasses = true
 		name = "About"
 		url = "/about"
 	[[menu.main]]
+		name = "Scraps"
+		url = "/scraps"
+	[[menu.main]]
 		name = "Tags"
 		url = "/tags"
 
