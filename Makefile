@@ -25,3 +25,16 @@ new:
 		-v $(PWD):/src \
 		-u $(USER_ID):$(GROUP_ID) \
 		klakegg/hugo:$(VERSION) new "content/post/$(D)/index.md"
+
+.PHONY: scraps
+scraps:
+	@echo "Directory name is $(D)"
+
+	mkdir -p content/scraps/$(D)
+
+	docker run --rm -it \
+		-v /etc/group:/etc/group:ro \
+		-v /etc/passwd:/etc/passwd:ro \
+		-v $(PWD):/src \
+		-u $(USER_ID):$(GROUP_ID) \
+		klakegg/hugo:$(VERSION) new "content/scraps/$(D)/index.md"
