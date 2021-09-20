@@ -354,6 +354,20 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### osbook_day20b
 
+![osbook_day20b.gif](media/osbook_day20b.gif)
+
+#### osbook_day20c
+
+![osbook_day20c.gif](media/osbook_day20c.gif)
+
+#### osbook_day20d
+
+![osbook_day20d.gif](media/osbook_day20d.gif)
+
+### 2021 年 9 月 21 日
+
+#### osbook_day20e
+
 - 実装中🤞
 
 ## 参考
