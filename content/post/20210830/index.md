@@ -368,6 +368,8 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### osbook_day20e
 
+- やっとシステムコールを実装できました。感激です。ここまで来るとシステムプログラミングを下側の Kernel から見上げれます。
+
 ![osbook_day20e.gif](media/osbook_day20e.gif)
 
 ### 2021 年 9 月 25 日
