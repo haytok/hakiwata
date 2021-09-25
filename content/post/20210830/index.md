@@ -376,6 +376,20 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### osbook_day21a
 
+- IST を設定した。
+
+![osbook_day21a.gif](media/osbook_day21a.gif)
+
+#### osbook_day21b
+
+- `rpn コマンド` で引き算した結果をターミナルに出力するためのシステムコールを実装した。だいぶ身近な箇所の実装にまで辿り着いてさらに楽しくなってきた。
+
+![osbook_day21b.gif](media/osbook_day21b.gif)
+
+### 2021 年 9 月 26 日
+
+#### osbook_day21c
+
 - 実装中🤞
 
 ## 参考
