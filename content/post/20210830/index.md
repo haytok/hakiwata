@@ -402,6 +402,26 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### osbook_day21d
 
+- アプリケーションが増えてきたので、アプリケーションのリファクタリングを行いました。UI に特に変更はありません。
+
+![osbook_day21d.gif](media/osbook_day21d.gif)
+
+#### osbook_day21e
+
+- ウィンドウを開くシステムコールを実装しました。
+
+![osbook_day21e.gif](media/osbook_day21e.gif)
+
+#### osbook_day21f
+
+- 前節で実装したシステムコールに機能を加え、開いたウィンドウに文字を表示させました。
+
+![osbook_day21f.gif](media/osbook_day21f.gif)
+
+### 2021 年 9 月 28 日
+
+#### osbook_day22a
+
 - 実装中🤞
 
 ## 参考
