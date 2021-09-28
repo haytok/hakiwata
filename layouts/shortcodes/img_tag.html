@@ -1,0 +1,9 @@
+{{- $title := .Page.Scratch.Get (index .Params 0) -}}
+{{- $file_ext := .Page.Scratch.Get (index .Params 1) -}}
+
+{{- $file_name := (print $title "." $file_ext) -}}
+{{- $file_path := path.Join "media" $file_name -}}
+
+<p>
+  <img src="{{ $file_path }}" alt="{{ $file_name }}" />
+</p>
