@@ -21,6 +21,9 @@ defaultContentLanguage = "en"
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 
+# Google Analytics
+googleAnalytics = 'G-YXCYPL25QW'
+
 [menu]
 	[[menu.main]]
 		name = "Post"
