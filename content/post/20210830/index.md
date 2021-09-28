@@ -12,13 +12,21 @@ favorite: false
 
 ## 日記
 
+{{<set file_ext "png">}}
+
+
 ### 2021 年 8 月 13 日
 
-#### osbook_day01
+{{<set title "osbook_day01">}}
+
+#### {{<get title>}}
 
 - 自作 OS を始めました！名前は HonOS です！
 
-![osbook_day01.png](media/osbook_day01.png)
+{{<img_tag title file_ext>}}
+
+{{<set file_ext "gif">}}
+
 
 ### 2021 年 8 月 28 日
 
@@ -33,6 +41,7 @@ favorite: false
 #### osbook_day09d
 
 ![osbook_day09d.gif](media/osbook_day09d.gif)
+
 
 ### 2021 年 8 月 29 日
 
@@ -62,11 +71,13 @@ favorite: false
 
 ![osbook_day10c-invalid.gif](media/osbook_day10c-invalid.gif)
 
+
 ### 2021 年 8 月 30 日
 
 - しかし、この記事を見た同期に表示されている色の挙動がおかしいと指摘されました。そこで、[osbook_day10c](https://github.com/uchan-nos/mikanos/tree/osbook_day10c) に checkout し、正常系の挙動を確認してみました。そうすると、確かに正常系と比較すると、挙動がおかしかったので、バグを調査し修正しました。原因は `constexpr PixelColor ToColor(uint32_t c);` の色のビットシフトが逆になっていたことでした。だいぶ画面がチカチカしていますが、そのリファクタリングは次節以降でできればと思っています！
 
 ![osbook_day10c.gif](media/osbook_day10c.gif)
+
 
 ### 2021 年 8 月 31 日
 
@@ -97,6 +108,7 @@ favorite: false
 
 ![osbook_day10g.gif](media/osbook_day10g.gif)
 
+
 ### 2021 年 9 月 1 日
 
 #### osbook_day11a
@@ -117,6 +129,7 @@ favorite: false
 
 ![osbook_day11c.gif](media/osbook_day11c.gif)
 
+
 ### 2021 年 9 月 2 日
 
 #### osbook_day11d
@@ -134,6 +147,7 @@ favorite: false
 #### osbook_day12a
 
 - IO ポート番号を求めるのに必要な FADT というテーブルのデータを取得する実装を行いました。UI に変化はありません。
+
 
 ### 2021 年 9 月 3 日
 
@@ -158,6 +172,7 @@ favorite: false
 #### osbook_day12f
 
 ![osbook_day12f.gif](media/osbook_day12f.gif)
+
 
 ### 2021 年 9 月 4 日
 
@@ -185,6 +200,7 @@ favorite: false
 
 ![osbook_day13d.gif](media/osbook_day13d.gif)
 
+
 ### 2021 年 9 月 5 日
 
 #### osbook_day14a
@@ -205,6 +221,7 @@ favorite: false
 
 ![osbook_day14d.gif](media/osbook_day14d.gif)
 
+
 ### 2021 年 9 月 6 日
 
 #### osbook_day15a
@@ -221,6 +238,7 @@ favorite: false
 
 - この節通りにプログラムを実装すると、実行後すぐに TaskB のウィンドウが消えてしまいます。状況を切り分けてトラブルシューティングすると、main.cpp 内でマウスを初期化する前に Taskb のウィンドウを初期化してしまうことが原因でした。自力で解決できたときは最高に嬉しかったです。その後、念の為、サポートページを確認すると、issues ([osbook_day15b で実行後すぐにTaskBウィンドウが消える](https://github.com/uchan-nos/os-from-zero/issues/42)) の中で同様の質問をしている方がいらっしゃいました。解決方法が正しかったと確信を持ててよかったです。
 
+
 ### 2021 年 9 月 9 日
 
 #### osbook_day15c
@@ -235,6 +253,7 @@ favorite: false
 
 ![osbook_day15d.gif](media/osbook_day15d.gif)
 
+
 ### 2021 年 9 月 10 日
 
 #### osbook_day16a
@@ -242,6 +261,7 @@ favorite: false
 - ターミナルに文字列を書き込めるようにしました！
 
 ![osbook_day16a.gif](media/osbook_day16a.gif)
+
 
 ### 2021 年 9 月 11 日
 
@@ -285,17 +305,20 @@ favorite: false
 
 ![osbook_day16f.gif](media/osbook_day16f.gif)
 
+
 ### 2021 年 9 月 14 日
 
 #### osbook_day17a
 
 ![osbook_day17a.gif](media/osbook_day17a.gif)
 
+
 ### 2021 年 9 月 15 日
 
 #### osbook_day17b
 
 ![osbook_day17b.gif](media/osbook_day17b.gif)
+
 
 ### 2021 年 9 月 16 日
 
@@ -308,6 +331,7 @@ favorite: false
 - 初めてアプリケーションを自作 OS 上で動作させた。ターミナルに `onlyhlt` コマンドを実行すると、ターミナルのプロセスが止まる。この節で OS とアプリケーションを全てビルドし、OS からアプリケーションを実行できるようなシェルスクリプトを実装した。
 
 ![osbook_day18b.gif](media/osbook_day18b.gif)
+
 
 ### 2021 年 9 月 17 日
 
@@ -334,6 +358,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 ![osbook_day18d.gif](media/osbook_day18d.gif)
 
+
 ### 2021 年 9 月 18 日
 
 #### osbook_day19a
@@ -342,6 +367,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 ![osbook_day19a.gif](media/osbook_day19a.gif)
 
+
 ### 2021 年 9 月 19 日
 
 #### osbook_day20a
@@ -349,6 +375,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 - アプリケーション (rpn) から Kernel の関数 (printk など) を呼び出しました。
 
 ![osbook_day20a.gif](media/osbook_day20a.gif)
+
 
 ### 2021 年 9 月 20 日
 
@@ -364,6 +391,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 ![osbook_day20d.gif](media/osbook_day20d.gif)
 
+
 ### 2021 年 9 月 24 日
 
 #### osbook_day20e
@@ -371,6 +399,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 - やっとシステムコールを実装できました。感激です。ここまで来るとシステムプログラミングを下側の Kernel から見上げれます。
 
 ![osbook_day20e.gif](media/osbook_day20e.gif)
+
 
 ### 2021 年 9 月 25 日
 
@@ -386,6 +415,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 ![osbook_day21b.gif](media/osbook_day21b.gif)
 
+
 ### 2021 年 9 月 26 日
 
 #### osbook_day21c
@@ -397,6 +427,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 - 今回は、解説されているプログラムをアプリケーション側から写経していきました。つまり、`apps/rpn/rpn.cpp` の `main 関数` 内で `SyscallExit` を呼び出すことから実装を始めました。これは、前節ではアセンブリから実装を始めたので、視点を変えたかったためです。
 
 - この節を実装して特に感じたことがあります。それは、節によっては説明が前後するため、紹介されているプログラムを読んで直後の解説を読んでもわけがわからないときが多々あることです。自分は紹介されているプログラムが自分で理解できる時は、プログラムを読んで自分なりの解釈を作ってから直後に書かれている解説を読むようにしています。しかし、プログラムを読んでなぜこの実装にしたのかの意図が全くわからず、直後の解説を読んでも特に触れられていない時があります。その時は、その実装の解釈に対してめちゃくちゃ悩み、妥協して読み進めるしかありません。そして、読み進めると、後の方のページでそのプログラムに対する解説を見つけると、何やねんと思ったりすることもありました。紙面や解説の都合上こうなるのはしょうがないと思うのですが、おいってなります。そのため、自分のこの本の読み方を改めつつ、もっと多くの知識を付けたいと思いました。
+
 
 ### 2021 年 9 月 27 日
 
@@ -412,15 +443,78 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 ![osbook_day21e.gif](media/osbook_day21e.gif)
 
-#### osbook_day21f
+{{<set title "osbook_day21f">}}
+
+#### {{<get title>}}
 
 - 前節で実装したシステムコールに機能を加え、開いたウィンドウに文字を表示させました。
 
-![osbook_day21f.gif](media/osbook_day21f.gif)
+{{<img_tag title file_ext>}}
+
 
 ### 2021 年 9 月 28 日
 
-#### osbook_day22a
+{{<set title "osbook_day22a">}}
+
+#### {{<get title>}}
+
+- `exit システムコール` を実装しました。これまで `SyscallExit` と記述していた。これを `exit` に書き換えて C の標準ライブラリを使うように修正したのですが、以下のように `_exit` が定義されていないというエラ−が出ました。そこで、エラーログに書かれているように `apps/newlib_support.c` に `_exit` を定義すると、次のステップに進むことができました。
+
+```bash
+clang++     -I/home/h-kiwata/osbook/devenv/x86_64-elf/include/c++/v1 -I/home/h-kiwata/osbook/devenv/x86_64-elf/include -I/home/h-kiwata/osbook/devenv/x86_64-elf/include/freetype2     -I/home/h-kiwata/edk2/MdePkg/Include -I/home/h-kiwata/edk2/MdePkg/Include/X64     -nostdlibinc -D__ELF__ -D_LDBL_EQ_DBL -D_GNU_SOURCE -D_POSIX_TIMERS     -DEFIAPI='__attribute__((ms_abi))' -I. -O2 -Wall -g --target=x86_64-elf -ffreestanding -mcmodel=large -fno-exceptions -fno-rtti -std=c++17 -c rpn.cpp -o rpn.o
+ld.lld -L/home/h-kiwata/osbook/devenv/x86_64-elf/lib --entry main -z norelro --image-base 0xffff800000000000 --static -o rpn rpn.o ../syscall.o ../newlib_support.o -lc -lc++ -lc++abi
+ld.lld: error: undefined symbol: _exit
+>>> referenced by exit.c
+>>>               lib_a-exit.o:(exit) in archive /home/h-kiwata/osbook/devenv/x86_64-elf/lib/libc.a
+../Makefile.elfapp:12: recipe for target 'rpn' failed
+make[1]: *** [rpn] Error 1
+make[1]: ディレクトリ '/home/h-kiwata/honOS/apps/rpn' から出ます
+Makefile:3: recipe for target 'build' failed
+make: *** [build] Error 2
+```
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22b">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22c">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22d">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22e">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22f">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22g">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+
+### 2021 年 9 月 29 日
+
+#### osbook_day23a
 
 - 実装中🤞
 
