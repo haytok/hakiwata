@@ -38,3 +38,12 @@ scraps:
 		-v $(PWD):/src \
 		-u $(USER_ID):$(GROUP_ID) \
 		klakegg/hugo:$(VERSION) new "content/scraps/$(D)/index.md"
+
+.PHONY: build
+build:
+	docker run --rm -it \
+		-v /etc/group:/etc/group:ro \
+		-v /etc/passwd:/etc/passwd:ro \
+		-v $(PWD):/src \
+		-u $(USER_ID):$(GROUP_ID) \
+		klakegg/hugo:$(VERSION) build
