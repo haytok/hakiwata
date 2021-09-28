@@ -458,7 +458,7 @@ KERNEL_ELF=$HOME/honOS/kernel/kernel.elf
 
 #### {{<get title>}}
 
-- `exit システムコール` を実装しました。これまで `SyscallExit` と記述していた。これを `exit` に書き換えて C の標準ライブラリを使うように修正したのですが、以下のように `_exit` が定義されていないというエラ−が出ました。そこで、エラーログに書かれているように `apps/newlib_support.c` に `_exit` を定義すると、次のステップに進むことができました。
+- `exit システムコール` を実装しました。これまで `SyscallExit` と記述していた実装を `exit` に書き換えて C の標準ライブラリを使うように修正しました。しかし、以下のように `_exit` が定義されていないというエラ−が出ます。そこで、エラーログに書かれているように `apps/newlib_support.c` に `_exit` を定義し、諸々の修正を行いました。その結果、最終的にはライブラリ関数の `exit` を呼び出すことでアプリケーションを終了させることができました。
 
 ```bash
 clang++     -I/home/h-kiwata/osbook/devenv/x86_64-elf/include/c++/v1 -I/home/h-kiwata/osbook/devenv/x86_64-elf/include -I/home/h-kiwata/osbook/devenv/x86_64-elf/include/freetype2     -I/home/h-kiwata/edk2/MdePkg/Include -I/home/h-kiwata/edk2/MdePkg/Include/X64     -nostdlibinc -D__ELF__ -D_LDBL_EQ_DBL -D_GNU_SOURCE -D_POSIX_TIMERS     -DEFIAPI='__attribute__((ms_abi))' -I. -O2 -Wall -g --target=x86_64-elf -ffreestanding -mcmodel=large -fno-exceptions -fno-rtti -std=c++17 -c rpn.cpp -o rpn.o
@@ -479,11 +479,15 @@ make: *** [build] Error 2
 
 #### {{<get title>}}
 
+- 星が描画されたウィンドウを出すアプリケーションを実装しました。
+
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day22c">}}
 
 #### {{<get title>}}
+
+- タイマカウントを取得するためのシステムコールを追加しました。。
 
 {{<img_tag title file_ext>}}
 
@@ -491,13 +495,20 @@ make: *** [build] Error 2
 
 #### {{<get title>}}
 
+- 画面の描画の最適化を行いました。gif からもわかるように前節と比較して描画時間が高速になりました。
+
 {{<img_tag title file_ext>}}
+
+
+### 2021 年 9 月 29 日
 
 {{<set title "osbook_day22e">}}
 
 #### {{<get title>}}
 
-{{<img_tag title file_ext>}}
+- 実装中🤞
+
+<!-- {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day22f">}}
 
@@ -511,12 +522,9 @@ make: *** [build] Error 2
 
 {{<img_tag title file_ext>}}
 
-
-### 2021 年 9 月 29 日
-
 #### osbook_day23a
 
-- 実装中🤞
+- 実装中🤞 -->
 
 ## 参考
 
