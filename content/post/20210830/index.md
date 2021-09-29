@@ -506,13 +506,21 @@ make: *** [build] Error 2
 
 #### {{<get title>}}
 
-- 実装中🤞
+- `lines` アプリケーションを実装しました。点をブロットして線を表現しているのですが、 gif の上の方は、傾きが大きくなるほど点の間隔が広くなり上手く描画できていません。それに改善を加えたのが下の方の gif です。下の gif では傾きが急になっても点と点の間隔が広くないような工夫を施しています。
 
-<!-- {{<img_tag title file_ext>}}
+{{<set title "osbook_day22e-invalid">}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day22e">}}
+
+{{<img_tag title file_ext>}}
 
 {{<set title "osbook_day22f">}}
 
 #### {{<get title>}}
+
+- アプリケーションのウィンドウを閉じるロジックを追加しました。現時点ではアプリケーションを開くとすぐに終了してしまいます。次節でコマンドでアプリケーションを終了できるように修正します。
 
 {{<img_tag title file_ext>}}
 
@@ -520,11 +528,15 @@ make: *** [build] Error 2
 
 #### {{<get title>}}
 
+- `Ctrl + Q` でアプリケーションを閉じる機能を追加しました。これでアプリケーションを閉じることができます！
+
 {{<img_tag title file_ext>}}
+
+### 2021 年 9 月 30 日
 
 #### osbook_day23a
 
-- 実装中🤞 -->
+- 実装中🤞
 
 ## 参考
 
