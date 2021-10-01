@@ -550,32 +550,114 @@ make: *** [build] Error 2
 
 {{<img_tag title file_ext>}}
 
-<!-- {{<set title "osbook_day23c">}}
-
-#### {{<get title>}}
-
-{{<img_tag title file_ext>}}
-
-{{<set title "osbook_day23d">}}
-
-#### {{<get title>}}
-
-{{<img_tag title file_ext>}}
-
-{{<set title "osbook_day23e">}}
-
-#### {{<get title>}}
-
-{{<img_tag title file_ext>}} -->
-
 
 ### 2021 年 10 月 1 日
 
 {{<set title "osbook_day23c">}}
+#### {{<get title>}}
+
+- 一定時間スリープするコマンド `timer` コマンドを実装しました。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day23d">}}
+#### {{<get title>}}
+
+- `cube` コマンドを実装しました。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day23e">}}
+#### {{<get title>}}
+
+- この節では、ブロック崩しコマンド `blocks` を実装しました。
+
+- このコマンドを実装する際に、 `newlib_support.c` に不足するライブラリ関数を追加する必要があります。それらの関数は、Kernel をビルドする際に現れる以下のエラーから確認できます。それらは、`getpid` と `kill` です。
+
+```bash
+ld.lld -L/home/h-kiwata/osbook/devenv/x86_64-elf/lib --entry main -z norelro --image-base 0xffff800000000000 --static -o blocks blocks.o ../syscall.o ../newlib_support.o -lc -lc++ -lc++abi -lm
+ld.lld: error: undefined symbol: kill
+>>> referenced by signalr.c
+>>>               lib_a-signalr.o:(_kill_r) in archive /home/h-kiwata/osbook/devenv/x86_64-elf/lib/libc.a
+
+ld.lld: error: undefined symbol: getpid
+>>> referenced by signalr.c
+>>>               lib_a-signalr.o:(_getpid_r) in archive /home/h-kiwata/osbook/devenv/x86_64-elf/lib/libc.a
+../Makefile.elfapp:12: recipe for target 'blocks' failed
+make[1]: *** [blocks] Error 1
+make[1]: ディレクトリ '/home/h-kiwata/honOS/apps/blocks' から出ます
+Makefile:3: recipe for target 'build' failed
+make: *** [build] Error 2
+```
+
+- きちんと条件分岐のロジックを設定しないと、文字列がダブって入力されてします。
+
+{{<set title "osbook_day23e-invalid">}}
+{{<img_tag title file_ext>}}
+
+- 以下の画像からもわかるようにブロック崩しゲームを実装できました。
+
+{{<set title "osbook_day23e">}}
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24a">}}
+#### {{<get title>}}
+
+- `F2` キーを押下すると、新しいターミナルが起動します。しかし、新しく起動したターミナルのカーソルは点滅しません。次節以降でこの問題点を解消していきます。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24b">}}
+#### {{<get title>}}
+
+- アクティブなウィンドウのカーソルが点滅するように修正を行いました。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24c">}}
+#### {{<get title>}}
+
+- 以下の上側の gif からもわかるように複数のターミナルから複数のアプリケーションを起動できません。これは、仮想メモリ領域が競合しているからです。本節では、このバグを解消します。
+
+{{<set title "osbook_day24c-invalid">}}
+{{<img_tag title file_ext>}}
+
+- アプリケーション毎に仮想メモリ領域を切り替えるように修正を行いました。その結果、複数のターミナルから複数のアプリケーションを実行することができました。
+
+{{<set title "osbook_day24c">}}
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24d">}}
+#### {{<get title>}}
+
+- ウィンドウの重なりのバグを修正しました。
+
+{{<set title "osbook_day24d-invalid">}}
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24d">}}
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24e">}}
+#### {{<get title>}}
+
+- ターミナルを束縛せずにアプリケーションを起動させるように修正しました。
+
+{{<img_tag title file_ext>}}
+
+### 2021 年 10 月 2 日
+
+{{<set title "osbook_day24f">}}
 
 #### {{<get title>}}
 
-<!-- {{<img_tag title file_ext>}} -->
+<!-- {{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24g">}}
+
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}} -->
 
 - 実装中🤞
 
