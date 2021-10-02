@@ -648,18 +648,40 @@ make: *** [build] Error 2
 ### 2021 年 10 月 2 日
 
 {{<set title "osbook_day24f">}}
-
 #### {{<get title>}}
+
+- 本節では、意図的にアプリケーションがフリーズするコマンド `fault` を作成します。このコマンド
+はアプリケーションがフリーズした時に上手にハンドリングを行う際に次節で活用します。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day24g">}}
+#### {{<get title>}}
+
+- アプリケーションが落ちた時の例外処理を実装しました。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day25a">}}
+#### {{<get title>}}
+
+- `ls` コマンドを実行した際に、ディレクトリ配下のエントリも表示するように修正しました。
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day25b">}}
+#### {{<get title>}}
+
+- 実装中🤞
 
 <!-- {{<img_tag title file_ext>}}
 
-{{<set title "osbook_day24g">}}
-
+{{<set title "osbook_day25c">}}
 #### {{<get title>}}
 
 {{<img_tag title file_ext>}} -->
 
-- 実装中🤞
+<!-- - 実装中🤞 -->
 
 ## 参考
 
