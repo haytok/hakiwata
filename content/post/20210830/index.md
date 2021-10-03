@@ -645,6 +645,7 @@ make: *** [build] Error 2
 
 {{<img_tag title file_ext>}}
 
+
 ### 2021 年 10 月 2 日
 
 {{<set title "osbook_day24f">}}
@@ -672,16 +673,28 @@ make: *** [build] Error 2
 {{<set title "osbook_day25b">}}
 #### {{<get title>}}
 
-- 実装中🤞
+- ファイルの中身を読み出すアプリケーション `readfile コマンド` を実装しました！
 
-<!-- {{<img_tag title file_ext>}}
+- 途中でシステムコール内でバグがあったのですが、`Log 関数` を活用してバグのありそうな箇所を起点に二分探索風に調査を行いました。その結果、if 文の条件式の間違いに気づけました。バグの調査はヒヤヒヤするのですが、解決できると嬉しいです😁
+
+{{<img_tag title file_ext>}}
 
 {{<set title "osbook_day25c">}}
 #### {{<get title>}}
 
-{{<img_tag title file_ext>}} -->
+- `grep コマンド` を実装しました！
 
-<!-- - 実装中🤞 -->
+{{<img_tag title file_ext>}}
+
+
+### 2021 年 10 月 2 日
+
+{{<set title "osbook_day26a">}}
+#### {{<get title>}}
+
+<!-- {{<img_tag title file_ext>}} -->
+
+- 実装中🤞
 
 ## 参考
 
