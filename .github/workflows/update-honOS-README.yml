@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'content/post/20210830/**'
+      - 'content/post/20210901/**'
 jobs:
   build:
     runs-on: ubuntu-latest
