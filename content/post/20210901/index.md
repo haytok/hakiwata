@@ -347,27 +347,37 @@ make: *** [build] Error 2
 
 ### 2021 年 10 月 5 日
 
-- 実装中🤞
+- デマンドページングの機能を作成しました！
 
-<!-- {{<set title "osbook_day27a">}}
+{{<set title "osbook_day27a">}}
 #### {{<get title>}}
 
 {{<img_tag title file_ext>}}
+
+
+### 2021 年 10 月 12 日
 
 {{<set title "osbook_day27b">}}
+
 #### {{<get title>}}
 
+- ファイルの内容をページキャシュから読み出すようにページフォルトを利用して実装を修正しました！
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day27c">}}
+#### {{<get title>}}
+
+- 実装中🤞
+
+<!-- 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day27d">}}
 #### {{<get title>}}
 
 {{<img_tag title file_ext>}}
-
-{{<set title "osbook_day27d">}}
-#### {{<get title>}}
-
-{{<img_tag title file_ext>}} -->
+-->
 
 ## 参考
 
