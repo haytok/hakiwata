@@ -368,16 +368,85 @@ make: *** [build] Error 2
 {{<set title "osbook_day27c">}}
 #### {{<get title>}}
 
-- 実装中🤞
+- メモリの使用量を計測するコマンド `memstat` を実装しました！次節でこのコマンドを活用してコピーオンライトで使用するメモリの量が節約できていることを確認します！
 
-<!-- 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day27d">}}
 #### {{<get title>}}
 
+- アプリケーションを起動する際に、コピーオンライトで起動させるように修正しました。
+- PML4 のシャローコピーを理解できませんでした。実装したいことの意図はわかるのだが、プログラムの意味を完全にはわかりませんでした。
+
 {{<img_tag title file_ext>}}
--->
+
+
+{{<set title "osbook_day28a">}}
+#### {{<get title>}}
+
+- 実装中🤞
+
+<!-- {{<img_tag title file_ext>}}
+
+{{<set title "osbook_day28b">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day28c">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day29a">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day29b">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day29c">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day29d">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30a">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30b">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30c">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30d">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30e">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day30f">}}
+#### {{<get title>}}
+
+{{<img_tag title file_ext>}} -->
 
 ## 参考
 
