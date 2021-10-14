@@ -384,12 +384,15 @@ make: *** [build] Error 2
 {{<set title "osbook_day28a">}}
 #### {{<get title>}}
 
-- 実装中🤞
+{{<img_tag title file_ext>}}
 
-<!-- {{<img_tag title file_ext>}}
+
+### 2021 年 10 月 13 日
 
 {{<set title "osbook_day28b">}}
 #### {{<get title>}}
+
+- 日本語などを読み出せるように修正しました！
 
 {{<img_tag title file_ext>}}
 
@@ -401,6 +404,9 @@ make: *** [build] Error 2
 {{<set title "osbook_day29a">}}
 #### {{<get title>}}
 
+- 実装中🤞
+
+<!--
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day29b">}}
