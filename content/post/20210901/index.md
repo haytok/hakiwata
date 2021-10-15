@@ -384,6 +384,8 @@ make: *** [build] Error 2
 {{<set title "osbook_day28a">}}
 #### {{<get title>}}
 
+- Unicode 対応の実装を行いました！情報理論や符号理論で扱いそうな符号化の話が出てきて面白かったです！
+
 {{<img_tag title file_ext>}}
 
 
@@ -398,6 +400,8 @@ make: *** [build] Error 2
 
 {{<set title "osbook_day28c">}}
 #### {{<get title>}}
+
+- リダイレクトの機能を実装しました！ファイルのディスクリプタ周りの処理を再度追って復習していたのですが、オブジェクト指向の複雑さにより呼び出している関数を勘違いしていました。どのオブジェクトの Read/Write 関数を呼び出しているかをキチンと把握することが大切であることを再認識しました。
 
 {{<img_tag title file_ext>}}
 
