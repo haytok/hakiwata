@@ -389,7 +389,7 @@ make: *** [build] Error 2
 {{<img_tag title file_ext>}}
 
 
-### 2021 年 10 月 13 日
+### 2021 年 10 月 14 日
 
 {{<set title "osbook_day28b">}}
 #### {{<get title>}}
@@ -405,21 +405,29 @@ make: *** [build] Error 2
 
 {{<img_tag title file_ext>}}
 
+
+### 2021 年 10 月 15 日
+
 {{<set title "osbook_day29a">}}
 #### {{<get title>}}
 
-- 実装中🤞
+- 変数 `$?` に直前のアプリケーションの終了コードを格納するように修正しました！
 
-<!--
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day29b">}}
 #### {{<get title>}}
 
+- IPC の機能を実装し、パイプで跨いだコマンドの実行を可能にしました！
+
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day29c">}}
 #### {{<get title>}}
+
+- 実装中🤞
+
+<!--
 
 {{<img_tag title file_ext>}}
 
