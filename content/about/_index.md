@@ -8,7 +8,7 @@ date = "2021-04-30T00:00:00+08:00"
 - April 2020 ~ Present
   - Graduate School of Engineering at Osaka University
     - Division of Electrical, Electronic, and Infocommunications Engineering
-    - Member of [Inoue Lab](http://www1b.comm.eng.osaka-u.ac.jp/index.htm)
+    - Member of [Inoue Lab](http://www1b.comm.eng.osaka-u.ac.jp)
 
 - April 2016 ~ March 2020
   - School of Engineering at Osaka University
