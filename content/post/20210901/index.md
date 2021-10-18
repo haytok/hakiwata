@@ -422,49 +422,73 @@ make: *** [build] Error 2
 
 {{<img_tag title file_ext>}}
 
+
+### 2021 年 10 月 16 日
+
 {{<set title "osbook_day29c">}}
 #### {{<get title>}}
 
-- 実装中🤞
-
-<!--
+- `sort コマンド` を実装しました！
 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day29d">}}
 #### {{<get title>}}
 
+- ターミナルのバグを修正しました！上の gif だとターミナルの更新が上手くいっていません。ターミナルに書き込む時の再描画の処理が不十分だったので、そのロジックを追加しました！
+
+{{<set title "osbook_day29d-invalid">}}
+
+{{<img_tag title file_ext>}}
+
+{{<set title "osbook_day29d">}}
+
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day30a">}}
 #### {{<get title>}}
+
+- アプリケーションにパスを通しました！ .bashrc などに記述するあれです。
 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day30b">}}
 #### {{<get title>}}
 
+- more コマンドを実装しました！基本的な C 言語のプログラミングで実装可能でした。
+
 {{<img_tag title file_ext>}}
+
+
+### 2021 年 10 月 17 日
 
 {{<set title "osbook_day30c">}}
 #### {{<get title>}}
+
+- cat コマンドでファイル名を省略したときに標準入力から受け取れる機能を実装しました！
 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day30d">}}
 #### {{<get title>}}
 
+- ターミナルのアプリケーションのウィンドウを閉じるボタンを押すと、ウィンドウが閉じる機能を実装しました！具体的には、閉じるボタン上にカーソルがあるかの領域判定、マウスがクリックされた時のメッセージを送信する処理、ウィンドウを閉じるメッセージを受け取るとターミナルを消すロジックを追加しました。
+
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day30e">}}
 #### {{<get title>}}
+
+- テキストビューアを実装しました！
 
 {{<img_tag title file_ext>}}
 
 {{<set title "osbook_day30f">}}
 #### {{<get title>}}
 
-{{<img_tag title file_ext>}} -->
+- 画像を表示するアプリケーションを実装しました！これにてひとまず完走です🤞
+
+{{<img_tag title file_ext>}}
 
 ## 参考
 
