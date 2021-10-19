@@ -21,7 +21,7 @@ favorite: false
 
 #### {{<get title>}}
 
-- 自作 OS を始めました！名前は HonOS です！
+- 自作 OS を始めました！名前は HonOS です！名前の由来は櫻坂46 の田村保乃ちゃんのあだ名の「ほのす」から付けました。
 
 {{<img_tag title file_ext>}}
 
