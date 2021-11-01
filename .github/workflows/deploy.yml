@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - 'content/about/**'
       - 'content/post/**'
       - 'content/scraps/**'
   workflow_dispatch:
