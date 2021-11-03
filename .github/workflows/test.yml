@@ -19,5 +19,4 @@ jobs:
       - name: Dump GitHub context
         env:
             GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          git log --pretty=%H
+        run: bash ./test.sh
