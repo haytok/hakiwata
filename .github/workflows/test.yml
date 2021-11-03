@@ -22,5 +22,6 @@ jobs:
         shell: bash
         run: |
           pwd
-          bash /home/runner/work/hakiwata/hakiwata/scripts/test.sh
+          echo ${GITHUB_WORKSPACE}
+          /home/runner/work/hakiwata/hakiwata/scripts/test.sh
           ls
