@@ -19,7 +19,8 @@ jobs:
       - name: Dump GitHub context
         env:
             GITHUB_CONTEXT: ${{ toJson(github) }}
+        shell: bash
         run: |
           pwd
           ls
-          sh ./scripts/test.sh
+          bash ./scripts/test.sh
