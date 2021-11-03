@@ -20,5 +20,8 @@ jobs:
         env:
             GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "$GITHUB_CONTEXT"
-          git diff
+          array_text=(`git log --pretty=%H`);
+          index=1;
+          git diff ${array_text[$index]};
+          git diff ${array_text[$index]} --name-only;
+          echo ${array_text[$index]};
