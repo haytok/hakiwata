@@ -22,5 +22,5 @@ jobs:
         shell: bash
         run: |
           pwd
+          bash /home/runner/work/hakiwata/hakiwata/scripts/test.sh
           ls
-          bash ./scripts/test.sh
