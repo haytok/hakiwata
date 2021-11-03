@@ -1,0 +1,22 @@
+name: hakiwata
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'content/about/**'
+      - 'content/post/**'
+      - 'content/scraps/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Dump GitHub context
+        env:
+            GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
