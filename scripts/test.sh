@@ -4,3 +4,4 @@ index=1;
 git diff ${commit_hash_list[$index]} --name-only
 # git diff ${commit_hash_list[$index]}
 # echo ${commit_hash_list[$index]};
+echo hoge
