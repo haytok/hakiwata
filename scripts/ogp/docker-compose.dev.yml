@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  ogp_creater:
+    build: .
+    user: "${USER_ID}:${GROUP_ID}"
+    volumes:
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - ../../:/app
+    tty: true
