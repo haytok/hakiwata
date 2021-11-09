@@ -4,6 +4,7 @@ title: "ゼロからのOS自作入門を読んで OS を実装してみた"
 date: 2021-10-17T19:29:55Z
 tags: []
 favorite: false
+ogimage: "img/images/20211018.png"
 ---
 
 ## 概要

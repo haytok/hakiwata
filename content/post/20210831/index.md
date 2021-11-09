@@ -4,6 +4,7 @@ title: "自作 OS 日記 (2)"
 date: 2021-08-30T19:11:00Z
 tags: ["OS", "Kernel", "C"]
 favorite: false
+ogimage: "img/images/20210831.png"
 ---
 
 ## 概要
