@@ -82,7 +82,7 @@ googleAnalytics = 'G-YXCYPL25QW'
 	# Maximum number of item in Latest Posts or Works
 	latestCount = 5
 	# Path to site's favicon image
-	faviconImg = "/img/images/kiwata.png"
+	faviconImg = "/img/images/favicon.ico"
 	images = ["/img/images/kiwata.png"]
 	# Date format in item list
 	dateFmt = "Jan 02, 2006"
