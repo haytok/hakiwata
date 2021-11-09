@@ -4,6 +4,7 @@ title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 tags: []
 favorite: false
+ogimage: "img/images/{{ .Name }}.png"
 ---
 
 ## 概要
