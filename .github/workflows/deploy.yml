@@ -19,10 +19,10 @@ jobs:
           submodules: true  # Fetch Hugo themes
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-    - name: Invoke another workflow of Creating OPG and Push
-      uses: benc-uk/workflow-dispatch@v1
-      with:
-        workflow: Create OPG and Push
+      - name: Invoke another workflow of Creating OPG and Push
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Create OPG and Push
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
