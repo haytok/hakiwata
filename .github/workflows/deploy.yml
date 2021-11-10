@@ -23,7 +23,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Create OPG and Push
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
