@@ -2,7 +2,7 @@
 draft: false
 title: "ゼロからのOS自作入門を読んで\n OS を実装してみた"
 date: 2021-10-17T19:29:55Z
-tags: []
+tags: ["OS", "Kernel"]
 favorite: false
 ogimage: "img/images/20211018.png"
 ---
