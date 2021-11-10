@@ -1,11 +1,6 @@
 name: Create OPG and Push
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'content/post/**'
   workflow_dispatch:
 
 jobs:
