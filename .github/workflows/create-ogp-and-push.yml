@@ -27,6 +27,7 @@ jobs:
       - name: Run main.py
         id: latest_data_id
         run: |
+          cd scripts/ogp/
           python scripts/ogp/main.py
 
       - name: Update README.md
