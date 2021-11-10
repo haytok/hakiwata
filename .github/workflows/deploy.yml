@@ -38,14 +38,18 @@ jobs:
       - name: Run main.py
         id: latest_data_id
         run: |
+          pwd
           cd scripts/ogp/
+          pwd
           python main.py
 
       - name: Update README.md
         run: |
+          pwd
           echo hoge
           git status
           git add -N static/img/images/*.png
+          pwd
           if ! git diff --exit-code --quiet static/img/images/*.png
           then
             git config --global user.name dilmnqvovpnmlib
