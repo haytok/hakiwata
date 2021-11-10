@@ -14,37 +14,30 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
       - name: Install Dependencies
-        run: | #このような書き方で複数行を一気に実行することができる。
-          echo Hello!!!
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/ogp/requirements.txt
 
-      # - name: Setup Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: "3.9"
+      - name: Run main.py
+        id: latest_data_id
+        run: |
+          python scripts/ogp/main.py
 
-      # - name: Install Dependencies
-      #   run: | #このような書き方で複数行を一気に実行することができる。
-      #     python -m pip install --upgrade pip
-      #     pip install -r scripts/ogp/requirements.txt
-
-      # - name: Run main.py
-      #   id: latest_data_id
-      #   run: |
-      #     python scripts/ogp/main.py
-
-      # - name: Update README.md
-      #   run: |
-      #     # すでに作成されているファイル (README.md) に修正が加わると、この then 以降の処理が走る。
-      #     # 一方、gif が更新されずブログの文章のみが変更されがときは、上のスクリプトで README.md が更新されない。
-      #     # したがって、以下の README.md の変更を表すコミットを打つ必要がない。
-      #     git add -N static/img/images/*.png
-      #     if ! git diff --exit-code --quiet static/img/images/*.png
-      #     then
-      #       git config --global user.name dilmnqvovpnmlib
-      #       git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
-      #       git pull
-      #       git add static/img/images/*.png
-      #       git commit -m 'update OGP images'
-      #       git push origin main
-      #     fi
+      - name: Update README.md
+        run: |
+          git add -N static/img/images/*.png
+          if ! git diff --exit-code --quiet static/img/images/*.png
+          then
+            git config --global user.name dilmnqvovpnmlib
+            git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
+            git pull
+            git add static/img/images/*.png
+            git commit -m 'update OGP images'
+            git push origin main
+          fi
