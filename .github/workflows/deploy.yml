@@ -43,6 +43,8 @@ jobs:
 
       - name: Update README.md
         run: |
+          echo hoge
+          git status
           git add -N static/img/images/*.png
           if ! git diff --exit-code --quiet static/img/images/*.png
           then
