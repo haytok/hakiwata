@@ -19,12 +19,7 @@ jobs:
           submodules: true  # Fetch Hugo themes
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      # - name: Invoke another workflow of Creating OPG and Push
-      #   uses: benc-uk/workflow-dispatch@v1
-      #   with:
-      #     workflow: Create OPG and Push
-      #     token: ${{ secrets.PERSONAL_TOKEN }}
-
+      # OGP の作成
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -38,18 +33,12 @@ jobs:
       - name: Run main.py
         id: latest_data_id
         run: |
-          pwd
           cd scripts/ogp/
-          pwd
           python main.py
 
       - name: Update README.md
         run: |
-          pwd
-          echo hoge
-          git status
           git add -N static/img/images/*.png
-          pwd
           if ! git diff --exit-code --quiet static/img/images/*.png
           then
             git config --global user.name dilmnqvovpnmlib
