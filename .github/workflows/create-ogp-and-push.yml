@@ -22,14 +22,18 @@ jobs:
       - name: Run main.py
         id: latest_data_id
         run: |
+          pwd
           cd scripts/ogp/
+          pwd
           python main.py
 
       - name: Update README.md
         run: |
+          pwd
           git add -N static/img/images/*.png
           if ! git diff --exit-code --quiet static/img/images/*.png
           then
+            echo then
             git config --global user.name dilmnqvovpnmlib
             git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
             git pull
