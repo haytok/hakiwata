@@ -2,6 +2,10 @@
 
 - この配下のディレクトリには GitHub Actions で実行される OGP を作成するために必要なスクリプトとそれに関連するファイルを配置しています。
 
+## OGP のチェック
+
+- [Twitter Card validator](https://cards-dev.twitter.com/validator)
+
 ## docker-compose.yml に関して
 
 - `docker-compose.yml` と `docker-compose.dev.yml` と `docker-compose.override.yml` を活用して開発環境と GitHub Actions 上で実行するコマンドを使い分ける。
