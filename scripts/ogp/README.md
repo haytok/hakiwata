@@ -1,10 +1,29 @@
 # 概要
 
-- この配下のディレクトリには GitHub Actions で実行される OGP を作成するために必要なスクリプトとそれに関連するファイルを配置しています。
+- この配下のディレクトリには GitHub Actions で実行される OGP を作成するために必要なスクリプトとそれに関連するファイルを配置している。
+
+## OGP を作成するためのツールの取捨選択に関して
+
+- `Twitter Card Image Generator` の Go 製のライブラリである [Ladicle/tcardgen](https://github.com/Ladicle/tcardgen) を検討した。
+
+- しかし、痒いところの手が届かないので、イメージとしては [kinpoko/vercel-generating-og-images](https://github.com/kinpoko/vercel-generating-og-images) を元に Pyhton で OGP を作るスクリプトを自作することにした。
+
+- [テキストを折り返し画像に収まるように表示する](https://tat-pytone.hatenablog.com/entry/2020/02/10/213332)
+  - タイトルによっては折り返しが必要なケースもある。その際には、標準ライブラリの `textwrap` を活用し、良い感じでタイトルが折り返されるように調整を行った。
+- また、`textwrap` を活用しても意図した通りに改行されないケースも存在した。そのため、タイトルに `\n` を入れると、その箇所で改行されるように Python のスクリプトに修正を加えた。しかし、タイトル数が長くなりすぎると (おそらく 40 文字以上) 描画がバグる可能性がある。したがって、できるだけタイトルが長くなりすぎず簡潔に書くようにする。
 
 ## OGP のチェック
 
 - [Twitter Card validator](https://cards-dev.twitter.com/validator)
+
+## OGP を作成する workflow に関して
+
+- 初めは、OGP を作成する workflow を別のファイルに定義し、[GitHub Action for Dispatching Workflows](https://github.com/benc-uk/workflow-dispatch) を活用してブログをデプロイする workflow から呼び出すつもりだった。しかし、workflow の処理順を逐次的に行うことができなかった。そのため、ファイルを分割せず、一つのファイルに OGP を作成する処理とデプロイの処理を記述するようにした。
+
+### 参考
+
+- [あるワークフローから他のワークフローを実行する方法](https://qiita.com/zomaphone/items/77ea3818e0922ed4173c)
+- [GitHub Action for Dispatching Workflows](https://github.com/benc-uk/workflow-dispatch)
 
 ## docker-compose.yml に関して
 
