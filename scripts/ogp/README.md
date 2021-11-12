@@ -12,6 +12,24 @@
   - タイトルによっては折り返しが必要なケースもある。その際には、標準ライブラリの `textwrap` を活用し、良い感じでタイトルが折り返されるように調整を行った。
 - また、`textwrap` を活用しても意図した通りに改行されないケースも存在した。そのため、タイトルに `\n` を入れると、その箇所で改行されるように Python のスクリプトに修正を加えた。しかし、タイトル数が長くなりすぎると (おそらく 40 文字以上) 描画がバグる可能性がある。したがって、できるだけタイトルが長くなりすぎず簡潔に書くようにする。
 
+## OGP を作成するスクリプトを実装するに当たって工夫したこと
+
+### 差分のあるファイル情報から正規表現を使ってファイル名を取得する
+
+- 各エントリは `yyyymmdd/index.md` か `yyyymmdd.md` のどちらかのファイルで作成している。それを含んだ情報を Python のスクリプト内で正規表現を使って取得した。そのスクリプトは以下である。
+
+```python
+import re
+
+def is_valid_date_format(value):
+    return True if re.fullmatch('[0-9]{8}', value) else False
+```
+
+#### 参考
+
+- [［解決！Python］正規表現を使って文字列が数字だけで構成されているかどうかを判定するには](https://atmarkit.itmedia.co.jp/ait/articles/2102/16/news019.html)
+- [正規表現：数字の表現。桁数や範囲など ](https://www-creators.com/archives/4241#i-3)
+
 ## OGP のチェック
 
 - [Twitter Card validator](https://cards-dev.twitter.com/validator)
@@ -24,6 +42,32 @@
 
 - [あるワークフローから他のワークフローを実行する方法](https://qiita.com/zomaphone/items/77ea3818e0922ed4173c)
 - [GitHub Action for Dispatching Workflows](https://github.com/benc-uk/workflow-dispatch)
+
+# GitHub Actions で回す CI に関して
+
+- `git diff --exit-code --quiet <ファイルパス>` で差分があると `exit code` に `1` が格納され、差分がないと `0` が格納される。
+- この結果 `exit_code` の結果は `$?` に格納されるので、 `echo $?` で確認することができる。`$?` に `exit code` が格納されているのを忘れがちだが、たまに出番が出てくる。
+- `untracked file` に対して `git diff --exit-code` を実行しても `exit code` には `0` が格納される。したがって、事前に `untracked file` を `git add -n untracked file` のコマンドで `tracked な状態` に変更しておく必要がある。
+- OGP を作成するスクリプト内で画像は `static/img/images/` に保存するような仕様にしている。そのため、`git diff` を実行する際には、そのディレクトリ配下に差分があるかを確認すれば仕様的には問題がない。
+- `git diff --exit-code --quiet <ファイルパス>` は差分の状態を表すフラグを `$?` に格納し、`--quiet` オプションで差分がある時は差分を表示しないようする。
+
+```bash
+git add -N static/img/images/*.png
+if ! git diff --exit-code --quiet static/img/images/*.png
+then
+  git config --global user.name dilmnqvovpnmlib
+  git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
+  git pull
+  git add static/img/images/*.png
+  git commit -m 'update OGP images'
+  git push origin main
+fi
+```
+
+## 参考
+
+- [Git での新規ファイル作成を含んだファイル変更有無の判定方法 ](https://reboooot.net/post/how-to-check-changes-with-git/)
+  - `git diff --exit-code` に関する解説が書かれていて大変参考になった。
 
 ## docker-compose.yml に関して
 
