@@ -14,6 +14,29 @@
 
 ## OGP を作成するスクリプトを実装するに当たって工夫したこと
 
+### OGP を作成するするスクリプトの実装に関して
+
+#### 参考
+
+- [PythonでPillowを使ってOGP画像を作ろう]](https://zenn.dev/makiart/articles/78d53694e70105)
+- [kinpoko/vercel-generating-og-images](https://github.com/kinpoko/vercel-generating-og-images)
+
+### Hugo 側から OGP を読み出す設定とデバッグに関して
+
+- 初めは、Chrome の拡張機能を使って OGP が適切に読み出せているかを確認していた。しかし、拡張機能自体が正常に動作していない気がした。そのため、localhost で起動させているアプリケーションのページのソースコードをブラウザ上で確認し、`meta タグ` に `property="og:image"` が付いているエレメントの `content` を逐一確認するようにした。
+- 以下が正常に動作するケースの `meta タグ` である。
+
+```html
+<meta property="og:image" content="http://localhost:1313/img/images/20211110.png">
+```
+
+#### 参考
+
+- [localhostの状態でOGPのテストを開発環境で行う](https://qiita.com/TeruhisaFukumoto/items/6032efde115a17b45637)
+- [ローカル環境でOGPをテストできるChrome拡張機能をリリースしました](https://nullnull.dev/blog/localhost-open-graph-debugger/#%F0%9F%8F%A9%E2%98%81)
+
+- [HugoでOGP設定](https://kinpokoblog.com/posts/setting-up-ogp-in-hugo/)
+
 ### 差分のあるファイル情報から正規表現を使ってファイル名を取得する
 
 - 各エントリは `yyyymmdd/index.md` か `yyyymmdd.md` のどちらかのファイルで作成している。それを含んだ情報を Python のスクリプト内で正規表現を使って取得した。そのスクリプトは以下である。
@@ -29,6 +52,40 @@ def is_valid_date_format(value):
 
 - [［解決！Python］正規表現を使って文字列が数字だけで構成されているかどうかを判定するには](https://atmarkit.itmedia.co.jp/ait/articles/2102/16/news019.html)
 - [正規表現：数字の表現。桁数や範囲など ](https://www-creators.com/archives/4241#i-3)
+
+
+### git log コマンドと bash を工夫して差分のあるファイル名を取得する
+
+- もともとは `git log -p -2` コマンドの出力結果をパースして差分のあるファイル名を出力しようとしたが、パーサを実装するのがめんどくさくなったので、違う方法を模索することにした。
+- 次に考えた方法は、ハッシュ値とコミットを活用して差分のファイルを求める方法です。これは、以下のシェルスクリプトで求めることが可能です。しかし、その求めたファイル名を最終的には OGP を作成する Python のスクリプトに引き渡さなければなりません。そこで、この方法は諦めました。
+
+```bash
+#!/bin/bash
+commit_hash_list=(`git log --pretty=%H`);
+index=1; # index=0 だと今の diff が出力される。
+file_list=(`git diff ${commit_hash_list[$index]} --name-only`);
+echo $file_list;
+git diff ${commit_hash_list[$index]}
+echo ${commit_hash_list[$index]};
+```
+
+- 次に考えた方法は、GitHub API を Python のスクリプトから呼び出し、直前のコミットからファイルの差分があるかを確認する方法です。git コマンドを実行し差分のあるファイル名を取得する処理とそのファイルのメタデータから OGP を作成する処理を一つにすることで、処理がスッキリしました。
+
+#### 参考
+
+- [2.3 Git の基本 - コミット履歴の閲覧](https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%E5%B1%A5%E6%AD%B4%E3%81%AE%E9%96%B2%E8%A6%A7)
+
+  - `git log -p -2 ` を実行すると直近の 2 エントリの log を出力できる。
+```bash
+git log -3
+    Limits the number of commits to show to 3.
+```
+- [git logでコミットハッシュだけほしい](https://otiai10.hatenablog.com/entry/2016/06/15/072039)
+
+- [GitHub APIでコミット履歴を取得する](https://qiita.com/nannany_hey/items/23f847e0a331da52ed77)
+- [List commits](https://docs.github.com/en/github-ae@latest/rest/reference/repos#list-commits)
+- [How can I get last commit from GitHub API](https://stackoverflow.com/questions/45726013/how-can-i-get-last-commit-from-github-api)
+  - `GET /repos/:owner/:repo/commits/master` にアクセスすると、一番最新のコミットにアクセスできる。
 
 ## OGP のチェック
 
@@ -68,6 +125,23 @@ fi
 
 - [Git での新規ファイル作成を含んだファイル変更有無の判定方法 ](https://reboooot.net/post/how-to-check-changes-with-git/)
   - `git diff --exit-code` に関する解説が書かれていて大変参考になった。
+
+## Hugo の yml ファイル内の Front Matter Formats に関して
+
+- Hugo でブログを書く際、Markdown の先頭にメタデータを記述する。これは、フロントマターと呼ばれ、そのファイルのメタデータを記述することができる。
+
+### 参考
+
+- [Front Matter](https://gohugo.io/content-management/front-matter/)
+
+## Python の requests で外部の API を呼び出す際の例外処理に関して
+
+- 今回は、`Response.raise_for_status()` を活用することにした。
+
+### 参考
+
+- [requestsが送出した例外からレスポンスボディを取得する](https://kamatimaru.hatenablog.com/entry/2021/05/18/073757)
+- [Python API通信時の例外処理](https://qiita.com/d_kvn/items/5da7f5cdfc8200172a39)
 
 ## docker-compose.yml に関して
 
