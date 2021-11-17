@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "CPython 調査ログ"
-date: 2021-10-20T09:20:23Z
+date: 2021-11-17T09:20:23Z
 tags: ["CPython", "Python", "C"]
 favorite: false
 ---
