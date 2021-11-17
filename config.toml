@@ -36,6 +36,9 @@ googleAnalytics = 'G-YXCYPL25QW'
 		name = "Scraps"
 		url = "/scraps"
 	[[menu.main]]
+		name = "Log"
+		url = "/log"
+	[[menu.main]]
 		name = "Tags"
 		url = "/tags"
 
