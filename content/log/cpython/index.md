@@ -16,6 +16,10 @@ favorite: false
 
 - token のオブジェクトの中身を見てみる。
 
+### 2021/11/18
+
+- 特に何もしなかった。
+
 ## 参考
 
 - [Changing CPython’s Grammar](https://devguide.python.org/grammar/)
