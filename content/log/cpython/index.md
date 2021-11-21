@@ -35,9 +35,21 @@ print('Hello World')
 
 - ちなみに、今回の調査で使用している Python は `Python 3.11.0a2+` である。
 
+- GDB のよく使うオプション
+  - `step (s)`
+  - `next (n)`
+  - `delete (d)`
+  - `i b`
+  - `continue`
+  - `until`
+  - `run`
+
 #### 参考
 
+- [Python Developer’s Guide](https://devguide.python.org/)
 - [Changing CPython’s Grammar](https://devguide.python.org/grammar/)
+
+---
 
 ### 2021/11/17
 
@@ -66,9 +78,13 @@ _PyPegen_run_parser_from_file_pointer(FILE *fp, int start_rule, PyObject *filena
 
 - こういう調査は興味があり手を動かし続けられれば、ある程度理解することができる。その先に何かしらのパッチを投げられるのではないかと思った。
 
+---
+
 ### 2021/11/18
 
 - 特に何もしなかった。
+
+---
 
 ### 2021/11/19
 
@@ -122,16 +138,24 @@ FILE *fp = _Py_fopen_obj(filename, "rb");
 
 - 途中で `make install` が実行できなくて困った。
 
+- `Python.h` を使って検証プログラムを書こうと思ったが、インクルードの仕方がわからず諦めた。
+
+- `python -m dis` で Python バイトコードの逆アセンブラを確認することができる。
+
+#### 参考
+
+- [printfで文字列の最大文字数を指定する](https://iww.hateblo.jp/entry/20090701/printf)
+- [dis --- Python バイトコードの逆アセンブラ](https://docs.python.org/ja/3/library/dis.html)
+
+---
+
 ### 2021/11/20
 
 - `Parser/pegen.c` の `_PyPegen_run_parser_from_file_pointer` を読むと、`Parser/pegen.c` の `_PyPegen_run_parser` がポイントだと感じた。そのため、その関数を読むと、`_PyPegen_parse` の理解が必要だと感じた。そこで、`Parser/parser.c` の `_PyPegen_parse` を読もうと思った。しかし、`Parser/parser.c` は `./Grammar/python.gram` から自動で生成されるファイルなので、一旦読むのを諦めて、言語自体を拡張する方にシフトすることにした。
 
-- 文法を拡張する機能としては以下が挙げられる。
+- 文法を拡張する。機能としては以下が挙げられる。
   - `&&`, `||`, `!` の追加
   - `else if` の追加
-  <!-- - 
-  - 
-  -  -->
 
 - 新しく token や PEG を変更すると以下のコマンドを叩く必要がある。
 
@@ -175,6 +199,46 @@ risa
 - [pyenv/pyenv](https://github.com/pyenv/pyenv#installation)
 - [pyenv global が効かなくなった（？）話](https://blog.serverworks.co.jp/2021/05/12/233520)
 
+---
+
 ### 2021/11/21
 
+- 文法を拡張する。機能としては以下が挙げられる。
+  - `unless 文` の追加
+  - インタープリタでエンターを押すと、自動でインデントが付くように修正する。
+    - GDB の共有ライブラリ内の実装にまで追えず途中で諦めた。
+
+```bash
+make regen-pegen
+make regen-ast
+make -j $(nproc) && make install
+```
+
+- `unless` を追加した結果の処理の確認は以下のようになる。
+
+![unless.png](unless.png)
+
+#### 参考
+
+- [Pythonにunless文を追加する](https://doss2020-3.hatenablog.com/entry/2020/10/25/160454)
+  - この記事に書いてあることだけを実装しても動かなかった。しかし、基本的なことは大変参考になった。
+
+---
+- [大規模ソフトウェアを手探る](https://doss.eidos.ic.i.u-tokyo.ac.jp/)
+- [東京大学eeic3年後期実験「大規模ソフトウェアを手探る」2016年度まとめ](https://pf-siedler.hatenablog.com/entry/2017/02/07/101831)
+- [東京大学eeic3年後期実験「大規模ソフトウェアを手探る」2015年度まとめ](https://swimath2.hatenablog.com/entry/2015/12/03/172000)
+- [CPythonに機能追加してみた（ビルド&構造把握）](https://qiita.com/takashi-o/items/d557033179e8d879ac31)
+- [Pythonを改造してみた はじめに](https://doss2020-3.hatenablog.com/entry/2020/10/25/155352)
+- [Pythonをいじっていろんな機能を追加してみた](https://py-plu-thon.hatenablog.com/entry/2020/10/31/154051)
+- [Pythonを改造してみた unless文を追加してみた]()
+  - 今回自分がビルドしているバージョンとは違うので、ほとんど参考にしていない。
+
+---
+
+### 2021/11/22
+
 - 🤞
+
+#### 参考
+
+- [Changing CPython’s Grammar](https://devguide.python.org/grammar/)
