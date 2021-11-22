@@ -180,17 +180,9 @@ pyenv global 3.8.0
 Python 3.8.0 
 ```
 
-- こうして Python のバージョンを変更すると、`make regen-pegen` を実行することができ、Python の文法を拡張することができた。拡張できたかどうかは以下の `main.py` を作成し、実行することで確認することができた。
+- こうして Python のバージョンを変更すると、`make regen-pegen` を実行することができ、Python の文法を拡張することができた。拡張できたかどうかは以下のようにインタラクティブシェルで確認した。
 
-```bash
-> cat main.py
-if false:
-    print('karin')
-else if true || false:
-    print('risa')
-> ./fuga/bin/python3 main.py
-risa
-```
+![else_if.png](else_if.png)
 
 #### 参考
 
@@ -231,6 +223,32 @@ make -j $(nproc) && make install
 - [Pythonをいじっていろんな機能を追加してみた](https://py-plu-thon.hatenablog.com/entry/2020/10/31/154051)
 - [Pythonを改造してみた unless文を追加してみた]()
   - 今回自分がビルドしているバージョンとは違うので、ほとんど参考にしていない。
+
+---
+
+### 2021/11/22
+
+- `xor` の文法を追加する。
+
+```bash
+make regen-pegen
+make -j $(nproc) && make install
+```
+
+- `mod 演算子` を追加しようとしたが、他のブログラムで `mod 変数` を使っているため定義することはできない。
+
+```bash
+Programs/_freeze_module importlib._bootstrap ./Lib/importlib/_bootstrap.py ./Python/frozen_modules/importlib._bootstrap.h
+Programs/_freeze_module importlib._bootstrap_external ./Lib/importlib/_bootstrap_external.py ./Python/frozen_modules/importlib._bootstrap_external.h
+Programs/_freeze_module zipimport ./Lib/zipimport.py ./Python/frozen_modules/zipimport.h
+Programs/_freeze_module abc ./Lib/abc.py ./Python/frozen_modules/abc.h
+  File "<frozen zipimport>", line 285
+    mod = sys.modules.get(fullname)
+    ^^^                                                       
+SyntaxError: invalid syntax
+make: *** [Python/frozen_modules/zipimport.h] エラー 1
+make: *** 未完了のジョブを待っています....
+```
 
 ---
 
