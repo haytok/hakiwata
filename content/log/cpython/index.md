@@ -228,14 +228,18 @@ make -j $(nproc) && make install
 
 ### 2021/11/22
 
-- `xor` の文法を追加する。
+- 文法を拡張する。機能としては以下が挙げられる。 
+  - `xor 演算子` の追加
+  - `mod 演算子` の追加
+
+- これまでやってきたように `Grammar/python.gram` に `xor 演算子` 用の PEG を追加する。そして、以下のコマンドを実行する。
 
 ```bash
 make regen-pegen
 make -j $(nproc) && make install
 ```
 
-- `mod 演算子` を追加しようとしたが、他のブログラムで `mod 変数` を使っているため定義することはできない。
+- 次に、`mod 演算子` を追加しようとしたが、他のブログラムで `mod 変数` を使っているため定義することはできない。そのため、今回の実装は一旦見送ることにした。
 
 ```bash
 Programs/_freeze_module importlib._bootstrap ./Lib/importlib/_bootstrap.py ./Python/frozen_modules/importlib._bootstrap.h
@@ -252,7 +256,7 @@ make: *** 未完了のジョブを待っています....
 
 ---
 
-### 2021/11/22
+### 2021/11/23
 
 - 🤞
 
