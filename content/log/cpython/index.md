@@ -232,14 +232,27 @@ make -j $(nproc) && make install
   - `xor 演算子` の追加
   - `mod 演算子` の追加
 
-- これまでやってきたように `Grammar/python.gram` に `xor 演算子` 用の PEG を追加する。そして、以下のコマンドを実行する。
+- これまでやってきたように `Grammar/python.gram` に `xor 演算子` 用の PEG を追加する。
+
+- diff は以下である。
+
+```bash
+@@ -713,6 +744,7 @@ bitwise_or[expr_ty]:
+
+ bitwise_xor[expr_ty]:
+     | a=bitwise_xor '^' b=bitwise_and { _PyAST_BinOp(a, BitXor, b, EXTRA) }
++    | a=bitwise_xor 'xor' b=bitwise_and { _PyAST_BinOp(a, BitXor, b, EXTRA) }
+     | bitwise_and
+```
+
+- そして、以下のコマンドを実行する。
 
 ```bash
 make regen-pegen
 make -j $(nproc) && make install
 ```
 
-- 次に、`mod 演算子` を追加しようとしたが、他のブログラムで `mod 変数` を使っているため定義することはできない。そのため、今回の実装は一旦見送ることにした。
+- 次に、`mod 演算子` を追加しようとした。しかし、これまで通り `Grammar/python.gram` に `mod 演算子` 用の PEG を追加したところ、以下のようなエラーが生じた。これは、他のライブラリ内のブログラムで `mod 変数` を使っているため定義することはできないようである。そのため、今回の実装は一旦見送ることにした。
 
 ```bash
 Programs/_freeze_module importlib._bootstrap ./Lib/importlib/_bootstrap.py ./Python/frozen_modules/importlib._bootstrap.h
@@ -254,9 +267,97 @@ make: *** [Python/frozen_modules/zipimport.h] エラー 1
 make: *** 未完了のジョブを待っています....
 ```
 
+#### 参考
+
+- [Pythonを改造してみた はじめに](https://pf-siedler.hatenablog.com/entry/2016/11/01/231816)
+
 ---
 
 ### 2021/11/23
+
+- 昨日に拡張した文法である `xor 演算子` について再度考える。`xor 演算子` を使用した後に、インタラクティブシェルで `import` 周りの操作を行うと、以下のようなエラーが生じてしまう。これは、`operator` モジュールに `xor` 関数があるため、名前が競合しているからと考えられる。そのため、現状の実装では問題がある。
+  - 昨日はこれで問題が無いと思ったが甘かった。テストが難しいと思った ...
+
+<!-- - 新しく定義した xor 演算子を使用後に import の命令を書くとエラーが生じる -->
+![xor_error.png](xor_error.png)
+
+- これは演算子名を `exor` に変更することで回避した。
+
+- 次に、Docker を使って xor を含むプログラムをディスアセンブルした結果と自前でビルドしたプログラムのディスアセンブルした結果を比較してみた。
+  - ディスアセンブルした結果が異なる。原因が不明だが、簡単な処理は正常に動作している。そもそも違っていても問題が無いのかすらわからなかった。
+
+- Docker 内の `Python 3.11.0a2` で `^` や `and` のバイトコードを確認した結果が以下である。
+
+![dis_on_docker.png](dis_on_docker.png)
+
+- EC2 上で自前でビルドした `Python 3.11.0a2+` で `^` や `and` のバイトコードを確認した結果が以下である。
+
+![dis_on_ec2.png](dis_on_ec2.png)
+
+- この二つの結果より `and` のバイトコードは一致するが、`xor` のバイトコードは一致しないことがわかる。前者では `xor` の演算に `BINARY_XOR` が使用されているが、後者では `BINARY_OP` が使われている違いがあった。`Grammar/python.gram` と `Parser/Python.asdl` より自前でビルドした結果は正しい気もするが、如何せんどういう違いがあるかわからず次に進むことにした。
+
+- ちなみに、まっさらの状況の `cpython` のコードを clone してきてビルドして確認したところ、修正を加えたプログラムを自前でビルドした結果と同じになった。問題なく実装ができてる気もしてきた。
+
+![dis_default_on_ec2.png](dis_default_on_ec2.png)
+
+- ディスアセンブルしたマシンコードから追加したロジックが正常かどうかを判定するのは諦めた。そこで、流石にこれぐらい大きい OSS のプロジェクトだとテストコードが書かれてると思い、`CPython` のテスト方法を調査してみた。流れは以下である。
+  - `Makefile` の中身を確認し、`make test` でテストを実行できることを確認した。
+  - `make test` で実行されるプログラムが `Tools/scripts/run_tests.py` にあることを確認する。確認方法は後に記述する。
+  - `Makefile` があるディレクトリで `./python Tools/scripts/run_tests.py` を実行する。そうすると、ログに各ロジック毎に実行されるテストコードのログが流れるので、そこから `Lib/test/test_bool.py` が実行されているようである。`Lib/test/` 配下には `test_` から始まるファイルが大量にあるので、おそらく Python の実行ファイルに対するテストコードがまとめられていると考えられる。(_※ドキュメントなどで要確認_)
+
+- ちなみに `Makefile` の解析は以下のように行った。`Makefile` の中でテストを実行する際のエントリーポイントとなりそうな以下である。
+
+{{< code lang="html" title="テストを実行するのに必要そうな Makefile の抜粋" >}}
+# Executable suffix (.exe on Windows and Mac OS X)
+EXE=		
+BUILDEXE=	
+...
+BUILDPYTHON=	python$(BUILDEXE)
+...
+TESTPYTHON=	$(RUNSHARED) ./$(BUILDPYTHON) $(TESTPYTHONOPTS)
+TESTRUNNER=	$(TESTPYTHON) $(srcdir)/Tools/scripts/run_tests.py
+...
+test:		all platform
+		$(TESTRUNNER) $(TESTOPTS)
+{{< /code >}}
+
+- 新しく Makefile 内にデバッグ用のターゲット `karin` を追加した。これで `make コマンド` 実行時の各変数を標準出力に表示させるようにした。
+
+{{< code lang="html" title="デバッグ用に追加したターゲット" >}}
+karin:
+	@echo Karin
+	@echo $(BUILDPYTHON)
+	@echo $(TESTPYTHON)
+	@echo $(TESTRUNNER)
+{{< /code >}}
+
+- 実際にデバッグ用に仕込んだコマンドを実行した。そうすると、実際にどのようにしてテストが実行されるのかを確認できた。
+
+{{< code lang="html" title="デバッグ用のターゲットを実行した結果" >}}
+h-kiwata cpython [main]
+> make karin
+Karin
+python
+./python
+./python ./Tools/scripts/run_tests.py
+{{< /code >}}
+
+- このテストコードが実装される際の流れや匙加減が気になった。
+- 言語を拡張することは文法にも詳しくなれることでもあるが、それが結構楽しいと思った！
+
+#### 参考
+
+- [Pythonを改造してみた 排他的論理のブール演算子作った](https://pf-siedler.hatenablog.com/entry/2016/11/05/135007)
+  - 正直なんでここまでの実装をする必要があるかがわからなかった。Python のバージョンのせいなのだろうか？
+- [operator --- 関数形式の標準演算子](https://docs.python.org/ja/3/library/operator.html)
+- [docker/python](https://hub.docker.com/_/python)
+- [Python の or と and 演算子の罠](https://qiita.com/keisuke-nakata/items/e0598b2c13807f102469)
+  - Python 内での `if x or y:` はどうなるだろうか？Python では、if の条件式は勝手に真理値が判別されます。つまり、`if bool(x or y):` と同じことが勝手に行われています。
+  - このロジックの調査を今度行いたい。
+
+---
+
+### 2021/11/24
 
 - 🤞
 
