@@ -19,6 +19,12 @@ make
 make new D=<directory name>
 ```
 
+- 新規 Log の作成
+
+```bash
+make log D=<directory name>
+```
+
 - 新規スクラップの作成
 
 ```bash
