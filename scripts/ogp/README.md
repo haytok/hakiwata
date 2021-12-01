@@ -2,6 +2,26 @@
 
 - この配下のディレクトリには GitHub Actions で実行される OGP を作成するために必要なスクリプトとそれに関連するファイルを配置している。
 
+# 環境の構築
+
+- Docker Image のビルド
+
+```bash
+make dev-build
+```
+
+- Docker コンテナの起動
+
+```bash
+make dev-up
+```
+
+- Docker コンテナを落とす
+
+```bash
+make dev-down
+```
+
 ---
 
 ## 一連の流れ
