@@ -1,6 +1,6 @@
 ---
 draft: false
-title: "OGP 画像のタイトルを作成する\nライブラリの比較と検討"
+title: "OGP 画像のタイトルを作成する\n実装方針の比較と検討"
 date: 2021-12-01T09:27:59Z
 tags: ["Python"]
 favorite: false
@@ -13,12 +13,12 @@ ogimage: "img/images/20211201.png"
 
 ## 事の発端 (原因) とライブラリの比較と検討を行おうと思った背景
 
-- [CyberAgent のコンテナ技術に関する勉強会に参加してきた](https://hakiwata.jp/post/20211124/) の OGP 画像が意図した形になっていませんでした。以下の図 1 の画像が実際に生成されていた OPG 画像で、図 2 のような画像が生成されて欲しかった画像です。
+- 先日投稿したブログエントリの [CyberAgent のコンテナ技術に関する勉強会に参加してきた](https://hakiwata.jp/post/20211124/) の OGP 画像が意図した形になっていませんでした。以下の図 1 の画像が実際に生成されていた OPG 画像で、図 2 のような画像が生成されて欲しかった画像です。
 
 {{<img_title src="fig_1.png" title="図 1 タイトルのレイアウトがズレてしまった OGP 画像" width="80%" height="80%" >}}
-{{<img_title src="fig_2.png" title="図 2 タイトルのレイアウトが納得行く形の OGP 画像" width="80%" height="80%" >}}
+{{<img_title src="fig_2.png" title="図 2 タイトルのレイアウトが良い感じの形の OGP 画像" width="80%" height="80%" >}}
 
-- 図 2 では、タイトルの 2 行目が長くなりすぎてしまい、端の文字が切れてしまっています。そこでまず、現時点での OGP 画像を生成するためのロジックについて説明したいと思います。
+- 図 2 では、日本語の文脈的にもレイアウト的にも良い感じの箇所で改行されています。一方、図 1 では、タイトルの 2 行目が長くなりすぎてしまい、端の文字が切れてしまっています。そこでまず、現時点での OGP 画像を生成するためのロジックについて説明したいと思います。
 
 - まず、タイトルがそれほど長くない場合 (30 文字以内) には、そのままタイトルを付けるようにしています。しかし、タイトルが 30 文字より大きくなると、改行処理を挟んでタイトルを付けるような実装になっています。この改行処理には、[textwrap](https://docs.python.org/ja/3/library/textwrap.html) という Python の標準ライブラリを活用しています。つまり、タイトルが 30 文字以上の場合には、[textwrap](https://docs.python.org/ja/3/library/textwrap.html) のアルゴリズムに従ってタイトルの分割処理が行われます。その分割処理によって、改行させてタイトルを付けます。
 
@@ -32,16 +32,16 @@ ogimage: "img/images/20211201.png"
 
 ## 実装の方針の洗い出し
 
-- OGP 画像にタイトルを付けるための実装方法を以下にまとめました。現時点での実装は、自動で行う方法の 1 と手動で行う方法の 1 のハイブリッドな実装となっています。
+- OGP 画像にタイトルを付けるために洗い出した実装方法を以下にまとめました。現時点での実装は、自動で行う方法の 1 と手動で行う方法の 1 のハイブリッドな実装となっています。
 
 - 自動で行う方法
   1. [textwrap](https://github.com/python/cpython/blob/3.9/Lib/textwrap.py) を活用して雑に改行させる
   2. [textwrap](https://github.com/python/cpython/blob/3.9/Lib/textwrap.py) を拡張して好みの形で改行させる
-  3. [google/budoux](https://github.com/google/budoux) を活用してタイトルを日本語として意味のある形に分割して、改行させる
+  3. [google/budoux](https://github.com/google/budoux) を活用してタイトルを日本語として意味のある形に分割して改行させる
 - 手動で行う方法
   1. Hugo のフロントマターのタイトルに改行させたい箇所に `\n` を差し込み、Python の OGP 画像を作成するスクリプトで改行させる
 
-- 自動で行う方法の 3 の [google/budoux](https://github.com/google/budoux) というライブラリは、[Twitter](https://twitter.com/tushuhei/status/1461184410473033742?s=20) で知りました。これは、機械学習を活用した文章を意味のある単位に分割するライブラリです。README.md にも書かれているように、例えば `あなたに寄り添う最先端のテクノロジー。` という文字列をこのライブラリを用いて分割するとします。その結果、`あなたに` と `寄り添う` と `最先端の` と `テクノロジー。` に分割されます。こうして日本語の文章を意味のある単位に分割することが確認できます。この結果から、[google/budoux](https://github.com/google/budoux) はこのブログに応用できるのではないかと思い、以前から試したいと思っていました。
+- 自動で行う方法の 3 の [google/budoux](https://github.com/google/budoux) というライブラリは、[Twitter](https://twitter.com/tushuhei/status/1461184410473033742?s=20) で知りました。これは、機械学習を活用した文章を意味のある単位に分割するライブラリです。README.md にも書かれているように、例えば `あなたに寄り添う最先端のテクノロジー。` という文字列をこのライブラリを用いて分割するとします。その結果、`あなたに` と `寄り添う` と `最先端の` と `テクノロジー。` に分割されます。こうして日本語の文章を意味のある単位に分割することが確認できます。この結果から、[google/budoux](https://github.com/google/budoux) はこのブログの OGP 画像の生成に応用できるのではないかと思い、以前から試したいと思っていました。
 
 ## 実装の方針の比較
 
@@ -70,5 +70,6 @@ ogimage: "img/images/20211201.png"
 
 ## 参考
 
+- [textwrap --- テキストの折り返しと詰め込み](https://docs.python.org/ja/3/library/textwrap.html#module-textwrap)
 - [textwrap](https://github.com/python/cpython/blob/3.9/Lib/textwrap.py)
 - [google/budoux](https://github.com/google/budoux)
