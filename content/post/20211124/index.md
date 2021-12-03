@@ -3,7 +3,7 @@ draft: false
 title: "CyberAgent のコンテナ技術に関する\n勉強会に参加してきた"
 date: 2021-11-30T18:35:39Z
 tags: ["CyberAgent", "Docker", "Kubernetes"]
-favorite: false
+pinned: false
 ogimage: "img/images/20211124.png"
 ---
 

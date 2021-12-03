@@ -3,7 +3,7 @@ draft: false
 title: "Hugo で Markdown が上手く Parse されない原因を調査してみた"
 date: 2021-06-22T13:08:38Z
 tags: ["Hugo"]
-favorite: false
+pinned: false
 ogimage: "img/images/20210624.png"
 ---
 

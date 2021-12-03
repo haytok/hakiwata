@@ -3,7 +3,7 @@ draft: false
 title: "CPython 調査ログ"
 date: 2021-11-17T09:20:23Z
 tags: ["CPython", "Python", "C"]
-favorite: false
+pinned: false
 ---
 
 ## 概要

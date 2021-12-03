@@ -3,7 +3,7 @@ draft: false
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 tags: []
-favorite: false
+pinned: false
 ogimage: "img/images/{{ .Name }}.png"
 ---
 

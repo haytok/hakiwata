@@ -3,7 +3,7 @@ draft: false
 title: "scp メモ"
 date: 2021-10-20T09:20:23Z
 tags: ["scp"]
-favorite: false
+pinned: false
 ---
 
 ## 概要

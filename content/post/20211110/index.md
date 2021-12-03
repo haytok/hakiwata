@@ -3,7 +3,7 @@ draft: false
 title: "このブログで使用した技術について"
 date: 2021-11-10T11:17:18Z
 tags: ["Hugo", "Python", "Docker", "docker-compose"]
-favorite: false
+pinned: false
 ogimage: "img/images/20211110.png"
 ---
 

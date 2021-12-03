@@ -3,7 +3,7 @@ draft: false
 title: "OGP 画像のタイトルを作成する\n実装方針の比較と検討"
 date: 2021-12-01T09:27:59Z
 tags: ["Python"]
-favorite: false
+pinned: false
 ogimage: "img/images/20211201.png"
 ---
 

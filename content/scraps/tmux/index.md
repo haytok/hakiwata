@@ -3,7 +3,7 @@ draft: false
 title: "tmux メモ"
 date: 2021-09-19T22:14:46Z
 tags: ["tmux"]
-favorite: false
+pinned: false
 ---
 
 ## 概要
