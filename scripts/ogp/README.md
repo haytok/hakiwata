@@ -227,6 +227,25 @@ git log -3
 - [requestsが送出した例外からレスポンスボディを取得する](https://kamatimaru.hatenablog.com/entry/2021/05/18/073757)
 - [Python API通信時の例外処理](https://qiita.com/d_kvn/items/5da7f5cdfc8200172a39)
 
+## GitHub API を呼び出した時に返ってくるレスポンスの例
+
+```bash
+"files": [
+    {
+        "sha": "hogehoge",
+        "filename": "content/post/20210430/index.md",
+        "status": "renamed",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "blob_url": "hogehoge",
+        "raw_url": "hogehoge",
+        "contents_url": "hogehoge",
+        "previous_filename": "content/post/20210430.md"
+    },
+]
+```
+
 ---
 
 ## favicon.ico の変更に関して
