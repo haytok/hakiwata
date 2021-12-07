@@ -1,14 +1,14 @@
 import glob
-import os
-import textwrap
-import requests
 import logging
+import os
 import re
 
+import requests
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from requests.exceptions import RequestException
 
 logger = logging.getLogger(__name__)
+
 
 def paste_icon_image(base_img, icon_img):
     # 円形にアイコンを切り出す処理
@@ -42,19 +42,12 @@ def add_centered_text(
     font = ImageFont.truetype(font_path, font_size)
     draw = ImageDraw.Draw(base_img)
 
-    # print(text)
-    # wrap_list = text.split('\\n')
-    # print(wrap_list, len(wrap_list[0]))
-    # if len(wrap_list) > 1:
-    #     y_pos -= 35
+    wrap_list = text.split('\\n') if '\\n' in text else [text]
 
-    if '\\n' in text:
-        wrap_list = text.split('\\n')
-    else:
-        wrap_list = textwrap.wrap(text, 30)
-    # print(wrap_list, len(wrap_list[0]))
+    # タイトルが長いせいで改行が必要な時、表示する位置を少し上に調整する。
     if len(wrap_list) > 1:
         y_pos -= 35
+
     for line in wrap_list:
         x_pos = (base_img.size[0] - draw.textsize(line, font=font)[0]) / 2
         draw.text(
@@ -92,7 +85,6 @@ def add_author_text(
 def create_ogp_image(date, text):
     if not date or not text:
         raise 'Invalid Inputs'
-    print('save_filepath')
 
     ogp_base_img_path = './images/template.png'
     ogp_icon_img_path = './images/kiwata.png'
@@ -149,40 +141,6 @@ def create_ogp_image(date, text):
     base_img.save(f'{save_filepath}{date}.png')
 
 
-BASE_POST_PATH = '../../content/post'
-
-
-def is_file(target):
-    file_data = glob.glob(f'{BASE_POST_PATH}/**', recursive=True)
-    for p in file_data:
-        if not os.path.isfile(p):
-            continue
-        if p.split('/')[-1].split('.')[0] == target:
-            return p
-    else:
-        return None
-
-
-def is_dir(target):
-    dir_data = glob.glob(f'{BASE_POST_PATH}/**/')
-    for p in dir_data:
-        if p.split('/')[-2] == target:
-            return p
-    else:
-        return None
-
-
-def get_file_path(target):
-    file_path = is_file(target)
-    dir_path = is_dir(target)
-    if file_path is not None:
-        return file_path
-    elif dir_path is not None:
-        return dir_path + 'index.md'
-    else:
-        return None
-
-
 def get_file_meta_data(file_path):
     is_started = False
     meta_data = []
@@ -207,73 +165,72 @@ def filter_meta_data(meta_data, key):
 
 
 # 既存のエントリ用の OGP を作成するための関数
-def update_ogp_image():
-    targets = [
-        '20210512',
-        '20210518',
-        '20210529',
-        '20210610',
-        '20210611',
-        '20210613',
-        '20210615',
-        '20210618',
-        '20210622',
-        '20210624',
-        '20210628',
-        '20210830',
-        '20210831',
-        '20210901',
-        '20210911',
-        '20211018',
-    ]
-    for target in targets:
-        file_path = get_file_path(target)
-        if file_path is None:
-            raise 'Invalid Input'
-
+def update_ogp_image(excluding_dir_entries=[]):
+    BASE_POST_PATH = '../../content/post'
+    dir_entries = glob.glob(f'{BASE_POST_PATH}/**/')
+    for dir_entry in sorted(dir_entries):
+        filename = 'index.md'
+        file_path = dir_entry + filename
         meta_data = get_file_meta_data(file_path)
+
         if len(meta_data) == 0:
-            raise 'Invalid Input'
-        # yyyymmdd のフォーマットで来るように仕様を変更する
-        meta_date = target
+            raise 'Directory entry is invalid.'
+
+        meta_date = dir_entry.split('/')[-2]
         meta_title = filter_meta_data(meta_data, 'title').replace("\"", "")
-        print(meta_date, meta_title)
-        # # 以下の 2 つのデータを取得する必要がある
-        # date = '2021-04-30T03:03:17+09:00'
-        # # 40 文字までは表示することが可能である。
-        # text = "振り返り"
-        # text = "Hugo で Markdown が上手く Parse されない原因を調査してみた"
-        # text = "自作 OS のリポジトリの README.md を自動更新する"
+
+        if meta_date in excluding_dir_entries:
+            continue
+
+        """
+        以下の 2 つのデータを取得する必要がある
+        meta_date は、yyyymmdd のフォーマットである。
+        タイトルは、40 文字まではレイアウトが崩れず表示することができる。
+        text = "振り返り"
+        text = "Hugo で Markdown が上手く Parse されない原因を調査してみた"
+        text = "自作 OS のリポジトリの README.md を自動更新する"
+        """
         create_ogp_image(meta_date, meta_title)
 
 
-def get_data():
+def get_latest_commit_data():
     url = 'https://api.github.com/repos/dilmnqvovpnmlib/hakiwata/commits/main'
-    # url = "https://dog.ceo/api/breeds/image/notfound" # 404 を返す API
-    fixed_files = []
 
     try:
         res = requests.get(url)
         res.raise_for_status()
         res_json = res.json()
-        access_key = 'files'
-        if access_key not in res_json:
-            return fixed_files
-        files = res_json[access_key]
-        if len(files) == 0:
-            return fixed_files
-        for file in files:
-            access_key = 'filename'
-            if access_key not in file:
-                continue
-            filename = file[access_key]
-            search_path = 'content/post/'
-            if filename.startswith(search_path):
-                fixed_files.append(filename)
-        return fixed_files
+        return res_json
     except RequestException as e:
-        logger.exception("request failed. error=(%s)", e.response.text)
+        logger.exception('request failed. error=(%s)', e.response.text)
+        raise e
 
+
+def get_fixed_files():
+    fixed_files = []
+
+    commit_data = get_latest_commit_data()
+
+    access_key = 'files'
+    if access_key not in commit_data:
+        return fixed_files
+
+    files = commit_data[access_key]
+    if len(files) == 0:
+        return fixed_files
+
+    # commit に複数の変更ファイルが含まれているケースも考慮する。
+    for file in files:
+        access_key = 'filename'
+        if access_key not in file:
+            continue
+
+        filename = file[access_key]
+        search_path = 'content/post/'
+        if filename.startswith(search_path):
+            fixed_files.append(filename)
+
+    return fixed_files
 
 
 def is_valid_date_format(value):
@@ -291,6 +248,7 @@ def is_valid_date_format(value):
 def get_date(filepath):
     splited_filepath = filepath.split('/')
     date = splited_filepath[-1].split('.')[0]
+
     if splited_filepath[-1] == 'index.md':
         return splited_filepath[-2]
     elif is_valid_date_format(date):
@@ -300,7 +258,9 @@ def get_date(filepath):
 
 
 def main():
-    fixed_files = get_data() # GitHub の API 経由で変更されたファイル名を取得する。
+    # GitHub の API 経由で変更されたファイル名を取得する。
+    # つまり、最新のコミット情報にファイル変更の履歴が無いと、この if 文で return されてしまう。
+    fixed_files = get_fixed_files()
     if len(fixed_files) == 0:
         return
 
@@ -320,5 +280,13 @@ def main():
 
 
 if __name__ == '__main__':
-    # update_ogp_image()
     main()
+
+    # 一部のファイルを除いたエントリの OGP を変更することができる。
+    # excluding_dir_entries = ['20210928', '20211114']
+    # update_ogp_image(excluding_dir_entries)
+
+    # 以下のような形であるエントリのみの OGP 画像を確認できる。
+    # meta_date = '20211124'
+    # meta_title = "CyberAgent のコンテナ技術に関する\n勉強会に参加してきた"
+    # create_ogp_image(meta_date, meta_title)
