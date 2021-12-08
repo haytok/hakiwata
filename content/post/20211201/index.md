@@ -66,7 +66,7 @@ ogimage: "img/images/20211201.png"
 
 ## 最後に
 
-- OGP 画像のタイトルを作成するライブラリの比較と検討に当たって [textwrap](https://github.com/python/cpython/blob/3.9/Lib/textwrap.py) や [google/budoux](https://github.com/google/budoux) の実装をソースコードレベルで追ったりしました。その調査は大変面白かったので、その内容に関しては、別の記事でまとめたいと思います。
+- OGP 画像のタイトルを作成するライブラリの比較と検討に当たって [textwrap](https://github.com/python/cpython/blob/3.9/Lib/textwrap.py) や [google/budoux](https://github.com/google/budoux) の実装をソースコードレベルで追ったりしました。その調査は大変面白かったので、その内容に関しては、別の記事でまとめたいと思います🤞
 
 ## 参考
 
