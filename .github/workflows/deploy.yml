@@ -9,6 +9,7 @@ on:
       - 'content/post/**'
       - 'content/log/**'
       - 'content/scraps/**'
+      - 'content/hobby/**'
   workflow_dispatch:
 
 jobs:
