@@ -26,15 +26,21 @@
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
     {{ range $pages }}
+    {{ $PermalinkElements := split .Permalink "/" }}
+    {{ $TargetIndex := 3 }}
+    {{ $ContentType := index $PermalinkElements $TargetIndex }}
+    <!-- ここに RSS から除外したい content のタイプを指定する。 -->
+    {{ $ExcludingContentTypes := (slice "scraps" "log" "hobby") }}
+    {{ if not (in $ExcludingContentTypes $ContentType) }}
     <item>
-      <title>{{ .Title }}</title>
-      <link>{{ .Permalink }}</link>
-      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
-      <guid>{{ .Permalink }}</guid>
-      <description/>
-      <!-- <description>{{ .Summary | html }}</description> -->
+        <title>{{ .Title }}</title>
+        <link>{{ .Permalink }}</link>
+        <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+        {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
+        <guid>{{ .Permalink }}</guid>
+        <description/>
     </item>
+    {{ end }}
     {{ end }}
   </channel>
 </rss>
