@@ -10,7 +10,7 @@
 - 開発用サーバの起動
 
 ```bash
-make
+make or make server
 ```
 
 - 新規コンテンツの作成
@@ -30,3 +30,10 @@ make log D=<directory name>
 ```bash
 make scraps D=<directory name>
 ```
+
+- ビルド
+
+```bash
+make build
+```
+
