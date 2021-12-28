@@ -10,10 +10,13 @@ on:
       - 'content/log/**'
       - 'content/scraps/**'
       - 'content/hobby/**'
+  pull_request:
+    types: [closed]
   workflow_dispatch:
 
 jobs:
   deploy:
+    if: ${{ github.event_name == 'push' || github.event.pull_request.merged == true }}
     runs-on: ubuntu-18.04
     timeout-minutes: 10
     steps:
