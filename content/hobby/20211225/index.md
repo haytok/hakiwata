@@ -31,7 +31,7 @@ date: 2021-12-25T09:27:59Z
 | [MAJOR 2nd](https://websunday.net/work/722/) | 1 ~ 24 (最新刊) | ✕ | - |
 | [ザ・ファブル The second contact](https://yanmaga.jp/comics/%E3%82%B6_%E3%83%95%E3%82%A1%E3%83%96%E3%83%AB_The_second_contact) | 1 (最新刊) | ✕ | - |
 | [九条の大罪](https://bigcomicbros.net/work/35215/) | 1 ~ 4 (最新刊) | ✕ | - |
-| [満州アヘンスクワッド](https://yanmaga.jp/comics/%E6%BA%80%E5%B7%9E%E3%82%A2%E3%83%98%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AF%E3%83%83%E3%83%89) | 1 ~ 3 | ✕ | - |
+| [満州アヘンスクワッド](https://yanmaga.jp/comics/%E6%BA%80%E5%B7%9E%E3%82%A2%E3%83%98%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AF%E3%83%83%E3%83%89) | 1 ~ 6 (最新刊) | ✕ | - |
 | [バトルスタディーズ](https://kc.kodansha.co.jp/title?code=1000025521) | 1 ~ 26 | ✕ | 27, 28, 29, 30 は持っていない。 |
 | [トリリオンゲーム](https://bigcomicbros.net/comics/69965/) | 1 ~ 2 (最新刊) | ✕ | - |
 | [キングダム](https://youngjump.jp/kingdom/) | 1 ~ 63 (最新刊) | ✕ | - |
