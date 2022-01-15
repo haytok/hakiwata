@@ -9,7 +9,7 @@ ogimage: "img/images/20220114.png"
 
 ## 概要
 
-- こんにちは :) 最近、FasS 環境を使って Web API をデプロイしたい機会がありました。そこで、[Vercel](https://vercel.com) を使うことにし、ドキュメントを読んで API をデプロイしようとしました。その際、ドキュメントの間違いに気づき、[Velcel Support](https://vercel.com/support) に問い合わすことでその真偽を確かめるような経験を初めてしました。今回はそこに至るまでの背景や [Velcel Support](https://vercel.com/support) とのやり取りや勉強になったことなどについての記録を残したいと思います。
+- こんにちは :) 最近、FasS 環境を使って Web API をデプロイしたい機会がありました。[Vercel](https://vercel.com) を使って API をデプロイすることにしたのですが、ドキュメントを読んで実装をしていると、サンプルコードの間違いに気づきました。そこで、その真偽を [Velcel Support](https://vercel.com/support) に問い合わせ、修正案を提案するという経験を初めてしました。今回はそこに至るまでの背景や [Velcel Support](https://vercel.com/support) とのやり取りにおいて勉強になったことなどについての記録を残したいと思います。
 
 ## 背景
 
