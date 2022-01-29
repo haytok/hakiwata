@@ -16,6 +16,8 @@ date = "2021-04-30T00:00:00+08:00"
 
 ## Publications
 
+- Hayato Kiwata, Koji Igarashi, Noboru Yoshikane, "[Control of SDN optical networks using public cloud container services,](https://www.ieice.org/ken/paper/20220128fC7Q/)" IEICE Tech. Rep., vol. 121, no. 350, PN2021-41, pp. 46-50, Jan. 2022.
+
 - K. Igarashi, H. Kiwata, M. Kikuta and M. Shigihara, "Measurement of Laser Phase Noise for Ultra-Long Period of 0.8 Seconds with 800-ps Temporal Resolution Using Optical Coherent Detection with FPGA-Implemented Data Acquisition," in Journal of Lightwave Technology, doi: [10.1109/JLT.2021.3101546](https://ieeexplore.ieee.org/abstract/document/9506889).
 
 - H. Kiwata, M. Kikuta, M. Shigihara and K. Igarashi, "Ultra-long-time (0.8 s) characterization of laser phase noise with high temporal resolution (800 ps) based on heterodyne reception with FPGA data acquisition," 2020 European Conference on Optical Communications (ECOC), 2020, pp. 1-4, doi: [10.1109/ECOC48923.2020.9333323](https://ieeexplore.ieee.org/document/9333323).
