@@ -1,0 +1,87 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.83.1"><title>cobra のソースコードを読んで
+調査してみた - haKiwata</title><meta name=description content="概要  こんにちは :) 最近、Golang を書くことにハマっています。その一環で cobra と viper を使って簡単な CLI アプリケーション (gngc) を作ってみました。このアプリケーションを実装する際、様々なネットの記事、公式ドキュメント、そして README.md を読んでみました。しかし、どの実装方法を選択すればわからない場面や出力させたくないエラーメッセージを消す方法がわからない場面などに遭遇することがありました。その際、内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみたので、その記録を簡単に残したいと思います。  調査内容  調査内容は以下の 3 点です。   CLI アプリケーションが実行されるまでの流れに関して rootCmd.Run と rootCmd.RunE の違いに関して cobra がデフォルトで出すエラーメッセージを出さない方法に関して  調査内容 1 (cobra の内部実装)  cobra を用いて実装した CLI アプリケーションが実行される大まかな流れを以下の画像のシーケンス図にまとめてみました。(シーケンス図の書き方は完全に正しくはありません &mldr;)  調査内容 2 (rootCmd.Run と rootCmd.RunE の違いに関して)  cobra でアプリケーションを実装する際、cmd/root.go に以下のような初期化を行います。その際、実際に実行されるコマンドは Run や RunE の箇所に関数を定義します。  var rootCmd = &cobra.Command{ Use: &#34;gngc&#34;, Short: &#34;Get and Notify GitHub Contributions&#34;, Long: &#34;A simple command line application to get GitHub contributions from GraphQL API and notify them to IFTTT."><link rel="shortcut icon" href=https://hakiwata.jp/img/images/favicon.ico><link rel=stylesheet href=https://hakiwata.jp/css/ui.css><link rel=stylesheet href=https://hakiwata.jp/css/main.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway"><meta property="og:title" content="cobra のソースコードを読んで
+調査してみた"><meta property="og:description" content="概要  こんにちは :) 最近、Golang を書くことにハマっています。その一環で cobra と viper を使って簡単な CLI アプリケーション (gngc) を作ってみました。このアプリケーションを実装する際、様々なネットの記事、公式ドキュメント、そして README.md を読んでみました。しかし、どの実装方法を選択すればわからない場面や出力させたくないエラーメッセージを消す方法がわからない場面などに遭遇することがありました。その際、内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみたので、その記録を簡単に残したいと思います。  調査内容  調査内容は以下の 3 点です。   CLI アプリケーションが実行されるまでの流れに関して rootCmd.Run と rootCmd.RunE の違いに関して cobra がデフォルトで出すエラーメッセージを出さない方法に関して  調査内容 1 (cobra の内部実装)  cobra を用いて実装した CLI アプリケーションが実行される大まかな流れを以下の画像のシーケンス図にまとめてみました。(シーケンス図の書き方は完全に正しくはありません &mldr;)  調査内容 2 (rootCmd.Run と rootCmd.RunE の違いに関して)  cobra でアプリケーションを実装する際、cmd/root.go に以下のような初期化を行います。その際、実際に実行されるコマンドは Run や RunE の箇所に関数を定義します。  var rootCmd = &cobra.Command{ Use: &#34;gngc&#34;, Short: &#34;Get and Notify GitHub Contributions&#34;, Long: &#34;A simple command line application to get GitHub contributions from GraphQL API and notify them to IFTTT."><meta property="og:type" content="article"><meta property="og:url" content="https://hakiwata.jp/post/20220213/"><meta property="og:image" content="https://hakiwata.jp/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-02-12T17:02:25+00:00"><meta property="article:modified_time" content="2022-02-12T17:02:25+00:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@bilmnpvovqnmlid"><meta name=twitter:creator content="@bilmnpvovqnmlid"><meta property="twitter:image" content="https://hakiwata.jp/img/images/20220213.png"><meta property="og:title" content="cobra のソースコードを読んで
+調査してみた"><meta property="og:url" content="https://hakiwata.jp/post/20220213/"><meta property="og:image" content="https://hakiwata.jp/img/images/20220213.png"><meta property="og:description" content><script async src="https://www.googletagmanager.com/gtag/js?id=G-YXCYPL25QW"></script><script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-YXCYPL25QW',{anonymize_ip:!1})}</script></head><body><header class="container no-print"><div class=u-header><nav class=bar><ul><li><a href=https://hakiwata.jp/><img class=icon-text src=https://hakiwata.jp/img/prev.svg></a></li><li><a href=https://hakiwata.jp/about>About</a></li><li><a href=https://hakiwata.jp/log>Log</a></li><li><a href=https://hakiwata.jp/post>Post</a></li><li><a href=https://hakiwata.jp/scraps>Scraps</a></li><li><a href=https://hakiwata.jp/tags>Tags</a></li></ul></nav></div></header><main class=container><article><header><hgroup id=brand><h1>cobra のソースコードを読んで
+調査してみた</h1><h5><time datetime="2022-02-12 17:02:25 +0000 UTC">Feb 12, 2022</time>
+<span class=no-print>-
+<a href=https://hakiwata.jp/tags/golang>Golang</a>
+<a href=https://hakiwata.jp/tags/cobra>cobra</a>
+<span></h5></hgroup><hr class=sep></header><h2 id=概要>概要</h2><ul><li>こんにちは :) 最近、<a href=https://go.dev/>Golang</a> を書くことにハマっています。その一環で <a href=https://github.com/spf13/cobra>cobra</a> と <a href=https://github.com/spf13/viper>viper</a> を使って簡単な CLI アプリケーション (<a href=https://github.com/dilmnqvovpnmlib/gngc/>gngc</a>) を作ってみました。このアプリケーションを実装する際、様々なネットの記事、<a href=https://cobra.dev/>公式ドキュメント</a>、そして <a href=https://github.com/spf13/cobra/blob/master/README.md>README.md</a> を読んでみました。しかし、どの実装方法を選択すればわからない場面や出力させたくないエラーメッセージを消す方法がわからない場面などに遭遇することがありました。その際、内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみたので、その記録を簡単に残したいと思います。</li></ul><h2 id=調査内容>調査内容</h2><ul><li>調査内容は以下の 3 点です。</li></ul><ol><li>CLI アプリケーションが実行されるまでの流れに関して</li><li><code>rootCmd.Run</code> と <code>rootCmd.RunE</code> の違いに関して</li><li><a href=https://github.com/spf13/cobra>cobra</a> がデフォルトで出すエラーメッセージを出さない方法に関して</li></ol><h2 id=調査内容-1-cobra-の内部実装>調査内容 1 (cobra の内部実装)</h2><ul><li><a href=https://github.com/spf13/cobra>cobra</a> を用いて実装した CLI アプリケーションが実行される大まかな流れを以下の画像のシーケンス図にまとめてみました。(シーケンス図の書き方は完全に正しくはありません &mldr;)</li></ul><p><img src=media/cobra-flow.png alt=cobra-flow.png></p><h2 id=調査内容-2-rootcmdrun-と-rootcmdrune-の違いに関して>調査内容 2 (rootCmd.Run と rootCmd.RunE の違いに関して)</h2><ul><li><a href=https://github.com/spf13/cobra>cobra</a> でアプリケーションを実装する際、<code>cmd/root.go</code> に以下のような初期化を行います。その際、実際に実行されるコマンドは <code>Run</code> や <code>RunE</code> の箇所に関数を定義します。</li></ul><div class=highlight><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>var</span> <span class=nx>rootCmd</span> <span class=p>=</span> <span class=o>&amp;</span><span class=nx>cobra</span><span class=p>.</span><span class=nx>Command</span><span class=p>{</span>
+	<span class=nx>Use</span><span class=p>:</span>           <span class=s>&#34;gngc&#34;</span><span class=p>,</span>
+	<span class=nx>Short</span><span class=p>:</span>         <span class=s>&#34;Get and Notify GitHub Contributions&#34;</span><span class=p>,</span>
+	<span class=nx>Long</span><span class=p>:</span>          <span class=s>&#34;A simple command line application to get GitHub contributions from GraphQL API and notify them to IFTTT.&#34;</span><span class=p>,</span>
+	<span class=nx>SilenceErrors</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+	<span class=c1>// SilenceUsage:  true,
+</span><span class=c1></span>
+	<span class=nx>RunE</span><span class=p>:</span> <span class=nx>runCommand</span><span class=p>,</span>
+<span class=p>}</span>
+</code></pre></div><ul><li>これは、<a href=https://pkg.go.dev/github.com/spf13/cobra#Command>ドキュメント</a>にも記載されています。しかし、イマイチ使い分けがわからなかったので、内部の実装 (<a href=https://github.com/spf13/cobra/blob/master/command.go#L769>func (c *Command) execute(a []string) (err error)</a>) を確認してみました。</li></ul><div class=highlight><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>Command</span><span class=p>)</span> <span class=nf>execute</span><span class=p>(</span><span class=nx>a</span> <span class=p>[]</span><span class=kt>string</span><span class=p>)</span> <span class=p>(</span><span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+<span class=o>...</span>
+	<span class=k>if</span> <span class=p>!</span><span class=nx>c</span><span class=p>.</span><span class=nf>Runnable</span><span class=p>()</span> <span class=p>{</span>
+		<span class=k>return</span> <span class=nx>flag</span><span class=p>.</span><span class=nx>ErrHelp</span>
+	<span class=p>}</span>
+<span class=o>...</span>
+	<span class=k>if</span> <span class=nx>c</span><span class=p>.</span><span class=nx>RunE</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>c</span><span class=p>.</span><span class=nf>RunE</span><span class=p>(</span><span class=nx>c</span><span class=p>,</span> <span class=nx>argWoFlags</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=nx>err</span>
+		<span class=p>}</span>
+	<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+		<span class=nx>c</span><span class=p>.</span><span class=nf>Run</span><span class=p>(</span><span class=nx>c</span><span class=p>,</span> <span class=nx>argWoFlags</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=o>...</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>Command</span><span class=p>)</span> <span class=nf>Runnable</span><span class=p>()</span> <span class=kt>bool</span> <span class=p>{</span>
+	<span class=k>return</span> <span class=nx>c</span><span class=p>.</span><span class=nx>Run</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=o>||</span> <span class=nx>c</span><span class=p>.</span><span class=nx>RunE</span> <span class=o>!=</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></div><ul><li><p><code>Run</code> や <code>RunE</code> で設定した関数はこの箇所で呼ばれているようです。このソースコードからもわかるように <a href=https://github.com/spf13/cobra/blob/master/command.go#L1358>func (c *Command) Runnable() bool</a> で <code>Run</code> あるいは <code>RunE</code> が定義されているかを確認します。その後に、<code>RunE</code> が定義されていると、その関数を呼び出し、結果 (<code>err</code>) をその時点で <code>return</code> します。そして、この返り値が呼び出し元に伝搬していき、呼び出し元でエラーに応じたハンドリングを行います。</p></li><li><p>一方、<code>Run</code> は <code>RunE</code> が定義されていない時に呼び出されます。<code>Run</code> で定義された関数を呼び出す際、その関数の返り値をハンドリングしないため、その関数内でエラーハンドリングを行い、エラーメッセージを出力する必要があります。そのため、エラーメッセージの出力の実装が散らばってしまう問題があります。</p></li><li><p>つまり、<code>RunE</code> を用いると、コマンド実行時のエラーをそもそもの呼び出し元の <a href=https://github.com/dilmnqvovpnmlib/gngc/blob/main/cmd/root.go>cmd/root.go</a> の <a href=https://github.com/dilmnqvovpnmlib/gngc/blob/main/cmd/root.go#L92>func Execute()</a> でまとめてエラーに応じたエラーメッセージを出力することができます。</p></li></ul><h2 id=調査内容-3-cobra-がデフォルト出すエラーメッセージを出さない方法に関して>調査内容 3 (cobra がデフォルト出すエラーメッセージを出さない方法に関して)</h2><ul><li>例えば、存在しないオプションでアプリケーションを実行するとエラーが生じ、それに応じたエラーメッセージが出力されます。この際、当初の自分の実装では、以下のようにエラーメッセージ (<code>Error: unknown shorthand flag: 'g' in -g</code>) が重複して出力されていました。</li></ul><div class=highlight><pre class=chroma><code class=language-bash data-lang=bash>&gt; go run main.go -g
+Error: unknown shorthand flag: <span class=s1>&#39;g&#39;</span> in -g
+Usage:
+  gngc <span class=o>[</span>flags<span class=o>]</span>
+
+Flags:
+      --config string   config file <span class=o>(</span>default is <span class=nv>$HOME</span>/.gngc.toml<span class=o>)</span>
+  -h, --help            <span class=nb>help</span> <span class=k>for</span> gngc
+  -n, --notify          Get GitHub contributions and notify them to IFTTT.
+
+Error: unknown shorthand flag: <span class=s1>&#39;g&#39;</span> in -g
+<span class=nb>exit</span> status <span class=m>1</span>
+</code></pre></div><ul><li>このエラーメッセージの重複を回避するために、ソースコードを読んでいると 1 つ目のエラーメッセージを出力している実装は <a href=https://github.com/spf13/cobra/blob/master/command.go#L915>func (c *Command) ExecuteC() (cmd *Command, err error)</a> 内の <code>cmd.SilenceErrors</code> の設定が関係していることに気づきました。</li></ul><div class=highlight><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>Command</span><span class=p>)</span> <span class=nf>ExecuteC</span><span class=p>()</span> <span class=p>(</span><span class=nx>cmd</span> <span class=o>*</span><span class=nx>Command</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+<span class=o>...</span>
+	<span class=nx>err</span> <span class=p>=</span> <span class=nx>cmd</span><span class=p>.</span><span class=nf>execute</span><span class=p>(</span><span class=nx>flags</span><span class=p>)</span>
+	<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+		<span class=c1>// Always show help if requested, even if SilenceErrors is in
+</span><span class=c1></span>		<span class=c1>// effect
+</span><span class=c1></span>		<span class=k>if</span> <span class=nx>err</span> <span class=o>==</span> <span class=nx>flag</span><span class=p>.</span><span class=nx>ErrHelp</span> <span class=p>{</span>
+			<span class=nx>cmd</span><span class=p>.</span><span class=nf>HelpFunc</span><span class=p>()(</span><span class=nx>cmd</span><span class=p>,</span> <span class=nx>args</span><span class=p>)</span>
+			<span class=k>return</span> <span class=nx>cmd</span><span class=p>,</span> <span class=kc>nil</span>
+		<span class=p>}</span>
+
+		<span class=c1>// If root command has SilenceErrors flagged,
+</span><span class=c1></span>		<span class=c1>// all subcommands should respect it
+</span><span class=c1></span>		<span class=k>if</span> <span class=p>!</span><span class=nx>cmd</span><span class=p>.</span><span class=nx>SilenceErrors</span> <span class=o>&amp;&amp;</span> <span class=p>!</span><span class=nx>c</span><span class=p>.</span><span class=nx>SilenceErrors</span> <span class=p>{</span>
+			<span class=nx>c</span><span class=p>.</span><span class=nf>PrintErrln</span><span class=p>(</span><span class=s>&#34;Error:&#34;</span><span class=p>,</span> <span class=nx>err</span><span class=p>.</span><span class=nf>Error</span><span class=p>())</span>
+		<span class=p>}</span>
+
+		<span class=c1>// If root command has SilenceUsage flagged,
+</span><span class=c1></span>		<span class=c1>// all subcommands should respect it
+</span><span class=c1></span>		<span class=k>if</span> <span class=p>!</span><span class=nx>cmd</span><span class=p>.</span><span class=nx>SilenceUsage</span> <span class=o>&amp;&amp;</span> <span class=p>!</span><span class=nx>c</span><span class=p>.</span><span class=nx>SilenceUsage</span> <span class=p>{</span>
+			<span class=nx>c</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>cmd</span><span class=p>.</span><span class=nf>UsageString</span><span class=p>())</span>
+		<span class=p>}</span>
+	<span class=p>}</span>
+	<span class=k>return</span> <span class=nx>cmd</span><span class=p>,</span> <span class=nx>err</span>
+<span class=p>}</span>
+</code></pre></div><ul><li>ドキュメントの <a href=https://pkg.go.dev/github.com/spf13/cobra#Command>type Command</a> の実装を確認すると、以下のようなコメントが確認できました。この <code>SilenceErrors</code> を <code>true</code> にして　Silence を有効にする、つまり 1 つ目のエラーメッセージを出力しないようにするように設定すると、エラーメッセージの重複が回避できました。</li></ul><div class=highlight><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>type</span> <span class=nx>Command</span> <span class=kd>struct</span> <span class=p>{</span>
+<span class=o>...</span>
+	<span class=c1>// SilenceErrors is an option to quiet errors down stream.
+</span><span class=c1></span>	<span class=nx>SilenceErrors</span> <span class=kt>bool</span>
+
+	<span class=c1>// SilenceUsage is an option to silence usage when an error occurs.
+</span><span class=c1></span>	<span class=nx>SilenceUsage</span> <span class=kt>bool</span>
+<span class=o>...</span>
+<span class=p>}</span>
+</code></pre></div><h2 id=結論>結論</h2><ul><li>今回は、<a href=https://github.com/spf13/cobra>cobra</a> の内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみました。ソースコードを読んで実装を理解したり、目的の実装を成し遂げられたことは結構楽しかったです。これからも定期的に自分が使うライブラリのソースコードを読む癖を付けていきたいと思いました :)</li></ul><h2 id=参考>参考</h2><ul><li><a href=https://github.com/spf13/cobra>cobra</a></li><li><a href=https://cobra.dev/>公式ドキュメント</a></li></ul></article><nav class="no-print post-nav"><a class=prev-post href=https://hakiwata.jp/post/20220131/><img class=icon-text src=https://hakiwata.jp/img/prev.svg>修士課程で初めて
+国内の研究会で発表をしてきた</a></nav><section id=related><h4>See Also</h4><ul><li><a href=https://hakiwata.jp/log/golang/>Golang</a></li></ul></section><hr class=sep></main><footer class="container no-print"><div class=u-footer><a href=https://github.com/dilmnqvovpnmlib><img class=icon-social src=https://hakiwata.jp/img/github.svg alt=Github></a>
+<a href=https://twitter.com/bilmnpvovqnmlid><img class=icon-social src=https://hakiwata.jp/img/twitter.svg alt=Twitter></a>
+<a href=https://hakiwata.jp/index.xml target=_blank><img class=icon-social src=https://hakiwata.jp/img/feed.svg alt=Feed></a><p>&copy; 2021 haKiwata</p><a href=#brand><img class=icon-text src=https://hakiwata.jp/img/toup.svg alt="To Up">
+<span>Back to Up</span></a></div></footer></body></html>
