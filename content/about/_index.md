@@ -5,7 +5,7 @@ date = "2021-04-30T00:00:00+08:00"
 
 ## Education
 
-- April 2020 ~ Present
+- April 2020 ~ March 2022
   - Graduate School of Engineering at Osaka University
     - Division of Electrical, Electronic, and Infocommunications Engineering
     - Member of [Inoue Lab](http://opt.comm.eng.osaka-u.ac.jp)
