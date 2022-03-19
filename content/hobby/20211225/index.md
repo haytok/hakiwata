@@ -22,16 +22,20 @@ date: 2021-12-25T09:27:59Z
 | [亜人](https://kc.kodansha.co.jp/title?code=1000006191) | 1 ~ 17 | ◯ | - |
 | [東京喰種トーキョーグール](https://youngjump.jp/tokyoghoul/tg/) | 1 ~ 14 | ◯ | - |
 | [東京喰種トーキョーグール：re](https://youngjump.jp/tokyoghoul/re/chara/index2.html) | 1 ~ 16 | ◯ | - |
+| [シガレット＆チェリー](https://www.akitashoten.co.jp/comics/4253239315) | 3 ~ 9 | ◯ | - |
+| [江川と西本](https://bigcomicbros.net/work/6153/) | 5 ~ 12 | ◯ | - |
 | [アクタージュ act-age](https://www.shonenjump.com/j/rensai/act-age.html) | 1 ~ 12 (最新刊) | △ | 原作者が逮捕されたため完結しない。 |
 | [ブルーロック](https://pocket.shonenmagazine.com/episode/10834108156632602988) | 1 ~ 17 (最新刊) | ✕ | - |
 | [ブルーピリオド](https://afternoon.kodansha.co.jp/c/blueperiod.html) | 1 ~ 11 (最新刊) | ✕ | - |
 | [チ。ー地球の運動についてー](https://bigcomicbros.net/work/35171/) | 1 ~ 6 (最新刊) | ✕ | - |
+| [ワールドトリガー](https://www.shonenjump.com/j/rensai/list/world_2.html) | 1 ~ 23 | ✕ | - |
+| [ドラフトキング](http://grandjump.shueisha.co.jp/manga/draftking.html) | 1 ~ 7 | ✕ | - |
 | [アオアシ](https://bigcomicbros.net/work/6196/) | 1 ~ 26 (最新刊) | ✕ | - |
 | [アオアシ ブラザーフット](https://bigcomicbros.net/work/57298/) | 1 (最新刊) | ✕ | - |
 | [MAJOR 2nd](https://websunday.net/work/722/) | 1 ~ 24 (最新刊) | ✕ | - |
-| [ザ・ファブル The second contact](https://yanmaga.jp/comics/%E3%82%B6_%E3%83%95%E3%82%A1%E3%83%96%E3%83%AB_The_second_contact) | 1 (最新刊) | ✕ | - |
+| [ザ・ファブル The second contact](https://yanmaga.jp/comics/%E3%82%B6_%E3%83%95%E3%82%A1%E3%83%96%E3%83%AB_The_second_contact) | 1 ~ 2 (最新刊) | ✕ | - |
 | [九条の大罪](https://bigcomicbros.net/work/35215/) | 1 ~ 4 (最新刊) | ✕ | - |
-| [満州アヘンスクワッド](https://yanmaga.jp/comics/%E6%BA%80%E5%B7%9E%E3%82%A2%E3%83%98%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AF%E3%83%83%E3%83%89) | 1 ~ 6 (最新刊) | ✕ | - |
+| [満州アヘンスクワッド](https://yanmaga.jp/comics/%E6%BA%80%E5%B7%9E%E3%82%A2%E3%83%98%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AF%E3%83%83%E3%83%89) | 1 ~ 7 (最新刊) | ✕ | - |
 | [バトルスタディーズ](https://kc.kodansha.co.jp/title?code=1000025521) | 1 ~ 26 | ✕ | 27, 28, 29, 30 は持っていない。 |
 | [トリリオンゲーム](https://bigcomicbros.net/comics/69965/) | 1 ~ 3 (最新刊) | ✕ | - |
 | [キングダム](https://youngjump.jp/kingdom/) | 1 ~ 63 (最新刊) | ✕ | - |
@@ -44,4 +48,13 @@ date: 2021-12-25T09:27:59Z
 | [アルスラーン戦記](https://kc.kodansha.co.jp/title?code=1000006649) | 1 ~ 3 | ✕ | - |
 | [菌と鉄](https://pocket.shonenmagazine.com/episode/3269632237276098910) | 1 (最新刊) | ✕ | - |
 | [超人X](https://tonarinoyj.jp/episode/3269754496306260379) | 1 ~ 2 (最新刊) | ✕ | - |
+| [心が叫びたがってるんだ。](https://csbs.shogakukan.co.jp/waitfree/detail?book_group_id=9826) | 3, 4 | ✕ | - |
+| [葬送のフリーレン](https://www.shogakukan.co.jp/books/09850180) | 1 ~ 4 | ✕ | - |
+| [BEASTARS](https://www.akitashoten.co.jp/works/beastars/) | 1 ~ 2 | ✕ | - |
+| [終わりのセラフ](https://jumpsq.shueisha.co.jp/rensai/owarinoseraph/) | 1 ~ 2 | ✕ | - |
+| [マイホームヒーロー](https://magazine.yanmaga.jp/c/myhomehero/) | 1 ~ 3 | ✕ | - |
+| [憂国のモリアーティ](https://jumpsq.shueisha.co.jp/rensai/moriarty/) | 1 ~ 10 | ✕ | - |
+| [逃げるは恥だが役に立つ](https://kc.kodansha.co.jp/product?item=0000036370) | 1 ~ 9 | ✕ | - |
+| [グラゼニ](http://morning.moae.jp/lineup/109) | 1 | ✕ | - |
+| [グラゼニ～東京ドーム編～]() | 1 ~ 8 | ✕ | - |
 <!-- | []() | 1 ~  (最新刊) | ✕ | - | -->
