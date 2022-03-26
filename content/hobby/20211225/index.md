@@ -57,4 +57,16 @@ date: 2021-12-25T09:27:59Z
 | [逃げるは恥だが役に立つ](https://kc.kodansha.co.jp/product?item=0000036370) | 1 ~ 9 | ✕ | - |
 | [グラゼニ](http://morning.moae.jp/lineup/109) | 1 | ✕ | - |
 | [グラゼニ～東京ドーム編～]() | 1 ~ 8 | ✕ | - |
+| [ブラッククローバー](https://www.shonenjump.com/j/rensai/bclover.html) | 1 ~ 26 | ✕ | - |
+| [Spy x Family](https://shonenjumpplus.com/episode/10834108156648240735) | 1 ~ 2 | ✕ | - |
+| [呪術廻戦](https://www.shonenjump.com/j/rensai/jujutsu.html) | 1 ~ 3 | ✕ | - |
+| [さよならミニスカート](https://shonenjumpplus.com/episode/10834108156632735347) | 1 ~ 2 | ✕ | - |
+| [ＦＡＩＲＹ　ＴＡＩＬ](https://kc.kodansha.co.jp/title?code=1000002520) | 1 ~ 2 | ✕ | - |
+| [正直不動産](https://bigcomicbros.net/work/6319/) | 1 ~ 9 | ✕ | - |
+| [君の膵臓をたべたい](https://www.futabasha.co.jp/booksdb/book/bookview/978-4-575-84925-7.html) | 上下 | ◯ | - |
+| [フェルマーの料理](https://gmaga.co/c/fermatnoryouri/) | 1 ~ 2 | ✕ | - |
+| [僕たちがやりました](https://kc.kodansha.co.jp/product?item=0000016248) | 1 ~ 3 | ✕ | - |
+| [ちはやふる](https://kc.kodansha.co.jp/title?code=1000003555) | 1 ~ 5 | ✕ | - |
+| [累 -かさね-](https://evening.kodansha.co.jp/c/kasane.html) | 3 ~ 5 | ✕ | - |
+| [ワンダンス](https://afternoon.kodansha.co.jp/c/wondance.html) | 1 ~ 3 | ✕ | - |
 <!-- | []() | 1 ~  (最新刊) | ✕ | - | -->
