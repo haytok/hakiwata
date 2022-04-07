@@ -47,8 +47,8 @@ jobs:
           git add -N static/img/images/*.png
           if ! git diff --exit-code --quiet static/img/images/*.png
           then
-            git config --global user.name dilmnqvovpnmlib
-            git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
+            git config --global user.name haytok
+            git config --global user.email haytok@users.noreply.github.com
             git pull
             git add static/img/images/*.png
             git commit -m 'update OGP images'
