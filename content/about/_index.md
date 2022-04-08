@@ -35,5 +35,5 @@ date = "2021-04-30T00:00:00+08:00"
 
 ## Others
 
-- [Old Website](https://dilmnqvovpnmlib.github.io/dilmnqvovpnmlib/)
+- [Old Website](https://haytok.github.io/haytok/)
 - [Hatena Blog](https://dilmnqvo.hatenablog.com/)
