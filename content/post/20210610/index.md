@@ -128,5 +128,5 @@ let rec prefix lst = match lst with
 
 ## 参考
 
-- [ProgrammingBasics](https://github.com/dilmnqvovpnmlib/ProgrammingBasics)
+- [ProgrammingBasics](https://github.com/haytok/ProgrammingBasics)
 - [プログラミングの基礎](http://pllab.is.ocha.ac.jp/~asai/book/Top.html)

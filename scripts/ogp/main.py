@@ -194,7 +194,7 @@ def update_ogp_image(excluding_dir_entries=[]):
 
 
 def get_latest_commit_data():
-    url = 'https://api.github.com/repos/dilmnqvovpnmlib/hakiwata/commits/main'
+    url = 'https://api.github.com/repos/haytok/hakiwata/commits/main'
 
     try:
         res = requests.get(url)

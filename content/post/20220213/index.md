@@ -9,7 +9,7 @@ ogimage: "img/images/20220213.png"
 
 ## 概要
 
-- こんにちは :) 最近、[Golang](https://go.dev/) を書くことにハマっています。その一環で [cobra](https://github.com/spf13/cobra) と [viper](https://github.com/spf13/viper) を使って簡単な CLI アプリケーション ([gngc](https://github.com/dilmnqvovpnmlib/gngc/)) を作ってみました。このアプリケーションを実装する際、様々なネットの記事、[公式ドキュメント](https://cobra.dev/)、そして [README.md](https://github.com/spf13/cobra/blob/master/README.md) を読んでみました。しかし、どの実装方法を選択すればわからない場面や出力させたくないエラーメッセージを消す方法がわからない場面などに遭遇することがありました。その際、内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみたので、その記録を簡単に残したいと思います。
+- こんにちは :) 最近、[Golang](https://go.dev/) を書くことにハマっています。その一環で [cobra](https://github.com/spf13/cobra) と [viper](https://github.com/spf13/viper) を使って簡単な CLI アプリケーション ([gngc](https://github.com/haytok/gngc/)) を作ってみました。このアプリケーションを実装する際、様々なネットの記事、[公式ドキュメント](https://cobra.dev/)、そして [README.md](https://github.com/spf13/cobra/blob/master/README.md) を読んでみました。しかし、どの実装方法を選択すればわからない場面や出力させたくないエラーメッセージを消す方法がわからない場面などに遭遇することがありました。その際、内部のソースコードを読んで処理の流れや設定の意味などを大まかに調査してみたので、その記録を簡単に残したいと思います。
 
 ## 調査内容
 
@@ -69,7 +69,7 @@ func (c *Command) Runnable() bool {
 
 - 一方、`Run` は `RunE` が定義されていない時に呼び出されます。`Run` で定義された関数を呼び出す際、その関数の返り値をハンドリングしないため、その関数内でエラーハンドリングを行い、エラーメッセージを出力する必要があります。そのため、エラーメッセージの出力の実装が散らばってしまう問題があります。
 
-- つまり、`RunE` を用いると、コマンド実行時のエラーをそもそもの呼び出し元の [cmd/root.go](https://github.com/dilmnqvovpnmlib/gngc/blob/main/cmd/root.go) の [func Execute()](https://github.com/dilmnqvovpnmlib/gngc/blob/main/cmd/root.go#L92) でまとめてエラーに応じたエラーメッセージを出力することができます。
+- つまり、`RunE` を用いると、コマンド実行時のエラーをそもそもの呼び出し元の [cmd/root.go](https://github.com/haytok/gngc/blob/main/cmd/root.go) の [func Execute()](https://github.com/haytok/gngc/blob/main/cmd/root.go#L92) でまとめてエラーに応じたエラーメッセージを出力することができます。
 
 ## 調査内容 3 (cobra がデフォルト出すエラーメッセージを出さない方法に関して)
 

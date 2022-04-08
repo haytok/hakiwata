@@ -27,10 +27,10 @@ ogimage: "img/images/20211231.png"
 
 #### 技術書関連
 - [コンピュータシステムの理論と実装 ―モダンなコンピュータの作り方](https://www.amazon.co.jp/%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E7%90%86%E8%AB%96%E3%81%A8%E5%AE%9F%E8%A3%85-%E2%80%95%E3%83%A2%E3%83%80%E3%83%B3%E3%81%AA%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9-Noam-Nisan/dp/4873117127) を読み切りました。
-  - この本を基に [nand2tetris](https://github.com/dilmnqvovpnmlib/nand2tetris) にあるプログラムを実装しました。 この本をキッカケにスタックで実行されるプログラムとコンパイラの内部実装に興味を持ちました。
+  - この本を基に [nand2tetris](https://github.com/haytok/nand2tetris) にあるプログラムを実装しました。 この本をキッカケにスタックで実行されるプログラムとコンパイラの内部実装に興味を持ちました。
 - [はじめて学ぶバイナリ解析 不正なコードからコンピュータを守るサイバーセキュリティ技術](https://www.amazon.co.jp/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E5%AD%A6%E3%81%B6%E3%83%90%E3%82%A4%E3%83%8A%E3%83%AA%E8%A7%A3%E6%9E%90-%E4%B8%8D%E6%AD%A3%E3%81%AA%E3%82%B3%E3%83%BC%E3%83%89%E3%81%8B%E3%82%89%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%82%92%E5%AE%88%E3%82%8B%E3%82%B5%E3%82%A4%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E6%8A%80%E8%A1%93-OnDeck-Books%EF%BC%88NextPublishing%EF%BC%89-%E5%B0%8F%E6%9E%97-%E4%BD%90%E4%BF%9D-ebook/dp/B084R85269) を読み切りました。
 - [低レイヤを知りたい人のためのCコンパイラ作成入門](https://www.sigbus.info/compilerbook) を読み切りました。
-  - この資料を基に [k8cc](https://github.com/dilmnqvovpnmlib/k8cc) を実装してみました。
+  - この資料を基に [k8cc](https://github.com/haytok/k8cc) を実装してみました。
 - [イラストでわかるDockerとKubernetes](https://www.amazon.co.jp/%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%88%E3%81%A7%E3%82%8F%E3%81%8B%E3%82%8BDocker%E3%81%A8Kubernetes-Software-Design-plus-%E5%BE%B3%E6%B0%B8/dp/4297118378) を読み切りました。
   - コンテナの仕組みのハンズオンが面白かったです。来年はさらにコンテナランタイムに詳しくなります。
 - [Goならわかるシステムプログラミング](https://www.lambdanote.com/products/go) を途中まで読んで、読むのをやめました。
@@ -39,7 +39,7 @@ ogimage: "img/images/20211231.png"
   - 演習問題も全て解き切りました。去年も一度読んだのですが、理解が更に進みました。やはりシスプロは楽しいです。
 - [自作エミュレータで学ぶx86アーキテクチャ-コンピュータが動く仕組みを徹底理解!](https://www.amazon.co.jp/%E8%87%AA%E4%BD%9C%E3%82%A8%E3%83%9F%E3%83%A5%E3%83%AC%E3%83%BC%E3%82%BF%E3%81%A7%E5%AD%A6%E3%81%B6x86%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3-%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%81%8C%E5%8B%95%E3%81%8F%E4%BB%95%E7%B5%84%E3%81%BF%E3%82%92%E5%BE%B9%E5%BA%95%E7%90%86%E8%A7%A3-%E5%86%85%E7%94%B0%E5%85%AC%E5%A4%AA/dp/4839954747) を途中まで読んで、読むのをやめました。
   - 読みにくい文章だったので、挫折してしまいました。
-- [Build Your Own Text Editor](https://viewsourcecode.org/snaptoken/kilo/) を読んで自作エディタの [keditor](https://github.com/dilmnqvovpnmlib/keditor) を実装してみました。
+- [Build Your Own Text Editor](https://viewsourcecode.org/snaptoken/kilo/) を読んで自作エディタの [keditor](https://github.com/haytok/keditor) を実装してみました。
   - 資料が英語だったのですが、気合で読み切りました。この経験により、そもそも日本語の技術書を読む必要性は改めて無いのでは無いかと思うようになりました。そのため、来年はオライリーの英語の技術書を読んで行きたいと思いました。
 - [Hacking: 美しき策謀 第2版 ―脆弱性攻撃の理論と実際](https://www.amazon.co.jp/Hacking-%E7%BE%8E%E3%81%97%E3%81%8D%E7%AD%96%E8%AC%80-%E2%80%95%E8%84%86%E5%BC%B1%E6%80%A7%E6%94%BB%E6%92%83%E3%81%AE%E7%90%86%E8%AB%96%E3%81%A8%E5%AE%9F%E9%9A%9B-Jon-Erickson/dp/4873115140) を読みました。
   - 低レイヤに関するセキュリティの勉強になりました。
@@ -54,7 +54,7 @@ ogimage: "img/images/20211231.png"
 - [新・明解C++入門編 (明解シリーズ)](https://www.amazon.co.jp/%E6%96%B0%E3%83%BB%E6%98%8E%E8%A7%A3C-%E5%85%A5%E9%96%80%E7%B7%A8-%E6%98%8E%E8%A7%A3%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA-%E6%9F%B4%E7%94%B0-%E6%9C%9B%E6%B4%8B/dp/4797394633) を読み切りました。
   - 自作 OS に必要だったので、一通り C++ の文法を把握するために読みました。あまり必要なかったと思いました。
 - [ゼロからのOS自作入門](https://www.amazon.co.jp/%E3%82%BC%E3%83%AD%E3%81%8B%E3%82%89%E3%81%AEOS%E8%87%AA%E4%BD%9C%E5%85%A5%E9%96%80-%E5%86%85%E7%94%B0-%E5%85%AC%E5%A4%AA/dp/4839975868) を読み切りました。
-  - もともと Kernel の仕組みには興味があったのがキッカケで読みました。[honOS](https://github.com/dilmnqvovpnmlib/honOS) を実装してみました。ただ、写経しただけなので、C++ で実装した箇所を C で置き換えてアレンジしたいと思っています。
+  - もともと Kernel の仕組みには興味があったのがキッカケで読みました。[honOS](https://github.com/haytok/honOS) を実装してみました。ただ、写経しただけなので、C++ で実装した箇所を C で置き換えてアレンジしたいと思っています。
 - [Raspberry Piで学ぶコンピュータアーキテクチャ](https://www.amazon.co.jp/Raspberry-Pi%E3%81%A7%E5%AD%A6%E3%81%B6%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3-Make-Eben-Upton/dp/4873118654) を途中まで読んで、読むのをやめました。
   - 学びたい内容でしたが、もっとプログラムを書きたかったため読むのを止めました。
 - [カーネルモジュール作成によるlinuxカーネル開発入門 - 第一回 hello world](https://satoru-takeuchi.hatenablog.com/entry/2020/03/26/010453) の連載記事を一通り読みました。

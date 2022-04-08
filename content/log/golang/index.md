@@ -18,7 +18,7 @@ ogimage: "img/images/golang.png"
 - `go mod` コマンドを実行することができない。
 
 ```bash
-> go mod init dilmnqvovpnmlib
+> go mod init haytok
 go: unknown subcommand "mod"
 Run 'go help' for usage.
 ```

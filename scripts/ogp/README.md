@@ -56,7 +56,7 @@ make dev-down
 
 ### 参考
 
-- [hk-41/docker-compose.override.yml](https://github.com/dilmnqvovpnmlib/hk-41/blob/master/docker-compose.override.yml)
+- [hk-41/docker-compose.override.yml](https://github.com/haytok/hk-41/blob/master/docker-compose.override.yml)
 - [ファイル間、プロジェクト間での Compose 設定の共有](https://docs.docker.jp/compose/extends.html)
 
 ## docker-compose.yml とコンテナ内でファイルを作成した時の権限に関して
@@ -326,8 +326,8 @@ git log -3
 git add -N static/img/images/*.png
 if ! git diff --exit-code --quiet static/img/images/*.png
 then
-  git config --global user.name dilmnqvovpnmlib
-  git config --global user.email dilmnqvovpnmlib@users.noreply.github.com
+  git config --global user.name haytok
+  git config --global user.email haytok@users.noreply.github.com
   git pull
   git add static/img/images/*.png
   git commit -m 'update OGP images'

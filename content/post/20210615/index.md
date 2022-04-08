@@ -18,10 +18,10 @@ ogimage: "img/images/20210615.png"
 ### 趣味に関すること
 
 - C 言語で [Exercism](https://exercism.io) を 2 問解きました。
-- 自作エディタ [keditor](https://github.com/dilmnqvovpnmlib/keditor) を実装しました。
+- 自作エディタ [keditor](https://github.com/haytok/keditor) を実装しました。
   - 参考にする自作エディタ [kilo](https://github.com/antirez/kilo) のコードリーディングを行いました。
   - また、[Build Your Own Text Editor](https://viewsourcecode.org/snaptoken/kilo/index.html) を読みました。これは [kilo](https://github.com/antirez/kilo) の解説記事です。そのため、コードリーディングにおける自分の解釈と照らし合わせながら読みました。この際に、必要なライブラリや処理の調査と検証をログに残しつつ行いました。
-  - 上のプロセスを経て [keditor](https://github.com/dilmnqvovpnmlib/keditor) を実装しました。
+  - 上のプロセスを経て [keditor](https://github.com/haytok/keditor) を実装しました。
 - Linux のシステムコールの静的解析を行いました。
   - この内容はブログにしようと思いながら時間が経ってしまっています。今月中には書きたいと考えています。
 - C 言語で `#include <stdio.h>` を行わずに `Hello World` を標準出力に表示させました。
@@ -46,8 +46,8 @@ ogimage: "img/images/20210615.png"
 
 ## 参考
 
-- [Exercism](https://github.com/dilmnqvovpnmlib/LowLevelProgramming/tree/main/exercism)
-- [keditor](https://github.com/dilmnqvovpnmlib/keditor)
-- [BinaryAnalysisBook/s6](https://github.com/dilmnqvovpnmlib/BinaryAnalysisBook/tree/main/s6)
-- [kiso_tcp](https://github.com/dilmnqvovpnmlib/NetworkProgramming/tree/main/kiso_tcp)
-- [flask-api](https://github.com/dilmnqvovpnmlib/flask-api)
+- [Exercism](https://github.com/haytok/LowLevelProgramming/tree/main/exercism)
+- [keditor](https://github.com/haytok/keditor)
+- [BinaryAnalysisBook/s6](https://github.com/haytok/BinaryAnalysisBook/tree/main/s6)
+- [kiso_tcp](https://github.com/haytok/NetworkProgramming/tree/main/kiso_tcp)
+- [flask-api](https://github.com/haytok/flask-api)

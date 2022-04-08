@@ -493,5 +493,5 @@ make: *** [build] Error 2
 
 ## 参考
 
-- [honOS](https://github.com/dilmnqvovpnmlib/honOS)
+- [honOS](https://github.com/haytok/honOS)
 - [mikanos](https://github.com/uchan-nos/mikanos)

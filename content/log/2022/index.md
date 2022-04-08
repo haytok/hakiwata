@@ -13,10 +13,10 @@ ogimage: "img/images/2022.png"
 
 ## Logs
 
-1. [apis-for-nodejs-on-vercel](https://github.com/dilmnqvovpnmlib/apis-for-nodejs-on-vercel/tree/main/log)
+1. [apis-for-nodejs-on-vercel](https://github.com/haytok/apis-for-nodejs-on-vercel/tree/main/log)
 
-2. [dilmnqvovpnmlib](https://github.com/dilmnqvovpnmlib/dilmnqvovpnmlib/tree/gh-pages/log)
+2. [haytok](https://github.com/haytok/haytok/tree/gh-pages/log)
 
-3. [gngc](https://github.com/dilmnqvovpnmlib/gngc/tree/main/note)
+3. [gngc](https://github.com/haytok/gngc/tree/main/note)
 
-4. [apis-for-golang-on-vercel](https://github.com/dilmnqvovpnmlib/apis-for-golang-on-vercel/tree/main/note)
+4. [apis-for-golang-on-vercel](https://github.com/haytok/apis-for-golang-on-vercel/tree/main/note)

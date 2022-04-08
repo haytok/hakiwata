@@ -73,4 +73,4 @@ export default function handler(request, response) {
 
 ## 参考
 
-- [Vercel サポートにドキュメントの修正の方法について問い合わせる](https://github.com/dilmnqvovpnmlib/apis-for-nodejs-on-vercel/issues/1)
+- [Vercel サポートにドキュメントの修正の方法について問い合わせる](https://github.com/haytok/apis-for-nodejs-on-vercel/issues/1)

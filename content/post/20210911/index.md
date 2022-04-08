@@ -9,7 +9,7 @@ ogimage: "img/images/20210911.png"
 
 ## 概要
 
-- こんにちは！先月から [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) に取り組んでいます。その進捗を綴った日記は [自作 OS 日記](https://hakiwata.jp/post/20210830/) にあり、日記にはその日までに出来上がった OS の挙動を記録した GIF を載せています。これまでは、この日記を更新すると、手動で [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md に最新の OS GIF のリンクを貼り付けていました。ですが、最近、その作業がすごく面倒臭くなってきました。そこで、今回は [自作 OS 日記](https://hakiwata.jp/post/20210830/) を更新すると、 [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリの README.md も同時にアップデートされるように行った自動化の記録について書き残したいと思います。
+- こんにちは！先月から [自作 OS](https://github.com/haytok/honOS) に取り組んでいます。その進捗を綴った日記は [自作 OS 日記](https://hakiwata.jp/post/20210830/) にあり、日記にはその日までに出来上がった OS の挙動を記録した GIF を載せています。これまでは、この日記を更新すると、手動で [自作 OS](https://github.com/haytok/honOS) のリポジトリの README.md に最新の OS GIF のリンクを貼り付けていました。ですが、最近、その作業がすごく面倒臭くなってきました。そこで、今回は [自作 OS 日記](https://hakiwata.jp/post/20210830/) を更新すると、 [自作 OS](https://github.com/haytok/honOS) のリポジトリの README.md も同時にアップデートされるように行った自動化の記録について書き残したいと思います。
 
 ## 方法
 
@@ -19,9 +19,9 @@ ogimage: "img/images/20210911.png"
 
 - 一番のポイントは、リポジトリを跨いだ GitHub Actions のワークフローの連携です。これを実現するために、[Repository Dispatch](https://github.com/marketplace/actions/repository-dispatch) というアクションを使用しました。このアクションを用いて、[自作 OS 日記](https://hakiwata.jp/post/20210830/) のコンテンツ配下のみが更新されると、workflow が走るような設計になっています。
 
-- このアクションでは、`client-payload` というペイロードを活用すると、通知先にデータを送信することができます。いわゆる HTTP の POST メソッドのようなことができます。したがって、日記を更新した段階で最新の GIF のリンクを取得できれば、このパラメータを活用して [自作 OS](https://github.com/dilmnqvovpnmlib/honOS) リポジトリにその最新のファイル名を通知することができます。今回の自動化の流れでは、この最新の GIF のファイル名を Python と GitHub の API を用いて取得します。一番初めは、このやり方で実装を考えていたのですが、日記側のリポジトリと自作 OS 側のリポジトリの両方で Python のスクリプトを用意する必要がありました。これでは、双方のリポジトリに README.md を更新するために必要なスクリプトが存在してしまい、管理が面倒臭いです。
+- このアクションでは、`client-payload` というペイロードを活用すると、通知先にデータを送信することができます。いわゆる HTTP の POST メソッドのようなことができます。したがって、日記を更新した段階で最新の GIF のリンクを取得できれば、このパラメータを活用して [自作 OS](https://github.com/haytok/honOS) リポジトリにその最新のファイル名を通知することができます。今回の自動化の流れでは、この最新の GIF のファイル名を Python と GitHub の API を用いて取得します。一番初めは、このやり方で実装を考えていたのですが、日記側のリポジトリと自作 OS 側のリポジトリの両方で Python のスクリプトを用意する必要がありました。これでは、双方のリポジトリに README.md を更新するために必要なスクリプトが存在してしまい、管理が面倒臭いです。
 
-- そこで、[自作 OS 日記](https://hakiwata.jp/post/20210830/) のリポジトリでは日記の更新だけを検知するようにします。そして、[自作 OS](https://github.com/dilmnqvovpnmlib/honOS) のリポジトリ側で [自作 OS 日記](https://hakiwata.jp/post/20210830/) のリポジトリの変更を検知すると、事前に用意した [Python のスクリプト](https://github.com/dilmnqvovpnmlib/honOS/blob/main/scripts/main.py) で最新の OS の GIF のリンクの取得と README.md の更新を行うように実装しました。
+- そこで、[自作 OS 日記](https://hakiwata.jp/post/20210830/) のリポジトリでは日記の更新だけを検知するようにします。そして、[自作 OS](https://github.com/haytok/honOS) のリポジトリ側で [自作 OS 日記](https://hakiwata.jp/post/20210830/) のリポジトリの変更を検知すると、事前に用意した [Python のスクリプト](https://github.com/haytok/honOS/blob/main/scripts/main.py) で最新の OS の GIF のリンクの取得と README.md の更新を行うように実装しました。
 
 ## 余談
 

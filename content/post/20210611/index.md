@@ -33,4 +33,4 @@ ogimage: "img/images/20210611.png"
 
 - [Front Matter](https://gohugo.io/content-management/front-matter/)
 - [Nest where Clauses](https://gohugo.io/functions/where/#nest-where-clauses)
-- [hakiwata/issues/3](https://github.com/dilmnqvovpnmlib/hakiwata/issues/3)
+- [hakiwata/issues/3](https://github.com/haytok/hakiwata/issues/3)

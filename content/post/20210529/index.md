@@ -34,4 +34,4 @@ ogimage: "img/images/20210529.png"
 
 ## 参考
 
-- [kiso_tcp](https://github.com/dilmnqvovpnmlib/NetworkProgramming/tree/main/kiso_tcp)
+- [kiso_tcp](https://github.com/haytok/NetworkProgramming/tree/main/kiso_tcp)
