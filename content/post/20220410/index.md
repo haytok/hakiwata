@@ -1,6 +1,6 @@
 ---
 draft: true
-title: "GitHub Pages を自動デプロイする Actions を調査してみた"
+title: "GitHub Pages を自動デプロイする\n Actions を調査してみた"
 date: 2022-04-10T13:29:37Z
 tags: ["GitHub", "CI", "CD"]
 pinned: false
