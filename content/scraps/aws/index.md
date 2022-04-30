@@ -33,6 +33,12 @@ aws s3 cp <ディレクトリ名> s3://<バケット名> --recursive
 aws s3 cp s3://<バケット名>/<ファイル名> .
 ```
 
+- 有効期限付きで特定の S3 バケットのファイルを公開する presigned URLs を発行する。
+
+```bash
+aws s3 presign --expires-in <有効時間 (秒)> s3://<バケット名>/<オブジェクト名> --region <リージョン名>
+```
+
 ## 参考
 
 - [AWS CLI での高レベル (S3) コマンドの使用](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-objects-copy)
