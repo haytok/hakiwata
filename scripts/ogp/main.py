@@ -128,7 +128,7 @@ def create_ogp_image(date, text):
     )
     base_img = add_author_text(
         base_img,
-        'Created by haKiwata',
+        'Created by haytok',
         font_medium_path,
         32,  # フォントサイズ
         (120, 120, 120),  # フォントカラー
@@ -242,7 +242,7 @@ def is_valid_date_format(value):
 # ../../content/post/20210624/index.md
 # ../../content/post/_index.md
 # ../../content/post/goisforlovers.md
-# ../../content/post/20210624/01_hakiwata.jp
+# ../../content/post/20210624/01_haytok.jp
 # ../../content/post/20210830/media/.gitkeep
 # ../../content/post/20210830/media/osbook_day01.png
 def get_date(filepath):

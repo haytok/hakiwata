@@ -9,7 +9,7 @@ ogimage: "img/images/20220105.png"
 
 ## 概要
 
-- こんにちは！先日、[ブログ](https://hakiwata.jp/post/20211124/) を書いた際に、OGP 画像のタイトルのレイアウトが崩れていることに気が付きました。この際、OGP 画像のタイトルを加工する際に使っている Python の標準ライブラリの [textwrap](https://docs.python.org/ja/3/library/textwrap.html) の内部の実装が気になりました。そこで、今回は [textwrap](https://docs.python.org/ja/3/library/textwrap.html) のソースコードを読んで内部の実装を簡単に紐解いていきたいと思います。
+- こんにちは！先日、[ブログ](https://haytok.jp/post/20211124/) を書いた際に、OGP 画像のタイトルのレイアウトが崩れていることに気が付きました。この際、OGP 画像のタイトルを加工する際に使っている Python の標準ライブラリの [textwrap](https://docs.python.org/ja/3/library/textwrap.html) の内部の実装が気になりました。そこで、今回は [textwrap](https://docs.python.org/ja/3/library/textwrap.html) のソースコードを読んで内部の実装を簡単に紐解いていきたいと思います。
 
 ## 背景 ([textwrap](https://docs.python.org/ja/3/library/textwrap.html) の内部の実装が気になったキッカケ)
 

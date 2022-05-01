@@ -9,7 +9,7 @@ ogimage: "img/images/20210613.png"
 
 ## 概要
 
-- 自分で運用している[ブログサイト](https://hakiwata.jp)は `git` を用いて管理しています。新しい記事を作成する際に、`untracked files` のみを `git stash` して、退避させたいことがありました。しかし、`git` にはデフォルトで `untracked files` のみを退避させるコマンドは無いそうです。そこで、今回は `.gitconfig` を使用して工夫したことについての記録を残したいと思います。
+- 自分で運用している[ブログサイト](https://haytok.jp)は `git` を用いて管理しています。新しい記事を作成する際に、`untracked files` のみを `git stash` して、退避させたいことがありました。しかし、`git` にはデフォルトで `untracked files` のみを退避させるコマンドは無いそうです。そこで、今回は `.gitconfig` を使用して工夫したことについての記録を残したいと思います。
 
 ## 背景と目的
 

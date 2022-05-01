@@ -1,6 +1,6 @@
 # hakiwata
 
-- これは、Hugo + GitHub Pages で作成した[自作ブログ](https://hakiwata.jp/)のソースコードです。開発環境は Docker を使用しています。
+- これは、Hugo + GitHub Pages で作成した[自作ブログ](https://haytok.jp/)のソースコードです。開発環境は Docker を使用しています。
 
 ![image](https://user-images.githubusercontent.com/44946173/141357296-4d6d5f3f-16f5-4ac2-a2c3-d0c6673041ec.png)
 

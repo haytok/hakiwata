@@ -15,12 +15,12 @@ ogimage: "img/images/20211110.png"
 
 - このブログには様々な機能を加えたりして工夫を行っています。具体的には以下の 8 つが挙げられます。過去にブログにまとめた記事もあるので、それ以外を補足しつつどう工夫してこのブログが成り立っているかについて説明したいと思います。
 
-1. [Hugo と GitHub Pages を用いて開発](https://hakiwata.jp/post/20210430/)
+1. [Hugo と GitHub Pages を用いて開発](https://haytok.jp/post/20210430/)
 2. 自動でデプロイするフローの導入 (CI/CD の構築)
-3. [テンプレートを修正する](https://hakiwata.jp/post/20210611/)
-4. [他のリポジトリとの連携](https://hakiwata.jp/post/20210911/)
-5. [開発環境の Docker 化](https://hakiwata.jp/post/20210628/)
-6. [バグの調査](https://hakiwata.jp/post/20210624/)
+3. [テンプレートを修正する](https://haytok.jp/post/20210611/)
+4. [他のリポジトリとの連携](https://haytok.jp/post/20210911/)
+5. [開発環境の Docker 化](https://haytok.jp/post/20210628/)
+6. [バグの調査](https://haytok.jp/post/20210624/)
 7. Google Analytics の導入
 8. OGP の作成
 

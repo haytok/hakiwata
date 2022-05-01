@@ -20,7 +20,7 @@ ogimage: "img/images/20211231.png"
 - [Amazon Rekognition](https://docs.aws.amazon.com/ja_jp/rekognition/latest/dg/what-is.html) と [Amazon S3](https://aws.amazon.com/jp/s3/) を使って顔認証のアプリケーションを実装するための検証を行いました。
 
 #### アプリケーションプログラミング関連
-- [自作ブログ](hakiwata.jp) を開設しました。
+- [自作ブログ](haytok.jp) を開設しました。
   - アウトプットする習慣が付いたのと言語化能力が多少上がったのが良かったです。この記事を含めると、`21 記事`を投稿したようです。文章を書くという練習をこのブログを通して行ったことで、研究会の原稿や修論の執筆が卒論の時と比較すると、スムーズに行ったのではないかと思います。また、このブログを自分なりに色々アレンジしたりするのが楽しいです。
 - GitHub の contribution の状況を LINE に通知するアプリケーションを実装しました。
   - このアプリケーションは、Golang + Docker + GitHub Actions で構成されます。contribution の状況を取得するには GraphQL で実装された GitHub API を呼び出す必要がありました。これまでこうして実装された API を呼び出したことはなく、取り組んだことが無い内容でした。ですが、GraphQL Client を駆使して馴染みのない Golang でアプリケーションを実装していく過程が非常に楽しかったです。
@@ -110,7 +110,7 @@ ogimage: "img/images/20211231.png"
 ![sakurazaka46.jpg](sakurazaka46.jpg)
 
 - マンガをたくさん読みました。
-  - これまでに読んだマンガの一部は、[持っているマンガ](https://hakiwata.jp/hobby/20211225/) にまとめてみました。
+  - これまでに読んだマンガの一部は、[持っているマンガ](https://haytok.jp/hobby/20211225/) にまとめてみました。
 
 ## 最後に
 

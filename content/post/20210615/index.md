@@ -9,7 +9,7 @@ ogimage: "img/images/20210615.png"
 
 ## 概要
 
-- こんにちは！[振り返り](https://hakiwata.jp/post/20210512/)では 1 月 ~ 4 月に勉強したことを振り返りました。しかし、6 月に入っても未だに 5 月に勉強したことをブログに書いて振り返ることができていませんでした。そこで、今回は 5 月に勉強したことを毎日メモしているノートを参考にザックリまとめたいと思います。
+- こんにちは！[振り返り](https://haytok.jp/post/20210512/)では 1 月 ~ 4 月に勉強したことを振り返りました。しかし、6 月に入っても未だに 5 月に勉強したことをブログに書いて振り返ることができていませんでした。そこで、今回は 5 月に勉強したことを毎日メモしているノートを参考にザックリまとめたいと思います。
 
 ## 勉強したこと
 
@@ -27,7 +27,7 @@ ogimage: "img/images/20210615.png"
 - C 言語で `#include <stdio.h>` を行わずに `Hello World` を標準出力に表示させました。
   - この内容はブログにしようと思いながら時間が経ってしまっています。今月中には書きたいと考えています。
 - [基礎からわかるTCP/IP ネットワーク実験プログラミング（第2版）](https://www.ohmsha.co.jp/book/9784274065842/) を読みました。
-  - 詳しくは [Network Programming の基礎を学んだ](https://hakiwata.jp/post/20210529/) に書きました。
+  - 詳しくは [Network Programming の基礎を学んだ](https://haytok.jp/post/20210529/) に書きました。
 - [ProjectEuler](https://projecteuler.net/) を 24 問解きました。
 - Heroku 上に Flask で作成した REST API をデプロイしました。
 - [プログラミングの基礎](https://www.amazon.co.jp/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E5%9F%BA%E7%A4%8E-Computer-Science-Library-%E6%B5%85%E4%BA%95/dp/4781911609/ref=sr_1_6?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&dchild=1&keywords=%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E5%9F%BA%E7%A4%8E&linkCode=qs&qid=1623256116&sourceid=Mozilla-search&sr=8-6)を読み始めました。

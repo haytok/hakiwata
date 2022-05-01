@@ -41,9 +41,9 @@ ogimage: "img/images/20211018.png"
 
 - また、細かい日記に関しては以下に記述しました。全く書いていない箇所もあればデバッグが辛かった様子を書いたりしていて、内容に関してはまちまちです。
 
-  - [自作 OS 日記 (1)](https://hakiwata.jp/post/20210830/)
-  - [自作 OS 日記 (2)](https://hakiwata.jp/post/20210831/)
-  - [自作 OS 日記 (3)](https://hakiwata.jp/post/20210901/)
+  - [自作 OS 日記 (1)](https://haytok.jp/post/20210830/)
+  - [自作 OS 日記 (2)](https://haytok.jp/post/20210831/)
+  - [自作 OS 日記 (3)](https://haytok.jp/post/20210901/)
 
 ## 最後に
 
