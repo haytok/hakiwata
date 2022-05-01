@@ -1,11 +1,11 @@
-baseURL = "https://hakiwata.jp/"
-title = "haKiwata"
+baseURL = "https://haytok.jp/"
+title = "haytok's Website"
 theme = "manis-hugo-theme"
 publishDir = "docs"
 canonifyurls = true
 
 # Copyright notice. Note: You can use HTML tag here
-copyright = "&copy; 2021 haKiwata"
+copyright = "&copy; 2021 haytok"
 pluralizeListTitles = false
 
 # Minimum number of posts before paginate navigation show up
@@ -52,7 +52,7 @@ googleAnalytics = 'G-YXCYPL25QW'
 	customCSS = ["/css/main.css"]
 	
 	# Site meta description
-	description = "haKiwata's Website."
+	description = "haytok's Website."
 	# Site's Tagline (Subtitle or Keyword)
 	tagline = "Welcome to my website !"
 	# If true give attribution to this theme
