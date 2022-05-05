@@ -39,6 +39,18 @@ aws s3 cp s3://<バケット名>/<ファイル名> .
 aws s3 presign --expires-in <有効時間 (秒)> s3://<バケット名>/<オブジェクト名> --region <リージョン名>
 ```
 
-## 参考
+#### 参考
 
 - [AWS CLI での高レベル (S3) コマンドの使用](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-s3-commands.html#using-s3-commands-managing-objects-copy)
+
+### Lambda
+
+- Lambda functions の一覧を返す。
+
+```bash
+aws lambda list-functions
+```
+
+#### 参考
+
+- [list-functions](https://docs.aws.amazon.com/cli/latest/reference/lambda/list-functions.html)
