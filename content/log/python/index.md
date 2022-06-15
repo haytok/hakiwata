@@ -1,5 +1,5 @@
 ---
-draft: false
+draft: true
 title: "Python"
 date: 2021-12-03T16:15:28Z
 tags: ["Python"]
