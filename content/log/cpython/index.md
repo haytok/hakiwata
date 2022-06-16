@@ -1,5 +1,5 @@
 ---
-draft: false
+draft: true
 title: "CPython 調査ログ"
 date: 2021-11-17T09:20:23Z
 tags: ["CPython", "Python", "C"]
