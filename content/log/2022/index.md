@@ -1,5 +1,5 @@
 ---
-draft: false
+draft: true
 title: "2022 年に GitHub 上に残したログの一覧"
 date: 2022-01-09T23:19:36Z
 tags: []
