@@ -41,6 +41,7 @@ ogimage: "img/images/postgres.png"
 - [ ] カバリングインデックスとそれ以外で検索時間が本当に変わるかを確認してみてください。
 
 - [ ] 気合を入れてこの連載 ([DBアタマアカデミー](https://gihyo.jp/dev/serial/01/db-academy)) を全て読んでください。
+- [ ] [OSS-DB道場](https://oss-db.jp/dojo) を一通り読んでください。
 
 - [ ] write システムコールと read システムコールと O_DIRECT について教えてください.
 - [ ] ファイルシステムに関して教えてください。
@@ -50,6 +51,8 @@ ogimage: "img/images/postgres.png"
 - [ ] MySQL における redlo log に関して教えてください。
 
 - [ ] ページって何ですか。教えてください。
+- [ ] pgbench のチュートリアルを試して見てください。
+- [ ] EXPLAIN コマンドを使って実行計画を確認してみてください。
 
 
 - [ ] WAL Log と Archive Log の違いはなんですか？
