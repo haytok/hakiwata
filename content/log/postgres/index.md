@@ -42,6 +42,7 @@ ogimage: "img/images/postgres.png"
 
 - [ ] 気合を入れてこの連載 ([DBアタマアカデミー](https://gihyo.jp/dev/serial/01/db-academy)) を全て読んでください。
 - [ ] [OSS-DB道場](https://oss-db.jp/dojo) を一通り読んでください。
+- [ ] 気になるポスグレのコンポーネントについて調査してください。
 
 - [ ] write システムコールと read システムコールと O_DIRECT について教えてください.
 - [ ] ファイルシステムに関して教えてください。
