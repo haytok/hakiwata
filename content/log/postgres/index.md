@@ -43,7 +43,9 @@ ogimage: "img/images/postgres.png"
 - [ ] 気合を入れてこの連載 ([DBアタマアカデミー](https://gihyo.jp/dev/serial/01/db-academy)) を全て読んでください。
 - [ ] [OSS-DB道場](https://oss-db.jp/dojo) を一通り読んでください。
 - [ ] 気になるポスグレのコンポーネントについて調査してください。
-- [ ] ポスグレのパーティションを手元で検証してみてください。
+- [ ] ポスグレのパーティションを手元で検証し、メリットデメリットを考えてみてください。
+  - [パーティショニングの概要](https://www.fujitsu.com/jp/products/software/resources/feature-stories/postgres/article-index/partitioning-overview/)
+  - [パーティショニング : 用途と利点](https://lets.postgresql.jp/documents/technical/partitioning/1)
 
 - [ ] write システムコールと read システムコールと O_DIRECT について教えてください.
 - [ ] ファイルシステムに関して教えてください。
