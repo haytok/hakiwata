@@ -46,7 +46,9 @@ ogimage: "img/images/postgres.png"
 - [ ] ポスグレのパーティションを手元で検証し、メリットデメリットを考えてみてください。
   - [パーティショニングの概要](https://www.fujitsu.com/jp/products/software/resources/feature-stories/postgres/article-index/partitioning-overview/)
   - [パーティショニング : 用途と利点](https://lets.postgresql.jp/documents/technical/partitioning/1)
-- [ ] [The Internals of PostgreSQL]() を最初から読んで特にソースコードを読みたい箇所がないか調査してみてください。
+- [ ] [The Internals of PostgreSQL](https://www.interdb.jp/pg/) を最初から読んで特にソースコードを読みたい箇所がないか調査してみてください。
+- [ ] リリースノートから追加された機能の中から気になるものを見つけて、commit id からメーリスや追加された実装を確認してみてください。
+
 - [ ] write システムコールと read システムコールと O_DIRECT について教えてください.
 - [ ] ファイルシステムに関して教えてください。
 - [ ] fsync システムコールについて教えてください。また、簡単なサンプルプログラムも実装してください。
