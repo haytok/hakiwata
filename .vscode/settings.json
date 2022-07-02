@@ -4,6 +4,11 @@
             "listItemIndent": 1,
             "fences": true
         }
+    },
+    "[markdown]":  {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": true,
+        "editor.snippetSuggestions": "top"
     }
 }
 
