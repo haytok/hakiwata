@@ -152,7 +152,6 @@ psql -h localhost -U postgres
 - この記事を読んでいるとファイルシステムとか inode が気になり、[以下の段落](#filesystem-by-yasukata)で調査をしていた。
 
 - やっと戻ってきた ...
-- 
 
 ### ファイルシステムと write システムコールや fsync システムコールの関係性について教えてください。{#filesystem-by-yasukata}
 
