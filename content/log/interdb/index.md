@@ -79,6 +79,43 @@ ogimage: "img/images/interdb.png"
 - WAL セグメントファイルの管理方法
 - 継続的なアーカイブ
 
+- 英単語
+  - acronym : 頭文字語
+  - synonym : 同意語
+  - durability : 永続性
+  - LSN : Log Sequence Number
+
+- As mentioned in Chapter 8, a modified pages are generally called a dirty page.
+- LSN (Log Sequence Number) of XLOG record represents the location where its record is written on the transaction log. LSN of record is used as the unique id of XLOG record.
+- ? 図ではページヘッダーのlabが書き変わっている→ヘッダにLenを格納する領域ってあったっけ？
+- PostgreSQL の 9.4 の前後で Data Portion of XLOG Record の構造が変わった。
+- LZ compression method がfull page imageに使われている。
+- 以下の処理の流れは後で追っときたい。
+
+```
+exec_simple_query() @postgres.c
+
+(1) ExtendCLOG() @clog.c                  /* Write the state of this transaction
+"IN_PROGRESS" to the CLOG.
+                                           */
+(2) heap_insert()@heapam.c                /* Insert a tuple, creates a XLOG record,
+and invoke the function XLogInsert.
+                                           */
+(3)   XLogInsert() @xlog.c (9.5 or later, xloginsert.c)
+                                          /* Write the XLOG record of the inserted tuple
+ to the WAL buffer, and update page's pd_lsn.
+                                           */
+(4) finish_xact_command() @postgres.c     /* Invoke commit action.*/  
+      XLogInsert() @xlog.c  (9.5 or later, xloginsert.c)
+                                          /* Write a XLOG record of this commit action
+to the WAL buffer.
+                                           */
+(5)   XLogWrite() @xlog.c                 /* Write and flush all XLOG records on
+the WAL buffer to WAL segment.
+                                           */
+(6) TransactionIdCommitTree() @transam.c
+```
+
 <!-- ## 背景
 
 ## 目的
