@@ -116,6 +116,16 @@ the WAL buffer to WAL segment.
 (6) TransactionIdCommitTree() @transam.c
 ```
 
+- 9.8. Database Recovery in PostgreSQL
+- このリカバリのアルゴリズムもおもろい
+- When PostgreSQL starts up, it reads the pg_control file at first.
+
+- WAL のローテーションとそのサイズとファイル数に関してよくわからんかった。
+
+- switches の意味があんまわからんかった。
+- LSN はログの通し番号
+- アーカイブログファイルは定期的に削除せんと肥大化していく。
+
 <!-- ## 背景
 
 ## 目的
