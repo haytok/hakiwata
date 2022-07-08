@@ -126,6 +126,15 @@ the WAL buffer to WAL segment.
 - LSN はログの通し番号
 - アーカイブログファイルは定期的に削除せんと肥大化していく。
 
+## Chapter 10
+
+- Point-in-Time Recovery (PITR), which has also been available since version 8.0, is the feature to restore a database cluster to any point in time using a base backup and archive logs created by continuous archiving feature.
+
+- The pg_start_backup prepares for making a base backup
+
+- Pinterの詳しい処理の流れはよくわかってない。
+- recovery.confはリカバリのたびに作成するっぽい
+
 <!-- ## 背景
 
 ## 目的
