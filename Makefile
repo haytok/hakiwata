@@ -1,7 +1,7 @@
-VERSION=0.83.1
+# OLD_VERSION=0.65.3
+# VERSION=0.83.1
+VERSION=0.101.0
 PORT=1313
-
-OLD_VERSION=0.65.3
 
 $(eval USER_ID := $(shell id -u $(USER)))
 $(eval GROUP_ID := $(shell id -g $(USER)))
