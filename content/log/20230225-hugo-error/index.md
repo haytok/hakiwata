@@ -26,6 +26,8 @@ Built in 87 ms
 make: *** [Makefile:12: server] Error 255
 ```
 
-エラーメッセージの内容と下記の記事の内容を参考にして、テーマのテンプレートを `{{ .Hugo.Generator }}` から `{{ hugo.Generator }}` に変更すると、`0.101.0` の Hugo で本アプリケーションを起動させることができた。バージョンを上げることによって表現できる文法が変更されたため、今回のようなエラーが発生したんやろうか ... 詳細は全くわかっていない :(
+エラーメッセージの内容と下記の記事の内容を参考にして、テーマのテンプレートを `{{ .Hugo.Generator }}` から `{{ hugo.Generator }}` に変更すると、`0.101.0` の Hugo で本アプリケーションを起動させることができた。
 
 - [Can't evaluate field Hugo in *hugolib.PageState - support - HUGO](https://discourse.gohugo.io/t/cant-evaluate-field-hugo-in-hugolib-pagestate/37862)
+
+バージョンを上げることによって表現できる文法が変更されたため、今回のようなエラーが発生したんやろうか ... 詳細は全くわかっていない :(
