@@ -6,17 +6,17 @@ date = "2021-04-30T00:00:00+08:00"
 ## Experience
 
 - April 2022 ~ Present
-  - Cloud Support Associate at Amazon Web Services Japan GK
+  - Cloud Support Associate at [Amazon Web Services Japan GK](https://aws.amazon.com/jp/)
 
 ## Education
 
 - April 2020 ~ March 2022
-  - Graduate School of Engineering at Osaka University
+  - Graduate School of Engineering at [Osaka University](https://www.osaka-u.ac.jp/)
     - Division of Electrical, Electronic, and Infocommunications Engineering
     - Member of [Inoue Lab](http://opt.comm.eng.osaka-u.ac.jp)
 
 - April 2016 ~ March 2020
-  - School of Engineering at Osaka University
+  - School of Engineering at [Osaka University](https://www.osaka-u.ac.jp/)
     - Division of Electronic and Information Engineering
 
 ## Publications
