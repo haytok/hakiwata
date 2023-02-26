@@ -16,6 +16,14 @@ command = service docker start;
 EOF
 ```
 
+bash の変数展開 (数式)
+
+```bash
+i=1234
+echo $((i*2))
+```
+
 ## 参考
 
 - [知ると便利なヒアドキュメント - Qiita](https://qiita.com/kite_999/items/e77fb521fc39454244e7)
+- [Bash $((算術式)) のすべて - A 基本編 - Qiita](https://qiita.com/akinomyoga/items/9761031c551d43307374)
