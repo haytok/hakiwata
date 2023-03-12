@@ -1,0 +1,1099 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.110.0"><title>Learning Memory Model for Linux kernel - haytok's Website</title><meta name=description content="下記のツールを使ってメモリモデルの挙動を確認してみる。
+linux/tools/memory-model at master · torvalds/linux · GitHub Simulating memory models with herd7 準備 検証環境
+haytok@2023-03-01 01:33:47:~/memory-model >>> uname -r 5.15.79.1-microsoft-standard-WSL2 haytok@2023-03-01 01:40:52:~/memory-model >>> cat /etc/lsb-release DISTRIB_ID=Ubuntu DISTRIB_RELEASE=20.04 DISTRIB_CODENAME=focal DISTRIB_DESCRIPTION=&#34;Ubuntu 20.04.5 LTS&#34; セットアップの手順は以下である。
+sudo apt update sudo apt install -y opam opam init opam install herdtools7 # ~/.bashrc に eval $(opam config env); を追記する。 実際に実行した手順は以下である。
+haytok@DESKTOP-SK03JO0:~$ mkdir memory-model haytok@DESKTOP-SK03JO0:~/memory-mode$ cd memory-model/ haytok@DESKTOP-SK03JO0:~/memory-mode$ pwd /home/haytok/memory-model haytok@DESKTOP-SK03JO0:~/memory-mode$ sudo apt install -y opam ."><link rel="shortcut icon" href=https://haytok.jp/img/images/favicon.ico><link rel=stylesheet href=https://haytok.jp/css/ui.css><link rel=stylesheet href=https://haytok.jp/css/main.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway"><meta property="og:title" content="Learning Memory Model for Linux kernel"><meta property="og:description" content="下記のツールを使ってメモリモデルの挙動を確認してみる。
+linux/tools/memory-model at master · torvalds/linux · GitHub Simulating memory models with herd7 準備 検証環境
+haytok@2023-03-01 01:33:47:~/memory-model >>> uname -r 5.15.79.1-microsoft-standard-WSL2 haytok@2023-03-01 01:40:52:~/memory-model >>> cat /etc/lsb-release DISTRIB_ID=Ubuntu DISTRIB_RELEASE=20.04 DISTRIB_CODENAME=focal DISTRIB_DESCRIPTION=&#34;Ubuntu 20.04.5 LTS&#34; セットアップの手順は以下である。
+sudo apt update sudo apt install -y opam opam init opam install herdtools7 # ~/.bashrc に eval $(opam config env); を追記する。 実際に実行した手順は以下である。
+haytok@DESKTOP-SK03JO0:~$ mkdir memory-model haytok@DESKTOP-SK03JO0:~/memory-mode$ cd memory-model/ haytok@DESKTOP-SK03JO0:~/memory-mode$ pwd /home/haytok/memory-model haytok@DESKTOP-SK03JO0:~/memory-mode$ sudo apt install -y opam ."><meta property="og:type" content="article"><meta property="og:url" content="https://haytok.jp/log/20230225-memory-model-for-linux/"><meta property="og:image" content="https://haytok.jp/"><meta property="article:section" content="log"><meta property="article:published_time" content="2023-02-25T10:36:23+00:00"><meta property="article:modified_time" content="2023-02-25T10:36:23+00:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@bilmnpvovqnmlid"><meta name=twitter:creator content="@bilmnpvovqnmlid"><meta property="twitter:image" content="https://haytok.jp/img/images/20230225-memory-model-for-linux.png"><meta property="og:title" content="Learning Memory Model for Linux kernel"><meta property="og:url" content="https://haytok.jp/log/20230225-memory-model-for-linux/"><meta property="og:image" content="https://haytok.jp/img/images/20230225-memory-model-for-linux.png"><meta property="og:description" content><script async src="https://www.googletagmanager.com/gtag/js?id=G-YXCYPL25QW"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YXCYPL25QW",{anonymize_ip:!1})}</script></head><body><header class="container no-print"><div class=u-header><nav class=bar><ul><li><a href=https://haytok.jp/><img class=icon-text src=https://haytok.jp/img/prev.svg></a></li><li><a href=https://haytok.jp/about>About</a></li><li><a href=https://haytok.jp/log>Log</a></li><li><a href=https://haytok.jp/post>Post</a></li><li><a href=https://haytok.jp/scraps>Scraps</a></li><li><a href=https://haytok.jp/tags>Tags</a></li></ul></nav></div></header><main class=container><article><header><hgroup id=brand><h1>Learning Memory Model for Linux kernel</h1><h5><time datetime="2023-02-25 10:36:23 +0000 UTC">Feb 25, 2023</time>
+<span class=no-print>-
+<a href=https://haytok.jp/tags/linux>Linux</a>
+<a href=https://haytok.jp/tags/wip>WIP</a>
+<span></h5></hgroup><hr class=sep></header><p>下記のツールを使ってメモリモデルの挙動を確認してみる。</p><ul><li><a href=https://github.com/torvalds/linux/tree/master/tools/memory-model>linux/tools/memory-model at master · torvalds/linux · GitHub</a></li><li><a href=http://diy.inria.fr/doc/herd.html>Simulating memory models with herd7</a></li></ul><h2 id=準備>準備</h2><p>検証環境</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 01:33:47:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; uname -r
+</span></span><span class=line><span class=cl>5.15.79.1-microsoft-standard-WSL2
+</span></span><span class=line><span class=cl>haytok@2023-03-01 01:40:52:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; cat /etc/lsb-release
+</span></span><span class=line><span class=cl><span class=nv>DISTRIB_ID</span><span class=o>=</span>Ubuntu
+</span></span><span class=line><span class=cl><span class=nv>DISTRIB_RELEASE</span><span class=o>=</span>20.04
+</span></span><span class=line><span class=cl><span class=nv>DISTRIB_CODENAME</span><span class=o>=</span>focal
+</span></span><span class=line><span class=cl><span class=nv>DISTRIB_DESCRIPTION</span><span class=o>=</span><span class=s2>&#34;Ubuntu 20.04.5 LTS&#34;</span>
+</span></span></code></pre></div><p>セットアップの手順は以下である。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo apt update
+</span></span><span class=line><span class=cl>sudo apt install -y opam
+</span></span><span class=line><span class=cl>opam init
+</span></span><span class=line><span class=cl>opam install herdtools7
+</span></span><span class=line><span class=cl><span class=c1># ~/.bashrc に eval $(opam config env); を追記する。</span>
+</span></span></code></pre></div><p>実際に実行した手順は以下である。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~$ mkdir memory-model
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-mode$ <span class=nb>cd</span> memory-model/
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-mode$ <span class=nb>pwd</span>
+</span></span><span class=line><span class=cl>/home/haytok/memory-model
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-mode$ sudo apt install -y opam
+</span></span><span class=line><span class=cl>... <span class=o>(</span>省略<span class=o>)</span>
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-mode$ opam --version
+</span></span><span class=line><span class=cl>2.0.5
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-model$ opam init
+</span></span><span class=line><span class=cl><span class=o>[</span>NOTE<span class=o>]</span> Will configure from built-in defaults.
+</span></span><span class=line><span class=cl>Checking <span class=k>for</span> available remotes: rsync and local, git, mercurial, darcs. Perfect!
+</span></span><span class=line><span class=cl>... <span class=o>(</span>省略<span class=o>)</span>
+</span></span><span class=line><span class=cl>Done.
+</span></span><span class=line><span class=cl><span class=c1># Run eval $(opam env) to update the current shell environment</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-model$ opam install herdtools7
+</span></span><span class=line><span class=cl>The following actions will be performed:
+</span></span><span class=line><span class=cl>... <span class=o>(</span>省略<span class=o>)</span>
+</span></span><span class=line><span class=cl>∗ installed herdtools7.7.56.3
+</span></span><span class=line><span class=cl>Done.
+</span></span><span class=line><span class=cl><span class=c1># Run eval $(opam env) to update the current shell environment</span>
+</span></span></code></pre></div><p><code>~/.bashrc</code> に <code>eval $(opam config env);</code> を追記する。追記しないと以下のエラーが発生して悩むことになる。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@DESKTOP-SK03JO0:~/memory-model$ herd7 --help
+</span></span><span class=line><span class=cl>herd7: <span class=nb>command</span> not found
+</span></span></code></pre></div><p><code>~/.bashrc</code> に追記すると、<code>herd7</code> コマンドを実行できる。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-02-26 19:39:52:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -version
+</span></span><span class=line><span class=cl>7.56+03, Rev: exported
+</span></span></code></pre></div><p>サンプルのコマンドを実行してみると、正常にシミュレーションが完了した。</p><blockquote><p>SB+fencembonceonces.litmus
+This is the fully ordered (again, via smp_mb() version of store buffering, which forms the core of Dekker&rsquo;s mutual-exclusion algorithm.</p></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-02-26 22:24:42:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/SB+fencembonceonces.litmus
+</span></span><span class=line><span class=cl>Test SB+fencembonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>0</span> /<span class=se>\ </span>1:r0<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation SB+fencembonceonces Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time SB+fencembonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>d66d99523e2cac6b06e66f4c995ebb48
+</span></span></code></pre></div><p>以上から litmus のプログラムを実行するための準備が完了した。</p><h2 id=検証>検証</h2><p>下記のページにある <code>LITMUS TESTS</code> を一通り動かしてみて結果を確認しみる。</p><ul><li><a href=https://github.com/torvalds/linux/tree/master/tools/memory-model/litmus-tests>linux/tools/memory-model/litmus-tests at master · torvalds/linux</a></li></ul><h3 id=0-sbfencembonceonceslitmus-res>#0 <code>SB+fencembonceonces.litmus</code> RES</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p><code>smp_mb()</code> の定義をチラッと確認しておく。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 01:30:38:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\ssmp_mb(&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm64/include/asm/vdso/compat_barrier.h:31:#define smp_mb<span class=o>()</span>     aarch32_smp_mb<span class=o>()</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:99:#define smp_mb<span class=o>()</span>    <span class=k>do</span> <span class=o>{</span> kcsan_mb<span class=o>()</span><span class=p>;</span> __smp_mb<span class=o>()</span><span class=p>;</span> <span class=o>}</span> <span class=k>while</span> <span class=o>(</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:113:#define smp_mb<span class=o>()</span>   barrier<span class=o>()</span>
+</span></span><span class=line><span class=cl>haytok@2023-03-01 01:30:44:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\s__smp_mb(&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/x86/include/asm/barrier.h:57:#define __smp_mb<span class=o>()</span> asm volatile<span class=o>(</span><span class=s2>&#34;lock; addl </span><span class=nv>$0</span><span class=s2>,-4(%%&#34;</span> _ASM_SP <span class=s2>&#34;)&#34;</span> ::: <span class=s2>&#34;memory&#34;</span>, <span class=s2>&#34;cc&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm64/include/asm/barrier.h:116:#define __smp_mb<span class=o>()</span>      dmb<span class=o>(</span>ish<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm/include/asm/barrier.h:77:#define __smp_mb<span class=o>()</span> dmb<span class=o>(</span>ish<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:85:#define __smp_mb<span class=o>()</span>  mb<span class=o>()</span>
+</span></span></code></pre></div><p><code>smp_mb()</code> は memory barrier のことやと思う。なので、本プログラムのそれぞれの鵜スレッドは
+それぞれリオーダリングが発生しないと考えられる。</p><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 01:33:17:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/SB+fencembonceonces.litmus
+</span></span><span class=line><span class=cl>Test SB+fencembonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>0</span> /<span class=se>\ </span>1:r0<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation SB+fencembonceonces Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time SB+fencembonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>d66d99523e2cac6b06e66f4c995ebb48
+</span></span></code></pre></div><p>-> この結果は自分が想定した結果やった。</p><h3 id=1-sfencewmbonceoncepoacquireoncelitmus-wip>#1 <code>S+fencewmbonceonce+poacquireonce.litmus</code> WIP</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_wmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p><code>smp_wmb()</code> の定義を kernel のコードから確認する。(多分 write memory barrier のことやと思う。)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 00:54:16:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\ssmp_wmb&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm64/include/asm/vdso/compat_barrier.h:33:#define smp_wmb<span class=o>()</span>    aarch32_smp_wmb<span class=o>()</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:107:#define smp_wmb<span class=o>()</span>  <span class=k>do</span> <span class=o>{</span> kcsan_wmb<span class=o>()</span><span class=p>;</span> __smp_wmb<span class=o>()</span><span class=p>;</span> <span class=o>}</span> <span class=k>while</span> <span class=o>(</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:121:#define smp_wmb<span class=o>()</span>  barrier<span class=o>()</span>
+</span></span></code></pre></div><ul><li><a href=https://github.com/torvalds/linux/blob/master/include/asm-generic/barrier.h#L107>linux/barrier.h at master · torvalds/linux</a></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#ifdef CONFIG_SMP
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifndef smp_wmb
+</span></span></span><span class=line><span class=cl><span class=cp>#define smp_wmb()	do { kcsan_wmb(); __smp_wmb(); } while (0)
+</span></span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#else	</span><span class=cm>/* !CONFIG_SMP */</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifndef smp_wmb
+</span></span></span><span class=line><span class=cl><span class=cp>#define smp_wmb()	barrier()
+</span></span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#endif	</span><span class=cm>/* CONFIG_SMP */</span><span class=cp>
+</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 01:16:24:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\sbarrier(&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/um/include/shared/user.h:57:#define barrier<span class=o>()</span> __asm__ __volatile__<span class=o>(</span><span class=s2>&#34;&#34;</span>: : :<span class=s2>&#34;memory&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/linux/compiler-intel.h:16:#define barrier<span class=o>()</span> __memory_barrier<span class=o>()</span>
+</span></span><span class=line><span class=cl>haytok@2023-03-01 01:16:45:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\s__memory_barrier&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span></code></pre></div><p>-> <code>barrier()</code> の定義は見つからんかった &mldr;</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 01:18:41:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\s__smp_wmb&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/x86/include/asm/barrier.h:60:#define __smp_wmb<span class=o>()</span>        barrier<span class=o>()</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm64/include/asm/barrier.h:118:#define __smp_wmb<span class=o>()</span>     dmb<span class=o>(</span>ishst<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/arm/include/asm/barrier.h:79:#define __smp_wmb<span class=o>()</span>        dmb<span class=o>(</span>ishst<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:93:#define __smp_wmb<span class=o>()</span> wmb<span class=o>()</span>
+</span></span></code></pre></div><p>-> <code>wmb()</code> と <code>dmb()</code> の定義を追いたいところだが、一旦置いておく &mldr;</p><ul><li><a href=https://developer.arm.com/documentation/dui0489/c/arm-and-thumb-instructions/miscellaneous-instructions/dmb--dsb--and-isb>ARM Compiler toolchain Assembler Reference Version 4.1</a></li></ul><blockquote><p>DMB
+Data Memory Barrier acts as a memory barrier. It ensures that all explicit memory accesses that appear in program order before the DMB instruction are observed before any explicit memory accesses that appear in program order after the DMB instruction. It does not affect the ordering of any other instructions executing on the processor.</p></blockquote><p>-> ARM では DMB 命令の前に現れる全ての明示的なメモリアクセスが、DMB 命令の後に現れるあらゆる明示的なメモリアクセスより先に観測されることを保証するとのことなので、<code>dmb()</code> を跨いだリオーダリングは発生しないと解釈しました。</p><p>一方、<code>smp_load_acquire()</code> の定義は下記に記述されている。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 00:53:09:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\ssmp_load_acquire&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tools<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:176:#define smp_load_acquire<span class=o>(</span>p<span class=o>)</span> __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/include/asm-generic/barrier.h:203:#define smp_load_acquire<span class=o>(</span>p<span class=o>)</span>
+</span></span></code></pre></div><ul><li><a href=https://github.com/torvalds/linux/blob/master/include/asm-generic/barrier.h#L175>linux/barrier.h at master · torvalds/linux</a></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#ifdef CONFIG_SMP
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifndef smp_load_acquire
+</span></span></span><span class=line><span class=cl><span class=cp>#define smp_load_acquire(p) __smp_load_acquire(p)
+</span></span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#else	</span><span class=cm>/* !CONFIG_SMP */</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=p>...</span> <span class=p>(</span><span class=err>省略</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifndef smp_load_acquire
+</span></span></span><span class=line><span class=cl><span class=cp>#define smp_load_acquire(p)						\
+</span></span></span><span class=line><span class=cl><span class=cp>({									\
+</span></span></span><span class=line><span class=cl><span class=cp>	__unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);		\
+</span></span></span><span class=line><span class=cl><span class=cp>	compiletime_assert_atomic_type(*p);				\
+</span></span></span><span class=line><span class=cl><span class=cp>	barrier();							\
+</span></span></span><span class=line><span class=cl><span class=cp>	(typeof(*p))___p1;						\
+</span></span></span><span class=line><span class=cl><span class=cp>})
+</span></span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#endif	</span><span class=cm>/* CONFIG_SMP */</span><span class=cp>
+</span></span></span></code></pre></div><p><code>__smp_load_acquire()</code> の定義も確認しておく。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 00:54:06:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; grep -rn <span class=s2>&#34;#define\s__smp_load_acquire&#34;</span> /home/haytok/linux/ --exclude-dir<span class=o>={</span>riscv,csky,s390,powerpc,parisc,sh,xtensa,loongarch,tool
+</span></span><span class=line><span class=cl>s<span class=o>}</span>
+</span></span><span class=line><span class=cl>/home/haytok/linux/arch/x86/include/asm/barrier.h:70:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>                                              <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>/home/haytok/linux/arch/sparc/include/asm/barrier_64.h:48:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>                                         <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>/home/haytok/linux/arch/arm64/include/asm/barrier.h:155:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>                                           <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>/home/haytok/linux/arch/ia64/include/asm/barrier.h:63:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>                                             <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>/home/haytok/linux/arch/alpha/include/asm/barrier.h:9:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>                                             <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span>/home/haytok/linux/include/asm-generic/barrier.h:148:#define __smp_load_acquire<span class=o>(</span>p<span class=o>)</span>
+</span></span></code></pre></div><p>-> この出力結果から、<code>__smp_load_acquire()</code> の定義は architecture specific っぽいのがわかる。</p><p>x86 やと、定義は以下にある。</p><ul><li><a href=https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/barrier.h#L70>linux/barrier.h at master · torvalds/linux</a></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#define __smp_load_acquire(p)						\
+</span></span></span><span class=line><span class=cl><span class=cp>({									\
+</span></span></span><span class=line><span class=cl><span class=cp>	typeof(*p) ___p1 = READ_ONCE(*p);				\
+</span></span></span><span class=line><span class=cl><span class=cp>	compiletime_assert_atomic_type(*p);				\
+</span></span></span><span class=line><span class=cl><span class=cp>	barrier();							\
+</span></span></span><span class=line><span class=cl><span class=cp>	___p1;								\
+</span></span></span><span class=line><span class=cl><span class=cp>})
+</span></span></span></code></pre></div><p>-> <code>barrier.h</code> にあった定義と同じ感じである。</p><p>arm の定義も確認しておく。</p><ul><li><a href=https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/barrier.h#L158>linux/barrier.h at master · torvalds/linux</a></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#define __smp_load_acquire(p)						\
+</span></span></span><span class=line><span class=cl><span class=cp>({									\
+</span></span></span><span class=line><span class=cl><span class=cp>	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
+</span></span></span><span class=line><span class=cl><span class=cp>	typeof(p) __p = (p);						\
+</span></span></span><span class=line><span class=cl><span class=cp>	compiletime_assert_atomic_type(*p);				\
+</span></span></span><span class=line><span class=cl><span class=cp>	kasan_check_read(__p, sizeof(*p));				\
+</span></span></span><span class=line><span class=cl><span class=cp>	switch (sizeof(*p)) {						\
+</span></span></span><span class=line><span class=cl><span class=cp>	case 1:								\
+</span></span></span><span class=line><span class=cl><span class=cp>		asm volatile (&#34;ldarb %w0, %1&#34;				\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;=r&#34; (*(__u8 *)__u.__c)			\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;Q&#34; (*__p) : &#34;memory&#34;);			\
+</span></span></span><span class=line><span class=cl><span class=cp>		break;							\
+</span></span></span><span class=line><span class=cl><span class=cp>	case 2:								\
+</span></span></span><span class=line><span class=cl><span class=cp>		asm volatile (&#34;ldarh %w0, %1&#34;				\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;=r&#34; (*(__u16 *)__u.__c)			\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;Q&#34; (*__p) : &#34;memory&#34;);			\
+</span></span></span><span class=line><span class=cl><span class=cp>		break;							\
+</span></span></span><span class=line><span class=cl><span class=cp>	case 4:								\
+</span></span></span><span class=line><span class=cl><span class=cp>		asm volatile (&#34;ldar %w0, %1&#34;				\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;=r&#34; (*(__u32 *)__u.__c)			\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;Q&#34; (*__p) : &#34;memory&#34;);			\
+</span></span></span><span class=line><span class=cl><span class=cp>		break;							\
+</span></span></span><span class=line><span class=cl><span class=cp>	case 8:								\
+</span></span></span><span class=line><span class=cl><span class=cp>		asm volatile (&#34;ldar %0, %1&#34;				\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;=r&#34; (*(__u64 *)__u.__c)			\
+</span></span></span><span class=line><span class=cl><span class=cp>			: &#34;Q&#34; (*__p) : &#34;memory&#34;);			\
+</span></span></span><span class=line><span class=cl><span class=cp>		break;							\
+</span></span></span><span class=line><span class=cl><span class=cp>	}								\
+</span></span></span><span class=line><span class=cl><span class=cp>	(typeof(*p))__u.__val;						\
+</span></span></span><span class=line><span class=cl><span class=cp>})
+</span></span></span></code></pre></div><p>マクロの定義の構造自体は同じ感じで、arm のメモリバリア関連の命令の <code>ldar</code> を使用して x86 でいうところの <code>barrier()</code> を実装している。なお、<code>ldar</code> は「この命令以降のメモリ読み書き命令がこの命令よりも先に実行されないことを保証」する命令である。 (ref. 並行プログラミング)</p><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-02-28 01:43:17:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/S+fencewmbonceonce+poacquireonce.litmus
+</span></span><span class=line><span class=cl>Test S+fencewmbonceonce+poacquireonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation S+fencewmbonceonce+poacquireonce Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time S+fencewmbonceonce+poacquireonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>c9ba02a9b2cbfb9a4d745aa4e0e586cb
+</span></span></code></pre></div><p><code>smp_load_acquire()</code> を <code>READ_ONCE()</code> に変えたときの litmus の結果 (検証プログラム 1)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-02-28 01:44:15:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/S+fencewmbonceonce+poacquireonce.litmus
+</span></span><span class=line><span class=cl>Test S+fencewmbonceonce+poacquireonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation S+fencewmbonceonce+poacquireonce Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time S+fencewmbonceonce+poacquireonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>d5b9219bc582c5ff010f5a70d4590983
+</span></span></code></pre></div><p>-> 取りうる状態が 1 つ増えた。この場合やと、<code>r0 = READ_ONCE(*y);</code> と <code>WRITE_ONCE(*x, 1);</code> の処理がリオーダリングして <code>WRITE_ONCE(*x, 1);</code> の処理が <code>r0 = READ_ONCE(*y);</code> の前、例えばスレッド P0 における <code>WRITE_ONCE(*x, 2);</code> より前に実行される可能性が考えられる。うーん、<a href=https://lwn.net/Articles/844224/>lwn の記事</a> 的には <code>datum = smp_load_acquire(&message);</code> は <code>datum = READ_ONCE(message);smp_rmb();</code> と同様の処理とも読み取れるが、kernel のコード的にホンマか？となっている。疑問に思っていたのは <code>smp_load_acquire()</code> の内部の <code>barrier()</code> によってリオーダリングが発生しないと考えたが、合っているやろか &mldr; マクロの展開が自分的にはややこしくて悩んだ原因やった。</p><p><code>smp_load_acquire()</code> の内部の <code>barrier()</code> を模した検証プログラムを実装してみた。(検証プログラム 2)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define __scalar_type_to_expr_cases(type)                               \
+</span></span></span><span class=line><span class=cl><span class=cp>                unsigned type:  (unsigned type)0,                       \
+</span></span></span><span class=line><span class=cl><span class=cp>                signed type:    (signed type)0
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define __unqual_scalar_typeof(x) typeof(                               \
+</span></span></span><span class=line><span class=cl><span class=cp>                _Generic((x),                                           \
+</span></span></span><span class=line><span class=cl><span class=cp>                         char:  (char)0,                                \
+</span></span></span><span class=line><span class=cl><span class=cp>                         __scalar_type_to_expr_cases(char),             \
+</span></span></span><span class=line><span class=cl><span class=cp>                         __scalar_type_to_expr_cases(short),            \
+</span></span></span><span class=line><span class=cl><span class=cp>                         __scalar_type_to_expr_cases(int),              \
+</span></span></span><span class=line><span class=cl><span class=cp>                         __scalar_type_to_expr_cases(long),             \
+</span></span></span><span class=line><span class=cl><span class=cp>                         __scalar_type_to_expr_cases(long long),        \
+</span></span></span><span class=line><span class=cl><span class=cp>                         default: (x)))
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&amp;(x))
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define READ_ONCE(x)                            \
+</span></span></span><span class=line><span class=cl><span class=cp>({                                  \
+</span></span></span><span class=line><span class=cl><span class=cp>    __READ_ONCE(x);                         \
+</span></span></span><span class=line><span class=cl><span class=cp>})
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=c1>// 実装を参考にした kernel で定義された定義
+</span></span></span><span class=line><span class=cl><span class=c1>// #define smp_load_acquire(p)						\
+</span></span></span><span class=line><span class=cl><span class=c1>// ({									\
+</span></span></span><span class=line><span class=cl><span class=c1>// 	__unqual_scalar_typeof(*p) ___p1 = READ_ONCE(*p);		\
+</span></span></span><span class=line><span class=cl><span class=c1>// 	compiletime_assert_atomic_type(*p);				\
+</span></span></span><span class=line><span class=cl><span class=c1>// 	barrier();							\
+</span></span></span><span class=line><span class=cl><span class=c1>// 	(typeof(*p))___p1;						\
+</span></span></span><span class=line><span class=cl><span class=c1>// })
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=cp>#define smp_load_acquire(p)						\
+</span></span></span><span class=line><span class=cl><span class=cp>({									\
+</span></span></span><span class=line><span class=cl><span class=cp>	typeof(p) value = READ_ONCE(p); \
+</span></span></span><span class=line><span class=cl><span class=cp>    puts(&#34;In smp_load_acquire&#34;); \
+</span></span></span><span class=line><span class=cl><span class=cp>    value + 1;						\
+</span></span></span><span class=line><span class=cl><span class=cp>})
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>value</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nf>typeof</span><span class=p>(</span><span class=n>value</span><span class=p>)</span> <span class=n>updated_value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>updated_value</span> <span class=o>=</span> <span class=n>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>updated_value</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>updated_value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nf>printf</span><span class=p>(</span><span class=s>&#34;value is %d, updated_value is %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>value</span><span class=p>,</span> <span class=n>updated_value</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 00:33:36:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; gcc -o <span class=nb>test</span> test.c <span class=o>&amp;&amp;</span> ./test
+</span></span><span class=line><span class=cl>In smp_load_acquire
+</span></span><span class=line><span class=cl>value is 0, updated_value is <span class=m>1</span>
+</span></span></code></pre></div><p><code>smp_load_acquire()</code> の内部で定義された <code>puts()</code> は呼び出され、マクロの引数として受け取った値に +1 して値を返す挙動をしている。</p><p>やから、この検証プログラム 1 と 2 の挙動から、やっぱり litmus のプログラムで実装されている <code>smp_load_acquire()</code> と <code>WRITE_ONCE()</code> はリオーダリングしないといっても良いと判断しました。</p><p>LWN の記事 (<a href=https://lwn.net/Articles/844224/>An introduction to lockless algorithms [LWN.net]</a>) の &ldquo;The message-passing pattern&rdquo; もちゃんと読み直さなあかん &mldr;</p><h3 id=2-spoonceonceslitmus-res>#2 <code>S+poonceonces.litmus</code> RES</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>これのシュミレーションでは、同一スレッドにおける値の依存関係はなく、バリア系の命令はないため、どちらのスレッドでもリオーダリングが発生し、4 パターンの取りうる結果がある。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 21:59:48:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/S+poonceonces.litmus
+</span></span><span class=line><span class=cl>Test S+poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation S+poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time S+poonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>696942ff9c74183ff5d97898969e38ca
+</span></span></code></pre></div><h3 id=3-sbpoonceonceslitmus-done>#3 <code>SB+poonceonces.litmus</code> done</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>これのシュミレーションでは、同一スレッドにおける値の依存関係はなく、バリア系の命令はないため、どちらのスレッドでもリオーダリングが発生し、4 パターンの取りうる結果がある。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 22:12:47:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/SB+poonceonces.litmus
+</span></span><span class=line><span class=cl>Test SB+poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>0</span> /<span class=se>\ </span>1:r0<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation SB+poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time SB+poonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>d2b6ca86cddfad6178a05767f57fafbf
+</span></span></code></pre></div><h3 id=4-sbrfionceonce-poonceonceslitmus-wip>#4 <code>SB+rfionceonce-poonceonces.litmus</code> WIP</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r4</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r3</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r4</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>r1 と r3 に格納される値はそれぞれ、変数 x と y における依存関係があるのでリオーダリングが発生しない。そのため、r1 と r3 に格納される値はそれぞれ 1 である。あとは、#3 とかと同様に考えれば良い。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 22:17:17:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/SB+rfionceonce-poonceonces.litmus
+</span></span><span class=line><span class=cl>Test SB+rfionceonce-poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>1<span class=p>;</span> 0:r2<span class=o>=</span>0<span class=p>;</span> 1:r3<span class=o>=</span>1<span class=p>;</span> 1:r4<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>1<span class=p>;</span> 0:r2<span class=o>=</span>0<span class=p>;</span> 1:r3<span class=o>=</span>1<span class=p>;</span> 1:r4<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>1<span class=p>;</span> 0:r2<span class=o>=</span>1<span class=p>;</span> 1:r3<span class=o>=</span>1<span class=p>;</span> 1:r4<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>1<span class=p>;</span> 0:r2<span class=o>=</span>1<span class=p>;</span> 1:r3<span class=o>=</span>1<span class=p>;</span> 1:r4<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r2<span class=o>=</span><span class=m>0</span> /<span class=se>\ </span>1:r4<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation SB+rfionceonce-poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time SB+rfionceonce-poonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>40de8418c4b395388f6501cafd1ed38d
+</span></span></code></pre></div><h3 id=5-wrcpoonceoncesoncelitmus-res>#5 <code>WRC+poonceonces+Once.litmus</code> RES</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>メモリバリアのプログラムが差し込まれていないので、リオーダリングがたくさん発生しそう。つまり、取りうる値分の組み合わせが生じる。</p><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-02-27 22:16:37:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt;  herd7 -conf linux-kernel.cfg litmus-tests/WRC+poonceonces+Once.litmus
+</span></span><span class=line><span class=cl>Test WRC+poonceonces+Once Allowed
+</span></span><span class=line><span class=cl>States <span class=m>8</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>7</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>2:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>2:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation WRC+poonceonces+Once Sometimes <span class=m>1</span> <span class=m>7</span>
+</span></span><span class=line><span class=cl>Time WRC+poonceonces+Once 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>fb66830df5109eaa42fdf0150ba74c5e
+</span></span></code></pre></div><h3 id=6-wrcpooncereleasefencermbonceonceoncelitmus-wip>#6 <code>WRC+pooncerelease+fencermbonceonce+Once.litmus</code> WIP</h3><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_store_release</span><span class=p>(</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_rmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-01 22:35:33:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/WRC+pooncerelease+fencermbonceonce+Once.litmus
+</span></span><span class=line><span class=cl>Test WRC+pooncerelease+fencermbonceonce+Once Allowed
+</span></span><span class=line><span class=cl>States <span class=m>7</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>0<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 2:r0<span class=o>=</span>1<span class=p>;</span> 2:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>7</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>2:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>2:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation WRC+pooncerelease+fencermbonceonce+Once Never <span class=m>0</span> <span class=m>7</span>
+</span></span><span class=line><span class=cl>Time WRC+pooncerelease+fencermbonceonce+Once 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>7b9a1a22fbb821d557ea6448eb64707b
+</span></span></code></pre></div><p>-> 全ての場合分けを考えたが、まともに計算するのがキツ過ぎて諦めた &mldr;</p><h2 id=7-z60pooncelockpooncelockpomboncelitmus-una>#7 <code>Z6.0+pooncelock+pooncelock+pombonce.litmus</code> UNA</h2><p>Pass &mldr;</p><h2 id=8-z60pooncelockpooncelockpomboncelitmus-una>#8 <code>Z6.0+pooncelock+poonceLock+pombonce.litmus</code> UNA</h2><p>Pass &mldr;</p><h2 id=9-z60pooncereleasepoacquirereleasefencembonceoncelitmus-una>#9 <code>Z6.0+pooncerelease+poacquirerelease+fencembonceonce.litmus</code> UNA</h2><p>Pass &mldr;</p><h2 id=10-corrpoonceonceoncelitmus-res>#10 <code>CoRR+poonceonce+Once.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>P1 の r0 と r1 には依存関係がある。</p><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-02 01:35:31:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/CoRR+poonceonce+Once.litmus
+</span></span><span class=line><span class=cl>Test CoRR+poonceonce+Once Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation CoRR+poonceonce+Once Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time CoRR+poonceonce+Once 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>378326ae44de3653b1ba8ac124001235
+</span></span></code></pre></div><p>P1 における <code>r0 = READ_ONCE(*x);</code> と <code>r1 = READ_ONCE(*x);</code> の間に <code>smp_rmb();</code> を挟んでも挟まんくても結果は変わらんかった。(&lt;- 気づいたときにちょいちょいいじるとおもろい。)</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_rmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>このことからも元のベースプログラムにおいても二つの処理のリオーダリングが発生しないことが明らかになった。</p><h2 id=11-corwpoonceonceoncelitmus-res>#11 <code>CoRW+poonceonce+Once.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-03 01:16:41:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/CoRW+poonceonce+Once.litmus
+</span></span><span class=line><span class=cl>Test CoRW+poonceonce+Once Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>2<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>0:r0<span class=o>=</span>2<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation CoRW+poonceonce+Once Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time CoRW+poonceonce+Once 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>342ea0846b39cffa347927f119efd044
+</span></span></code></pre></div><p>P0 の <code>r0 = READ_ONCE(*x);</code> と <code>WRITE_ONCE(*x, 1);</code> は依存関係があるので、リオーダリングが発生しないと考えられるので、3 通りのパターンしかない。</p><h2 id=12-cowrpoonceonceoncelitmus-res>#12 <code>CoWR+poonceonce+Once.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-03 01:44:43:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/CoWR+poonceonce+Once.litmus
+</span></span><span class=line><span class=cl>Test CoWR+poonceonce+Once Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>2<span class=p>;</span> <span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span><span class=m>1</span> /<span class=se>\ </span>0:r0<span class=o>=</span>2<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation CoWR+poonceonce+Once Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time CoWR+poonceonce+Once 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>3f8770b94cb57e6487da7b89ad43ecb3
+</span></span></code></pre></div><p><code>WRITE_ONCE(*x, 1);</code> と <code>r0 = READ_ONCE(*x);</code> は依存関係があるので、リオーダリングが発生しないと考えられるので、3 通りのパターンしかない。</p><h2 id=13-cowwpoonceoncelitmus-una>#13 <code>CoWW+poonceonce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-03 01:48:00:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/CoWW+poonceonce.litmus
+</span></span><span class=line><span class=cl>Test CoWW+poonceonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>1</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>x<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>1</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>x<span class=o>]=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation CoWW+poonceonce Never <span class=m>0</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>Time CoWW+poonceonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>260aac15e0895506fb610570ef05debc
+</span></span></code></pre></div><p><code>WRITE_ONCE(*x, 1);</code> と <code>WRITE_ONCE(*x, 2);</code> は依存関係があるので、リオーダリングが発生しないと考えられるので、1 通りのパターンしかない。</p><h2 id=14-iriwfencembonceoncesonceoncelitmus-una>#14 <code>IRIW+fencembonceonces+OnceOnce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P3</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass …</p><h2 id=15-iriwpoonceoncesonceoncelitmus-una>#15 <code>IRIW+poonceonces+OnceOnce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P3</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass …</p><h2 id=16-isa2pooncelockpooncelockpomboncelitmus-una>#16 <code>ISA2+pooncelock+pooncelock+pombonce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>z</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>z</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=17-isa2poonceonceslitmus-una>#17 <code>ISA2+poonceonces.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>z</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>z</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=18-isa2pooncereleasepoacquirereleasepoacquireoncelitmus-una>#18 <code>ISA2+pooncerelease+poacquirerelease+poacquireonce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_store_release</span><span class=p>(</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_store_release</span><span class=p>(</span><span class=n>z</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P2</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>z</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>z</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=19-lbfencembonceoncectrlonceoncelitmus-res>#19 <code>LB+fencembonceonce+ctrlonceonce.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=p>(</span><span class=n>r0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 21:06:52:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/LB+fencembonceonce+ctrlonceonce.litmus
+</span></span><span class=line><span class=cl>Test LB+fencembonceonce+ctrlonceonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>2</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>2</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation LB+fencembonceonce+ctrlonceonce Never <span class=m>0</span> <span class=m>2</span>
+</span></span><span class=line><span class=cl>Time LB+fencembonceonce+ctrlonceonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>e5260556f6de495fd39b556d1b831c3b
+</span></span></code></pre></div><p>P0 のスレッドでは変数 r0 に対して依存関係があるので、リオーダリングが発生しない。また、P1 では smp_mb() が呼び出されているので、リオーダリングが発生しない。</p><h2 id=20-lbpoacquireoncepooncereleaselitmus-res-good-question->#20 <code>LB+poacquireonce+pooncerelease.litmus</code> RES (Good Question !!!)</h2><p>LWN で紹介されていたケース (<a href=https://lwn.net/Articles/844224/>An introduction to lockless algorithms [LWN.net]</a>) と似ていた。</p><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_store_release</span><span class=p>(</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 21:18:47:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/LB+poacquireonce+pooncerelease.litmus
+</span></span><span class=line><span class=cl>Test LB+poacquireonce+pooncerelease Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation LB+poacquireonce+pooncerelease Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time LB+poacquireonce+pooncerelease 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>b801d815f44d02d33711734a05577728
+</span></span></code></pre></div><p>LWN の記事の読み込みが浅かったが、必ずしも READ_ONCE() -> smp_store_release() -> smo_load_acquire() -> WRITE_ONCE() の順序で処理が実行されるわけではないことが明らかになった。これは、各スレッドの ro の値から確認できた。</p><h2 id=21-lbpoonceonceslitmus-res>#21 <code>LB+poonceonces.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 21:23:26:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/LB+poonceonces.litmus
+</span></span><span class=line><span class=cl>Test LB+poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>0<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r0<span class=o>=</span>1<span class=p>;</span> 1:r0<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r0<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation LB+poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time LB+poonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>d96b009b18c3b7a0f61fc31b99c956d4
+</span></span></code></pre></div><p>全ての通りのリオーダリングが発生するケースだった。</p><h2 id=22-lbunlocklockonceoncepoacquireoncelitmus-wip>#22 <code>LB+unlocklockonceonce+poacquireonce.litmus</code> WIP</h2><blockquote><p>If two locked critical sections execute on the same CPU, all accesses in the first must execute before any accesses in the second, even if the critical sections are protected by different locks. Note: Even when a write executes before a read, their memory effects can be reordered from the viewpoint of another CPU (the kind of reordering allowed by TSO).</p></blockquote><p>コメントを読んだ感じ、同一 CPU 上で実行される処理内でロックされた 2 つのクリティカルセクションが実行される場合、順番に実行されるとある。なので、#20 と同様の結果が得られると思われる。</p><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>s</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>t</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 21:30:59:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/LB+unlocklockonceonce+poacquireonce.litmus
+</span></span><span class=line><span class=cl>Test LB+unlocklockonceonce+poacquireonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>0<span class=p>;</span> 1:r2<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>0<span class=p>;</span> 1:r2<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>0:r1<span class=o>=</span>1<span class=p>;</span> 1:r2<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>0:r1<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r2<span class=o>=</span>1<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation LB+unlocklockonceonce+poacquireonce Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time LB+unlocklockonceonce+poacquireonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>da6330e658ae65e07d480639bf637dd7
+</span></span></code></pre></div><p>やはり、その結果になった。ただ、理解が合っているかどうかは有識者に出来たら確認したい。</p><h2 id=23-mpfencewmbonceoncefencermbonceoncelitmus-res>#23 <code>MP+fencewmbonceonce+fencermbonceonce.litmus</code> RES</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_wmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_rmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 21:42:18:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/MP+fencewmbonceonce+fencermbonceonce.litmus
+</span></span><span class=line><span class=cl>Test MP+fencewmbonceonce+fencermbonceonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation MP+fencewmbonceonce+fencermbonceonce Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time MP+fencewmbonceonce+fencermbonceonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>7e451c2d514abe8532fb9eb15fcc46c6
+</span></span></code></pre></div><p>想定された結果になったのを確認することができた。</p><h2 id=24-mponceassignderefoncelitmus-una>#24 <code>MP+onceassign+derefonce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>**</span><span class=n>p</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>rcu_assign_pointer</span><span class=p>(</span><span class=o>*</span><span class=n>p</span><span class=p>,</span> <span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>**</span><span class=n>p</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=o>*</span><span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>rcu_read_lock</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>rcu_dereference</span><span class=p>(</span><span class=o>*</span><span class=n>p</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>r0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>rcu_read_unlock</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr; (RCU 周りは全く勉強していないので &mldr; :()</p><h2 id=25-mppolockmboncepoacquiresilsillitmus-una>#25 <code>MP+polockmbonce+poacquiresilsil.litmus</code> UNA</h2><blockquote><p>Do spinlocks combined with smp_mb__after_spinlock() provide order to outside observers using spin_is_locked() to sense the lock-held state, ordered by acquire? Note that when the first spin_is_locked() returns false and the second true, we know that the smp_load_acquire() executed before the lock was acquired (loosely speaking).</p></blockquote><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>lo</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb__after_spinlock</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>lo</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>spin_is_locked</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r3</span> <span class=o>=</span> <span class=nf>spin_is_locked</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr; (複雑すぎてわからん &mldr;)</p><h2 id=26-mppolockoncepoacquiresilsillitmus-una>#26 <code>MP+polockonce+poacquiresilsil.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>lo</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>lo</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>spin_is_locked</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r3</span> <span class=o>=</span> <span class=nf>spin_is_locked</span><span class=p>(</span><span class=n>lo</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr; (複雑すぎてわからん &mldr;)</p><h2 id=27-mppolockslitmus-una>#27 <code>MP+polocks.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=28-mppoonceonceslitmus-res>#28 <code>MP+poonceonces.litmus</code> RES</h2><p>この場合、双方のスレッドでリオーダリングが発生するので、全ての変数のパターンが発生する。</p><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 22:03:39:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/MP+poonceonces.litmus
+</span></span><span class=line><span class=cl>Test MP+poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 1:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation MP+poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time MP+poonceonces 0.02
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>c0ebd8ca556580d772ac73303c4c4f84
+</span></span></code></pre></div><h2 id=29-mppooncereleasepoacquireoncelitmus-res>#29 <code>MP+pooncerelease+poacquireonce.litmus</code> RES</h2><p>#23 と同じ結果になると思われる。</p><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_store_release</span><span class=p>(</span><span class=n>flag</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>smp_load_acquire</span><span class=p>(</span><span class=n>flag</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 22:04:36:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/MP+pooncerelease+poacquireonce.litmus
+</span></span><span class=line><span class=cl>Test MP+pooncerelease+poacquireonce Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>0<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> 1:r1<span class=o>=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>(</span>1:r0<span class=o>=</span><span class=m>1</span> /<span class=se>\ </span>1:r1<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation MP+pooncerelease+poacquireonce Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time MP+pooncerelease+poacquireonce 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>f259d8efc86e0b40c7168bf58524ab49
+</span></span></code></pre></div><p>確かに、同じになったのが確認できた。</p><h2 id=30-mpporevlockslitmus-una>#30 <code>MP+porevlocks.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span> <span class=c1>// Consumer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>mylock</span><span class=p>)</span> <span class=c1>// Producer
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>buf</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>mylock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>flag</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=31-mpunlocklockonceoncefencermbonceoncelitmus-una>#31 <code>MP+unlocklockonceonce+fencermbonceonce.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>s</span><span class=p>,</span> <span class=kt>spinlock_t</span> <span class=o>*</span><span class=n>t</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>s</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_lock</span><span class=p>(</span><span class=n>t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>spin_unlock</span><span class=p>(</span><span class=n>t</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>r1</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_rmb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r2</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>Pass &mldr;</p><h2 id=32-rfencembonceonceslitmus-res>#32 <code>R+fencembonceonces.litmus</code> RES</h2><p>両方のスレッドでメモリバリアが機能する。</p><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>smp_mb</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 22:16:12:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/R+fencembonceonces.litmus
+</span></span><span class=line><span class=cl>Test R+fencembonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>3</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>No
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>0</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>y<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>1:r0<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation R+fencembonceonces Never <span class=m>0</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time R+fencembonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>ca0b9c6c2fac803b694c4465a750b9bd
+</span></span></code></pre></div><p>想定した結果になった。</p><h2 id=33-rpoonceonceslitmus-una>#33 <code>R+poonceonces.litmus</code> UNA</h2><p>シミュレートするスレッド</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=nf>P0</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>P1</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=o>*</span><span class=n>y</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=n>r0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>WRITE_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>y</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>r0</span> <span class=o>=</span> <span class=nf>READ_ONCE</span><span class=p>(</span><span class=o>*</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>litmus のプログラム (デフォルト) の実行結果</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>haytok@2023-03-12 22:16:16:~/memory-model
+</span></span><span class=line><span class=cl>&gt;&gt;&gt; herd7 -conf linux-kernel.cfg litmus-tests/R+poonceonces.litmus
+</span></span><span class=line><span class=cl>Test R+poonceonces Allowed
+</span></span><span class=line><span class=cl>States <span class=m>4</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>0<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>1<span class=p>;</span>
+</span></span><span class=line><span class=cl>1:r0<span class=o>=</span>1<span class=p>;</span> <span class=o>[</span>y<span class=o>]=</span>2<span class=p>;</span>
+</span></span><span class=line><span class=cl>Ok
+</span></span><span class=line><span class=cl>Witnesses
+</span></span><span class=line><span class=cl>Positive: <span class=m>1</span> Negative: <span class=m>3</span>
+</span></span><span class=line><span class=cl>Condition exists <span class=o>([</span>y<span class=o>]=</span><span class=m>2</span> /<span class=se>\ </span>1:r0<span class=o>=</span>0<span class=o>)</span>
+</span></span><span class=line><span class=cl>Observation R+poonceonces Sometimes <span class=m>1</span> <span class=m>3</span>
+</span></span><span class=line><span class=cl>Time R+poonceonces 0.01
+</span></span><span class=line><span class=cl><span class=nv>Hash</span><span class=o>=</span>96d794b154dbd14a4d2d4c927f7471b4
+</span></span></code></pre></div><p>想定された挙動をした。</p><h2 id=最後に>最後に</h2><p>このシミュレータを使用することで、Linux kernel におけるメモリモデルの挙動がよりソースコードレベルでの理解が進んだ。</p><p>頼りにしていた <code>head7</code> の doc の図の意味が分からず泣いた。是非どなたかにご教示いただきたい &mldr; :(</p><ul><li><a href=http://diy.inria.fr/doc/herd.html#intro%3Acandidate>Simulating memory models with herd7</a></li><li><a href=https://speakerdeck.com/shigemi1014/armv8-a-memorimoderu>Armv8-A_メモリモデル.pdf - Speaker Deck</a></li><li><a href=https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/how-to-use-the-memory-model-tool>A working example of the Memory Model Tool - Architectures and Processors blog - Arm Community blogs - Arm Community</a></li></ul><h2 id=参考>参考</h2><ul><li><a href=https://lwn.net/Articles/844224/>An introduction to lockless algorithms [LWN.net]</a></li></ul></article><nav class="no-print post-nav"><a class=prev-post href=https://haytok.jp/log/20230225-docker-error-on-wsl/><img class=icon-text src=https://haytok.jp/img/prev.svg>Docker Error on WSL2</a>
+<a class=next-post href=https://haytok.jp/log/20230225-bash-prompt/>bash の表示の微修正<img class=icon-text src=https://haytok.jp/img/next.svg></a></nav><section id=related><h4>See Also</h4><ul><li><a href=https://haytok.jp/log/20230225-docker-error-on-wsl/>Docker Error on WSL2</a></li></ul></section><hr class=sep></main><footer class="container no-print"><div class=u-footer><a href=https://github.com/haytok><img class=icon-social src=https://haytok.jp/img/github.svg alt=Github></a>
+<a href=https://twitter.com/haytok6><img class=icon-social src=https://haytok.jp/img/twitter.svg alt=Twitter></a>
+<a href=https://haytok.jp/index.xml target=_blank><img class=icon-social src=https://haytok.jp/img/feed.svg alt=Feed></a><p>&copy; 2021 haytok</p><a href=#brand><img class=icon-text src=https://haytok.jp/img/toup.svg alt="To Up">
+<span>Back to Up</span></a></div></footer></body></html>
