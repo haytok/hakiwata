@@ -31,7 +31,7 @@ date = "2021-04-30T00:00:00+08:00"
 
 ## Interests
 
-- Linux | Container | Python | C | Web Application Programming
+- Linux kernel | Container | Python | C | Web Application Programming
 
 ## Others
 
